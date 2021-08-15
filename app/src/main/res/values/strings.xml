@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">JetpackComposeDemo</string>
+    <string name="days_today">Сегодня</string>
+</resources>
