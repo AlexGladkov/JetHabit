@@ -41,3 +41,19 @@ val blueLightPalette = baseLightPalette.copy(
 val blueDarkPalette = baseDarkPalette.copy(
     tintColor = Color(0xFF99BBFF)
 )
+
+val redLightPalette = baseLightPalette.copy(
+    tintColor = Color(0xFFE63956)
+)
+
+val redDarkPalette = baseDarkPalette.copy(
+    tintColor = Color(0xFFFF5975)
+)
+
+val greenLightPalette = baseLightPalette.copy(
+    tintColor = Color(0xFF12B37D)
+)
+
+val greenDarkPalette = baseDarkPalette.copy(
+    tintColor = Color(0xFF7EE6C3)
+)

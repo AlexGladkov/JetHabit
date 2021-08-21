@@ -16,6 +16,8 @@ fun MainTheme(
                 JetHabbitStyle.Purple -> purpleDarkPalette
                 JetHabbitStyle.Blue -> blueDarkPalette
                 JetHabbitStyle.Orange -> orangeDarkPalette
+                JetHabbitStyle.Red -> redDarkPalette
+                JetHabbitStyle.Green -> greenDarkPalette
             }
         }
         false -> {
@@ -23,6 +25,8 @@ fun MainTheme(
                 JetHabbitStyle.Purple -> purpleLightPalette
                 JetHabbitStyle.Blue -> blueLightPalette
                 JetHabbitStyle.Orange -> orangeLightPalette
+                JetHabbitStyle.Red -> redLightPalette
+                JetHabbitStyle.Green -> greenLightPalette
             }
         }
     }

@@ -19,7 +19,7 @@ object JetHabbitTheme {
 }
 
 enum class JetHabbitStyle {
-    Purple, Orange, Blue
+    Purple, Orange, Blue, Red, Green
 }
 
 val LocalJetHabbitColors = staticCompositionLocalOf<JetHabbitColors> {

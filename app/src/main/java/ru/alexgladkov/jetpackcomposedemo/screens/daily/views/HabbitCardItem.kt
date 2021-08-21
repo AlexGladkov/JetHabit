@@ -2,6 +2,7 @@ package ru.alexgladkov.jetpackcomposedemo.screens.daily.views
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,13 +12,17 @@ import androidx.compose.material.Card
 import androidx.compose.material.Checkbox
 import androidx.compose.material.CheckboxColors
 import androidx.compose.material.CheckboxDefaults
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabbitStyle
 import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabbitTheme
 import ru.alexgladkov.jetpackcomposedemo.ui.themes.MainTheme
 
@@ -67,25 +72,78 @@ fun HabbitCardItem(
 @Composable
 @Preview(showBackground = true)
 fun HabbitPurpleLightItem_Preview() {
-    MainTheme(darkTheme = false) {
-        HabbitCardItem(
-            HabbitCardItemModel(
-                title = "Чистить зубы",
-                isChecked = true
-            )
-        )
-    }
+    ThemedHabbitCard(isDarkMode = false, style = JetHabbitStyle.Purple)
 }
 
 @Composable
 @Preview(showBackground = true)
 fun HabbitPurpleDarkItem_Preview() {
-    MainTheme(darkTheme = true) {
-        HabbitCardItem(
-            HabbitCardItemModel(
-                title = "Чистить зубы",
-                isChecked = true
+    ThemedHabbitCard(isDarkMode = true, style = JetHabbitStyle.Purple)
+}
+
+@Composable
+@Preview(showBackground = true)
+fun HabbitRedLightItem_Preview() {
+    ThemedHabbitCard(isDarkMode = false, style = JetHabbitStyle.Red)
+}
+
+@Composable
+@Preview(showBackground = true)
+fun HabbitRedDarkItem_Preview() {
+    ThemedHabbitCard(isDarkMode = true, style = JetHabbitStyle.Red)
+}
+
+@Composable
+@Preview(showBackground = true)
+fun HabbitGreenLightItem_Preview() {
+    ThemedHabbitCard(isDarkMode = false, style = JetHabbitStyle.Green)
+}
+
+@Composable
+@Preview(showBackground = true)
+fun HabbitGreenDarkItem_Preview() {
+    ThemedHabbitCard(isDarkMode = true, style = JetHabbitStyle.Green)
+}
+
+@Composable
+@Preview(showBackground = true)
+fun HabbitOrangeLightItem_Preview() {
+    ThemedHabbitCard(isDarkMode = false, style = JetHabbitStyle.Orange)
+}
+
+@Composable
+@Preview(showBackground = true)
+fun HabbitOrangeDarkItem_Preview() {
+    ThemedHabbitCard(isDarkMode = true, style = JetHabbitStyle.Orange)
+}
+
+@Composable
+@Preview(showBackground = true)
+fun HabbitBlueLightItem_Preview() {
+    ThemedHabbitCard(isDarkMode = false, style = JetHabbitStyle.Blue)
+}
+
+@Composable
+@Preview(showBackground = true)
+fun HabbitBlueDarkItem_Preview() {
+    ThemedHabbitCard(isDarkMode = true, style = JetHabbitStyle.Blue)
+}
+
+@Composable
+private fun ThemedHabbitCard(
+    isDarkMode: Boolean,
+    style: JetHabbitStyle
+) {
+    MainTheme(darkTheme = isDarkMode, style = style) {
+        Surface(
+            color = JetHabbitTheme.colors.primaryBackground
+        ) {
+            HabbitCardItem(
+                HabbitCardItemModel(
+                    title = "Чистить зубы",
+                    isChecked = true
+                )
             )
-        )
+        }
     }
 }
