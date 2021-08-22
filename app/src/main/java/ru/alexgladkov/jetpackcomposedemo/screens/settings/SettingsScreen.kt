@@ -1,44 +1,37 @@
 package ru.alexgladkov.jetpackcomposedemo.screens.settings
 
-import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.GridCells
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Checkbox
 import androidx.compose.material.CheckboxDefaults
+import androidx.compose.material.Divider
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import ru.alexgladkov.jetpackcomposedemo.R
 import ru.alexgladkov.jetpackcomposedemo.screens.daily.views.HabbitCardItem
 import ru.alexgladkov.jetpackcomposedemo.screens.daily.views.HabbitCardItemModel
+import ru.alexgladkov.jetpackcomposedemo.screens.settings.views.MenuItem
+import ru.alexgladkov.jetpackcomposedemo.screens.settings.views.MenuItemModel
+import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabbitCorners
+import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabbitSize
 import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabbitStyle
 import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabbitTheme
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.LocalJetHabbitColors
 import ru.alexgladkov.jetpackcomposedemo.ui.themes.blueDarkPalette
 import ru.alexgladkov.jetpackcomposedemo.ui.themes.blueLightPalette
 import ru.alexgladkov.jetpackcomposedemo.ui.themes.greenDarkPalette
@@ -55,8 +48,14 @@ import ru.alexgladkov.jetpackcomposedemo.ui.themes.redLightPalette
 @Composable
 fun SettingsScreen(
     isDarkMode: Boolean,
+    currentTextSize: JetHabbitSize,
+    currentPaddingSize: JetHabbitSize,
+    currentCornersStyle: JetHabbitCorners,
     onDarkModeChanged: (Boolean) -> Unit,
-    onNewStyle: (JetHabbitStyle) -> Unit
+    onNewStyle: (JetHabbitStyle) -> Unit,
+    onTextSizeChanged: (JetHabbitSize) -> Unit,
+    onPaddingSizeChanged: (JetHabbitSize) -> Unit,
+    onCornersStyleChanged: (JetHabbitCorners) -> Unit,
 ) {
     Surface(
         color = JetHabbitTheme.colors.primaryBackground,
@@ -71,20 +70,21 @@ fun SettingsScreen(
                 Text(
                     modifier = Modifier
                         .weight(1f)
-                        .padding(start = 16.dp),
-                    text = "Настройки",
+                        .padding(start = JetHabbitTheme.shapes.padding),
+                    text = stringResource(id = R.string.title_settings),
                     color = JetHabbitTheme.colors.primaryText,
-                    fontWeight = FontWeight.Medium,
-                    fontSize = 16.sp
+                    style = JetHabbitTheme.typography.toolbar
                 )
             }
 
             Row(
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier.padding(JetHabbitTheme.shapes.padding)
             ) {
                 Text(
-                    modifier = Modifier.weight(1f), text = "Включить темную тему",
-                    color = JetHabbitTheme.colors.primaryText
+                    modifier = Modifier.weight(1f),
+                    text = stringResource(id = R.string.action_dark_theme_enable),
+                    color = JetHabbitTheme.colors.primaryText,
+                    style = JetHabbitTheme.typography.body
                 )
                 Checkbox(
                     checked = isDarkMode, onCheckedChange = {
@@ -97,9 +97,83 @@ fun SettingsScreen(
                 )
             }
 
+            Divider(
+                modifier = Modifier.padding(start = JetHabbitTheme.shapes.padding),
+                thickness = 0.5.dp,
+                color = JetHabbitTheme.colors.secondaryText.copy(
+                    alpha = 0.3f
+                )
+            )
+
+            MenuItem(
+                model = MenuItemModel(
+                    title = stringResource(id = R.string.title_font_size),
+                    currentIndex = when (currentTextSize) {
+                        JetHabbitSize.Small -> 0
+                        JetHabbitSize.Medium -> 1
+                        JetHabbitSize.Big -> 2
+                    },
+                    values = listOf(
+                        stringResource(id = R.string.title_font_size_small),
+                        stringResource(id = R.string.title_font_size_medium),
+                        stringResource(id = R.string.title_font_size_big)
+                    )
+                ),
+                onItemSelected = {
+                    when (it) {
+                        0 -> onTextSizeChanged.invoke(JetHabbitSize.Small)
+                        1 -> onTextSizeChanged.invoke(JetHabbitSize.Medium)
+                        2 -> onTextSizeChanged.invoke(JetHabbitSize.Big)
+                    }
+                }
+            )
+
+            MenuItem(
+                model = MenuItemModel(
+                    title = stringResource(id = R.string.title_padding_size),
+                    currentIndex = when (currentPaddingSize) {
+                        JetHabbitSize.Small -> 0
+                        JetHabbitSize.Medium -> 1
+                        JetHabbitSize.Big -> 2
+                    },
+                    values = listOf(
+                        stringResource(id = R.string.title_padding_small),
+                        stringResource(id = R.string.title_padding_medium),
+                        stringResource(id = R.string.title_padding_big)
+                    )
+                ),
+                onItemSelected = {
+                    when (it) {
+                        0 -> onPaddingSizeChanged.invoke(JetHabbitSize.Small)
+                        1 -> onPaddingSizeChanged.invoke(JetHabbitSize.Medium)
+                        2 -> onPaddingSizeChanged.invoke(JetHabbitSize.Big)
+                    }
+                }
+            )
+
+            MenuItem(
+                model = MenuItemModel(
+                    title = stringResource(id = R.string.title_corners_style),
+                    currentIndex = when (currentCornersStyle) {
+                        JetHabbitCorners.Rounded -> 0
+                        JetHabbitCorners.Flat -> 1
+                    },
+                    values = listOf(
+                        stringResource(id = R.string.title_corners_style_rounded),
+                        stringResource(id = R.string.title_corners_style_flat)
+                    )
+                ),
+                onItemSelected = {
+                    when (it) {
+                        0 -> onCornersStyleChanged.invoke(JetHabbitCorners.Rounded)
+                        1 -> onCornersStyleChanged.invoke(JetHabbitCorners.Flat)
+                    }
+                }
+            )
+
             Row(
                 modifier = Modifier
-                    .padding(16.dp)
+                    .padding(JetHabbitTheme.shapes.padding)
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
@@ -119,7 +193,7 @@ fun SettingsScreen(
 
             Row(
                 modifier = Modifier
-                    .padding(16.dp)
+                    .padding(JetHabbitTheme.shapes.padding)
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
@@ -156,6 +230,6 @@ fun ColorCard(
             },
         backgroundColor = color,
         elevation = 8.dp,
-        shape = RoundedCornerShape(4.dp)
+        shape = JetHabbitTheme.shapes.cornersStyle
     ) { }
 }

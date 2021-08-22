@@ -38,22 +38,24 @@ fun HabbitCardItem(
 ) {
     Card(
         modifier = Modifier
-            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .padding(
+                horizontal = JetHabbitTheme.shapes.padding,
+                vertical = JetHabbitTheme.shapes.padding / 2
+            )
             .fillMaxWidth(),
         elevation = 8.dp,
         backgroundColor = JetHabbitTheme.colors.primaryBackground,
-        shape = RoundedCornerShape(8.dp)
+        shape = JetHabbitTheme.shapes.cornersStyle
     ) {
         Row(
             modifier = Modifier
-                .padding(16.dp)
+                .padding(JetHabbitTheme.shapes.padding)
                 .fillMaxWidth()
         ) {
             Text(
                 modifier = Modifier.weight(1f),
                 text = model.title,
-                fontWeight = FontWeight.Medium,
-                fontSize = 14.sp,
+                style = JetHabbitTheme.typography.body,
                 color = JetHabbitTheme.colors.primaryText
             )
 

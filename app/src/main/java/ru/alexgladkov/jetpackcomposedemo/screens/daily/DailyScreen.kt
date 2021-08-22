@@ -48,9 +48,11 @@ fun DailyScreen(
                 content = {
                     stickyHeader {
                         Text(
-                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 24.dp),
+                            modifier = Modifier.padding(
+                                horizontal = JetHabbitTheme.shapes.padding,
+                                vertical = JetHabbitTheme.shapes.padding + 8.dp),
                             text = stringResource(id = R.string.days_today),
-                            fontWeight = FontWeight.Bold, fontSize = 28.sp,
+                            style = JetHabbitTheme.typography.heading,
                             color = JetHabbitTheme.colors.primaryText
                         )
                     }
@@ -63,7 +65,9 @@ fun DailyScreen(
                 })
 
             FloatingActionButton(
-                modifier = Modifier.align(BottomEnd).padding(16.dp),
+                modifier = Modifier
+                    .align(BottomEnd)
+                    .padding(JetHabbitTheme.shapes.padding),
                 backgroundColor = JetHabbitTheme.colors.tintColor,
                 onClick = {
                     navController.navigate("settings")
