@@ -15,12 +15,14 @@ import androidx.compose.material.Checkbox
 import androidx.compose.material.CheckboxDefaults
 import androidx.compose.material.Divider
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Icon
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import ru.alexgladkov.jetpackcomposedemo.R
@@ -169,6 +171,11 @@ fun SettingsScreen(
                         1 -> onCornersStyleChanged.invoke(JetHabbitCorners.Flat)
                     }
                 }
+            )
+
+            Icon(painterResource(
+                id = JetHabbitTheme.images.mainIcon),
+                contentDescription = JetHabbitTheme.images.mainIconDescription
             )
 
             Row(

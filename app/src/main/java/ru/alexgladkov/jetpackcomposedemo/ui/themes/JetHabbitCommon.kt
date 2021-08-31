@@ -26,6 +26,11 @@ data class JetHabbitShape(
     val cornersStyle: Shape
 )
 
+data class JetHabbitImage(
+    val mainIcon: Int,
+    val mainIconDescription: String
+)
+
 object JetHabbitTheme {
     val colors: JetHabbitColors
         @Composable
@@ -38,6 +43,10 @@ object JetHabbitTheme {
     val shapes: JetHabbitShape
         @Composable
         get() = LocalJetHabbitShape.current
+
+    val images: JetHabbitImage
+        @Composable
+        get() = LocalJetHabbitImage.current
 }
 
 enum class JetHabbitStyle {
@@ -62,4 +71,8 @@ val LocalJetHabbitTypography = staticCompositionLocalOf<JetHabbitTypography> {
 
 val LocalJetHabbitShape = staticCompositionLocalOf<JetHabbitShape> {
     error("No shapes provided")
+}
+
+val LocalJetHabbitImage = staticCompositionLocalOf<JetHabbitImage> {
+    error("No images provided")
 }

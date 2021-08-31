@@ -8,6 +8,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ru.alexgladkov.jetpackcomposedemo.R
 
 @Composable
 fun MainTheme(
@@ -78,10 +79,16 @@ fun MainTheme(
         }
     )
 
+    val images = JetHabbitImage(
+        mainIcon = if (darkTheme) R.drawable.ic_baseline_mood_24 else R.drawable.ic_baseline_mood_bad_24,
+        mainIconDescription = if (darkTheme) "Good Mood" else "Bad Mood"
+    )
+
     CompositionLocalProvider(
         LocalJetHabbitColors provides colors,
         LocalJetHabbitTypography provides typography,
         LocalJetHabbitShape provides shapes,
+        LocalJetHabbitImage provides images,
         content = content
     )
 }
