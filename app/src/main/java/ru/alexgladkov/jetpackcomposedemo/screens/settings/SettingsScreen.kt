@@ -173,11 +173,6 @@ fun SettingsScreen(
                 }
             )
 
-            Icon(painterResource(
-                id = JetHabbitTheme.images.mainIcon),
-                contentDescription = JetHabbitTheme.images.mainIconDescription
-            )
-
             Row(
                 modifier = Modifier
                     .padding(JetHabbitTheme.shapes.padding)
