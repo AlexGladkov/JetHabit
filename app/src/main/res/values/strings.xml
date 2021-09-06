@@ -11,6 +11,7 @@
     <string name="title_padding_medium">Средние</string>
     <string name="title_padding_big">Большие</string>
 
+    <string name="title_daily">Daily</string>
     <string name="title_settings">Настройки</string>
 
     <string name="title_corners_style">Стиль карточки</string>
@@ -18,4 +19,5 @@
     <string name="title_corners_style_flat">Плоский</string>
 
     <string name="action_dark_theme_enable">Включить темную тему</string>
+
 </resources>

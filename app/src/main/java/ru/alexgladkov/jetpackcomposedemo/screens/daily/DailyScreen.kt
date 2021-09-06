@@ -32,8 +32,8 @@ import ru.alexgladkov.jetpackcomposedemo.ui.themes.MainTheme
 @ExperimentalFoundationApi
 @Composable
 fun DailyScreen(
-    navController: NavController
-//    dailyViewModel: DailyViewModel = viewModel()
+    navController: NavController,
+    dailyViewModel: DailyViewModel = viewModel()
 ) {
     val exampleData = listOf(
         HabbitCardItemModel("Чистить зубы", isChecked = false),
