@@ -20,4 +20,10 @@
 
     <string name="action_dark_theme_enable">Включить темную тему</string>
 
+    <string name="compose_new_record">Новая привычка</string>
+    <string name="compose_title">Название</string>
+    <string name="compose_is_good">Полезная привычка</string>
+
+    <string name="action_add">Добавить</string>
+
 </resources>

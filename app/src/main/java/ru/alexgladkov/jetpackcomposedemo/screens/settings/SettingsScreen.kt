@@ -49,6 +49,7 @@ import ru.alexgladkov.jetpackcomposedemo.ui.themes.redLightPalette
 @ExperimentalFoundationApi
 @Composable
 fun SettingsScreen(
+    modifier: Modifier = Modifier,
     isDarkMode: Boolean,
     currentTextSize: JetHabbitSize,
     currentPaddingSize: JetHabbitSize,
@@ -60,6 +61,7 @@ fun SettingsScreen(
     onCornersStyleChanged: (JetHabbitCorners) -> Unit,
 ) {
     Surface(
+        modifier = modifier,
         color = JetHabbitTheme.colors.primaryBackground,
     ) {
         Column(

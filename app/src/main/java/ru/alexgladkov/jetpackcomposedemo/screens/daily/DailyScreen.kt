@@ -1,5 +1,6 @@
 package ru.alexgladkov.jetpackcomposedemo.screens.daily
 
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -8,8 +9,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Create
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment.Companion.BottomEnd
 import androidx.compose.ui.Modifier
@@ -20,6 +24,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -32,16 +37,19 @@ import ru.alexgladkov.jetpackcomposedemo.ui.themes.MainTheme
 @ExperimentalFoundationApi
 @Composable
 fun DailyScreen(
+    modifier: Modifier = Modifier,
     navController: NavController,
-    dailyViewModel: DailyViewModel = viewModel()
+    dailyViewModel: DailyViewModel
 ) {
+
     val exampleData = listOf(
         HabbitCardItemModel("Чистить зубы", isChecked = false),
         HabbitCardItemModel("Не есть сладкое", isChecked = false),
         HabbitCardItemModel("Не курить", isChecked = true)
     )
 
-    Surface(color = JetHabbitTheme.colors.primaryBackground, modifier = Modifier.fillMaxSize()) {
+    Surface(color = JetHabbitTheme.colors.primaryBackground,
+        modifier = modifier.fillMaxSize()) {
         Box {
             LazyColumn(
                 Modifier.background(JetHabbitTheme.colors.primaryBackground),
@@ -70,37 +78,15 @@ fun DailyScreen(
                     .padding(JetHabbitTheme.shapes.padding),
                 backgroundColor = JetHabbitTheme.colors.tintColor,
                 onClick = {
-                    navController.navigate("settings")
+                    navController.navigate("compose")
                 }) {
                 Icon(
-                    painter = painterResource(R.drawable.ic_baseline_settings_24),
+                    imageVector = Icons.Filled.Create,
                     contentDescription = "Settings icon",
                     tint = White
                 )
             }
         }
-    }
-}
-
-@ExperimentalFoundationApi
-@Preview(showBackground = true)
-@Composable
-fun DailyScreen_Preview() {
-    MainTheme(darkTheme = false) {
-        DailyScreen(
-            navController = rememberNavController()
-        )
-    }
-}
-
-@ExperimentalFoundationApi
-@Preview(showBackground = true)
-@Composable
-fun DailyScreenDark_Preview() {
-    MainTheme(darkTheme = true) {
-        DailyScreen(
-            navController = rememberNavController()
-        )
     }
 }
 
