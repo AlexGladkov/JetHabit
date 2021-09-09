@@ -1,10 +1,21 @@
-dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+pluginManagement {
     repositories {
+        gradlePluginPortal()
+        jcenter()
         google()
         mavenCentral()
-        jcenter() // Warning: this repository is going to shut down soon
+    }
+    resolutionStrategy {
+        eachPlugin {
+            if (requested.id.id.startsWith("com.android")) {
+                useModule("com.android.tools.build:gradle:7.0.0")
+            }
+            if (requested.id.id.startsWith("org.jetbrains.kotlin")) {
+                useVersion("1.5.21")
+            }
+        }
     }
 }
+
 rootProject.name = "JetpackComposeDemo"
 include(":app")

@@ -1,6 +1,12 @@
 plugins {
     id("com.android.application")
-    id("kotlin-android") version "1.5.21"
+    kotlin("android")
+    kotlin("kapt")
+}
+
+repositories {
+    google()
+    mavenCentral()
 }
 
 android {
