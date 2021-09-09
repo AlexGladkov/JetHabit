@@ -10,14 +10,14 @@ repositories {
 }
 
 android {
-    compileSdk = 31
+    compileSdk = Config.compileSdk
 
     defaultConfig {
-        applicationId = "ru.alexgladkov.jetpackcomposedemo"
-        minSdk = 21
-        targetSdk = 31
-        versionCode = 1
-        versionName = "1.0"
+        applicationId = Config.packageName
+        minSdk = Config.minSDK
+        targetSdk = Config.targetSDK
+        versionCode = Config.versionCode
+        versionName = Config.versionName
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -51,7 +51,7 @@ android {
 
     packagingOptions {
         resources {
-//            excludes.add("/META-INF/{AL2.0,LGPL2.1}")
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
 }
