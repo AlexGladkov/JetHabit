@@ -1,6 +1,12 @@
 package ru.alexgladkov.jetpackcomposedemo.screens.compose.models
 
-data class ComposeViewState(
-    val habbitTitle: String = "",
-    val isGoodHabbit: Boolean = true
-)
+sealed class ComposeViewState {
+
+    data class ViewStateInitial(
+        val habbitTitle: String = "",
+        val isGoodHabbit: Boolean = true,
+        val isSending: Boolean = false
+    ) : ComposeViewState()
+
+    object ViewStateSuccess : ComposeViewState()
+}

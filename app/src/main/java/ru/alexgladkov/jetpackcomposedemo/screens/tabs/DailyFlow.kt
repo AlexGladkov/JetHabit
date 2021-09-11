@@ -35,7 +35,11 @@ fun NavGraphBuilder.dailyFlow(
 
         composable("compose") {
             val composeViewModel = hiltViewModel<ComposeViewModel>()
-            ComposeScreen(modifier = Modifier.padding(paddingValues), composeViewModel = composeViewModel)
+            ComposeScreen(
+                modifier = Modifier.padding(paddingValues),
+                navController = navController,
+                composeViewModel = composeViewModel
+            )
         }
     }
 }

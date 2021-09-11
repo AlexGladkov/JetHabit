@@ -23,7 +23,8 @@
     <string name="compose_new_record">Новая привычка</string>
     <string name="compose_title">Название</string>
     <string name="compose_is_good">Полезная привычка</string>
+    <string name="compose_success_add">Привычка успешно добавлена</string>
 
     <string name="action_add">Добавить</string>
-
+    <string name="action_close">Закрыть</string>
 </resources>
