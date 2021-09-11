@@ -34,10 +34,12 @@ import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabbitTheme
 @Composable
 fun ComposeScreen(
     modifier: Modifier,
-    viewModel: ComposeViewModel
+    composeViewModel: ComposeViewModel
 ) {
     val titleValue = remember { mutableStateOf("") }
     val isGoodValue = remember { mutableStateOf(false) }
+
+    val viewState = composeViewModel.composeViewState.observeAsState()
 
     Surface(modifier = modifier.fillMaxSize(), color = JetHabbitTheme.colors.primaryBackground) {
         Box {

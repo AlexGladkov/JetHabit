@@ -34,15 +34,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navigation
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
-import ru.alexgladkov.jetpackcomposedemo.screens.daily.DailyScreen
-import ru.alexgladkov.jetpackcomposedemo.screens.daily.DailyViewModel
 import ru.alexgladkov.jetpackcomposedemo.screens.main.MainBottomScreen
 import ru.alexgladkov.jetpackcomposedemo.screens.settings.SettingsScreen
 import ru.alexgladkov.jetpackcomposedemo.screens.tabs.dailyFlow
-import ru.alexgladkov.jetpackcomposedemo.screens.tabs.settingsFlow
 import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabbitCorners
 import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabbitSize
 import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabbitStyle
