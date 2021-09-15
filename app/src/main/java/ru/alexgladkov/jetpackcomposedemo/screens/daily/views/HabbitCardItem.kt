@@ -22,14 +22,23 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ru.alexgladkov.jetpackcomposedemo.data.features.habbit.HabbitEntity
 import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabbitStyle
 import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabbitTheme
 import ru.alexgladkov.jetpackcomposedemo.ui.themes.MainTheme
 
 data class HabbitCardItemModel(
+    val habbitId: Long,
     val title: String,
     val isChecked: Boolean
 )
+
+fun HabbitEntity.mapToCardItem() =
+    HabbitCardItemModel(
+        habbitId = this.itemId,
+        title = this.title,
+        isChecked = false
+    )
 
 @Composable
 fun HabbitCardItem(
@@ -142,6 +151,7 @@ private fun ThemedHabbitCard(
         ) {
             HabbitCardItem(
                 HabbitCardItemModel(
+                    habbitId = 0,
                     title = "Чистить зубы",
                     isChecked = true
                 )

@@ -9,4 +9,7 @@ class HabbitRepository @Inject constructor(
     suspend fun addNewHabbit(habbitEntity: HabbitEntity) {
         habbitDao.insert(habbitEntity)
     }
+
+    suspend fun fetchHabbitsList(): List<HabbitEntity> =
+        habbitDao.getAll()
 }

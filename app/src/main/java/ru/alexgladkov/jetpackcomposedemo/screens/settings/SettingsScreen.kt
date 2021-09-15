@@ -213,6 +213,7 @@ fun SettingsScreen(
 
             HabbitCardItem(
                 model = HabbitCardItemModel(
+                    habbitId = 0,
                     title = "Пример карточки",
                     isChecked = true
                 )

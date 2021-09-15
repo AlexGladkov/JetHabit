@@ -23,6 +23,7 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -50,6 +51,7 @@ import ru.alexgladkov.jetpackcomposedemo.ui.themes.baseLightPalette
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
+    @ExperimentalComposeUiApi
     @ExperimentalMaterialApi
     @ExperimentalFoundationApi
     override fun onCreate(savedInstanceState: Bundle?) {

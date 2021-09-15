@@ -13,7 +13,8 @@ data class JetHabbitColors(
     val secondaryText: Color,
     val secondaryBackground: Color,
     val tintColor: Color,
-    val controlColor: Color
+    val controlColor: Color,
+    val errorColor: Color
 )
 
 data class JetHabbitTypography(

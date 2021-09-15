@@ -24,11 +24,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.alexgladkov.jetpackcomposedemo.R
+import ru.alexgladkov.jetpackcomposedemo.screens.compose.models.ComposeError
 import ru.alexgladkov.jetpackcomposedemo.screens.compose.models.ComposeEvent
 import ru.alexgladkov.jetpackcomposedemo.screens.compose.models.ComposeViewState
 import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabbitTheme
+import ru.alexgladkov.jetpackcomposedemo.ui.themes.MainTheme
 
 @ExperimentalFoundationApi
 @Composable
@@ -137,7 +140,47 @@ fun ComposeViewInitial(
                             }
                         }
                     }
+
+                    state.sendingError?.let { error ->
+                        item {
+                            ComposeViewInitialError(error = error)
+                        }
+                    }
                 })
         }
+    }
+}
+
+@ExperimentalFoundationApi
+@Preview
+@Composable
+fun ComposeViewInitial_Preview() {
+    MainTheme(darkTheme = true) {
+        ComposeViewInitial(
+            state = ComposeViewState.ViewStateInitial(),
+            onCheckedChange = {},
+            onTitleChanged = {},
+            onSaveClicked = {}
+        )
+    }
+}
+
+@ExperimentalFoundationApi
+@Preview
+@Composable
+fun ComposeViewInitialFilled_Preview() {
+    MainTheme(darkTheme = true) {
+        ComposeViewInitial(
+            state = ComposeViewState
+                .ViewStateInitial(
+                    habbitTitle = "Test habbit",
+                    isGoodHabbit = false,
+                    sendingError = ComposeError.SendingGeneric,
+                    isSending = true
+                ),
+            onCheckedChange = {},
+            onTitleChanged = {},
+            onSaveClicked = {}
+        )
     }
 }
