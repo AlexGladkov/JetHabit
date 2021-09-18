@@ -24,13 +24,11 @@ import ru.alexgladkov.jetpackcomposedemo.screens.main.MainBottomScreen
 @ExperimentalFoundationApi
 fun NavGraphBuilder.dailyFlow(
     navController: NavController,
-    paddingValues: PaddingValues
 ) {
     navigation(startDestination = "daily", route = MainBottomScreen.Daily.route) {
         composable("daily") {
             val dailyViewModel = hiltViewModel<DailyViewModel>()
             DailyScreen(
-                modifier = Modifier.padding(paddingValues),
                 navController = navController, dailyViewModel = dailyViewModel
             )
         }
@@ -38,7 +36,6 @@ fun NavGraphBuilder.dailyFlow(
         composable("compose") {
             val composeViewModel = hiltViewModel<ComposeViewModel>()
             ComposeScreen(
-                modifier = Modifier.padding(paddingValues),
                 navController = navController,
                 composeViewModel = composeViewModel
             )

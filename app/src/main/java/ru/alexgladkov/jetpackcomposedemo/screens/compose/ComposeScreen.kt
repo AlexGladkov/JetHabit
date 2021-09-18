@@ -43,7 +43,7 @@ import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabbitTheme
 @ExperimentalFoundationApi
 @Composable
 fun ComposeScreen(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     navController: NavController,
     composeViewModel: ComposeViewModel
 ) {
