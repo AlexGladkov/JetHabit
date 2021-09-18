@@ -8,6 +8,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import ru.alexgladkov.jetpackcomposedemo.data.database.JetHabbitDatabase
+import ru.alexgladkov.jetpackcomposedemo.data.features.daily.DailyDao
 import ru.alexgladkov.jetpackcomposedemo.data.features.habbit.HabbitDao
 import javax.inject.Singleton
 
@@ -29,4 +30,8 @@ class RoomModule {
     @Provides
     @Singleton
     fun provideHabbitDao(jetHabbitDatabase: JetHabbitDatabase): HabbitDao = jetHabbitDatabase.habbitDao()
+
+    @Provides
+    @Singleton
+    fun provideDailyDao(jetHabbitDatabase: JetHabbitDatabase): DailyDao = jetHabbitDatabase.dailyDao()
 }

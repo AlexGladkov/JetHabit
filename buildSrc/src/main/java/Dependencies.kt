@@ -14,6 +14,10 @@ object Dependencies {
         const val accompanist = "com.google.accompanist:accompanist-systemuicontroller:0.18.0"
     }
 
+    object Kotlin {
+        const val serialization = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2"
+    }
+
     object Hilt {
         const val version = "2.38.1"
         const val android = "com.google.dagger:hilt-android:$version"

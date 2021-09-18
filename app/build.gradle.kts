@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("dagger.hilt.android.plugin")
+    kotlin("plugin.serialization") version "1.5.30"
     kotlin("android")
     kotlin("kapt")
 }
@@ -82,6 +83,8 @@ dependencies {
     implementation(Dependencies.Lifecycle.viewModelCompose)
     implementation(Dependencies.Lifecycle.activityCompose)
     implementation(Dependencies.Navigation.navigationCompose)
+
+    implementation(Dependencies.Kotlin.serialization)
 
     // Hilt
     implementation(Dependencies.Hilt.android)

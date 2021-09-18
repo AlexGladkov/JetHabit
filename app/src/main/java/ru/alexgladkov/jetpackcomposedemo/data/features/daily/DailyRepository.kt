@@ -1,14 +1,31 @@
 package ru.alexgladkov.jetpackcomposedemo.data.features.daily
 
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import ru.alexgladkov.jetpackcomposedemo.data.features.daily.models.DailyHabbitContainer
 import javax.inject.Inject
 
+data class DailyItem(
+    val date: String,
+    val habbits: List<DailyHabbitContainer>
+)
+
 class DailyRepository @Inject constructor(
-    val dailyDao: DailyDao
+    private val dailyDao: DailyDao
 ) {
 
-    suspend fun fetchDiary(): List<DailyEntity> = dailyDao.getAll()
+    suspend fun fetchDiary(): List<DailyItem> = dailyDao.getAll()
+        .map {
+            DailyItem(
+                date = it.date,
+                habbits = decompressHabbitsWithValues(it.habbitItemIdsWithStatuses)
+            )
+        }
 
-    suspend fun addOrUpdate(date: String, habbitId: Int, value: Boolean) {
+
+    suspend fun addOrUpdate(date: String, habbitId: Long, value: Boolean) {
         val records = fetchDiary()
         val recordForDate = records.firstOrNull { it.date == date }
 
@@ -17,20 +34,31 @@ class DailyRepository @Inject constructor(
                 DailyEntity(
                     date = date,
                     habbitItemIdsWithStatuses = compressHabbitsWithValues(
-                        listOf(Pair(habbitId, value))
+                        listOf(DailyHabbitContainer(habbitId, value))
                     )
                 )
             )
         } else {
-            val values = decompressHabbitsWithValues(recordForDate.habbitItemIdsWithStatuses)
+            val dailyRecords = recordForDate.habbits.toMutableList()
+            val dailyRecord = dailyRecords.filter { it.habbitId == habbitId }
+
+            if (dailyRecord.isNotEmpty()) {
+                dailyRecords.remove(dailyRecord.first())
+            }
+
+            dailyRecords.add(DailyHabbitContainer(habbitId, value))
+            val compressed = compressHabbitsWithValues(dailyRecords)
+            dailyDao.update(entity = DailyEntity(date = date, habbitItemIdsWithStatuses = compressed))
         }
     }
 
-    fun decompressHabbitsWithValues(input: String): List<Pair<Int, Boolean>> {
-
+    @ExperimentalSerializationApi
+    fun decompressHabbitsWithValues(input: String): List<DailyHabbitContainer> {
+        return Json.decodeFromString(input)
     }
 
-    fun compressHabbitsWithValues(pairs: List<Pair<Int, Boolean>>): String {
-
+    @ExperimentalSerializationApi
+    fun compressHabbitsWithValues(pairs: List<DailyHabbitContainer>): String {
+        return Json.encodeToString(pairs)
     }
 }

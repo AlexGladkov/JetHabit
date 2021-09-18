@@ -24,6 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import ru.alexgladkov.jetpackcomposedemo.R
@@ -39,7 +40,8 @@ fun DailyViewDisplay(
     navController: NavController,
     viewState: DailyViewState.Display,
     onPreviousDayClicked: () -> Unit,
-    onNextDayClicked: () -> Unit
+    onNextDayClicked: () -> Unit,
+    onCheckedChange: (Long, Boolean) -> Unit
 ) {
     Surface(
         modifier = modifier.fillMaxSize(),
@@ -81,7 +83,9 @@ fun DailyViewDisplay(
 
                         if (viewState.hasNextDay) {
                             Icon(
-                                modifier = Modifier.size(56.dp).padding(16.dp)
+                                modifier = Modifier
+                                    .size(56.dp)
+                                    .padding(16.dp)
                                     .clickable { onNextDayClicked.invoke() },
                                 imageVector = Icons.Filled.ArrowForward,
                                 tint = JetHabbitTheme.colors.controlColor,
@@ -91,11 +95,12 @@ fun DailyViewDisplay(
                     }
                 }
 
-                viewState.items.map { it.mapToCardItem() }
-                    .forEach {
+                viewState.items
+                    .forEach { cardItem ->
                         item {
                             HabbitCardItem(
-                                model = it
+                                model = cardItem,
+                                onCheckedChange = { onCheckedChange(cardItem.habbitId, !cardItem.isChecked) }
                             )
                         }
                     }
@@ -128,22 +133,23 @@ fun DailyViewDisplay_Preview() {
             navController = rememberNavController(),
             viewState = DailyViewState.Display(
                 items = listOf(
-                    HabbitEntity(
-                        itemId = 0,
+                    HabbitCardItemModel(
+                        habbitId = 0,
                         title = "Test habbit",
-                        isGood = true
+                        isChecked = true
                     ),
-                    HabbitEntity(
-                        itemId = 1,
+                    HabbitCardItemModel(
+                        habbitId = 1,
                         title = "Test habbit 2",
-                        isGood = false
+                        isChecked = false
                     )
                 ),
                 title = "Today",
                 hasNextDay = true
             ),
             onPreviousDayClicked = {},
-            onNextDayClicked = {}
+            onNextDayClicked = {},
+            onCheckedChange = { _, _ -> }
         )
     }
 }

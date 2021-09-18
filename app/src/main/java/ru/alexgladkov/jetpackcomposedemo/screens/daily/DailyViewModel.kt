@@ -1,15 +1,20 @@
 package ru.alexgladkov.jetpackcomposedemo.screens.daily
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import ru.alexgladkov.jetpackcomposedemo.base.EventHandler
+import ru.alexgladkov.jetpackcomposedemo.data.features.daily.DailyRepository
 import ru.alexgladkov.jetpackcomposedemo.data.features.habbit.HabbitRepository
 import ru.alexgladkov.jetpackcomposedemo.screens.daily.models.DailyEvent
 import ru.alexgladkov.jetpackcomposedemo.screens.daily.models.DailyViewState
+import ru.alexgladkov.jetpackcomposedemo.screens.daily.views.HabbitCardItemModel
 import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -20,7 +25,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DailyViewModel @Inject constructor(
-    private val habbitRepository: HabbitRepository
+    private val habbitRepository: HabbitRepository,
+    private val dailyRepository: DailyRepository
 ) : ViewModel(), EventHandler<DailyEvent> {
 
     private var currentDate: Date = Calendar.getInstance().time
@@ -32,6 +38,7 @@ class DailyViewModel @Inject constructor(
             is DailyViewState.Loading -> reduce(event, currentState)
             is DailyViewState.Display -> reduce(event, currentState)
             is DailyViewState.Error -> reduce(event, currentState)
+            is DailyViewState.NoItems -> reduce(event, currentState)
         }
     }
 
@@ -41,17 +48,44 @@ class DailyViewModel @Inject constructor(
         }
     }
 
+    private fun reduce(event: DailyEvent, currentState: DailyViewState.NoItems) {
+        when (event) {
+            DailyEvent.ReloadScreen -> fetchHabbitForDate(true)
+            DailyEvent.EnterScreen -> fetchHabbitForDate()
+        }
+    }
+
     private fun reduce(event: DailyEvent, currentState: DailyViewState.Display) {
         when (event) {
             DailyEvent.EnterScreen -> fetchHabbitForDate()
             DailyEvent.NextDayClicked -> performNextClick(currentState.hasNextDay)
             DailyEvent.PreviousDayClicked -> performPreviousClick()
+            is DailyEvent.OnHabbitClick -> performHabbitClick(
+                hasNextDay = currentState.hasNextDay,
+                habbitId = event.habbitId,
+                newValue = event.newValue
+            )
         }
     }
 
     private fun reduce(event: DailyEvent, currentState: DailyViewState.Error) {
         when (event) {
             DailyEvent.ReloadScreen -> fetchHabbitForDate(needsToRefresh = true)
+        }
+    }
+
+    private fun performHabbitClick(hasNextDay: Boolean, habbitId: Long, newValue: Boolean) {
+        viewModelScope.launch {
+            val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+            dailyRepository.addOrUpdate(
+                date = dateFormat.format(currentDate),
+                habbitId = habbitId,
+                value = newValue
+            )
+
+            withContext(Dispatchers.Main) {
+                fetchHabbitForDate(setHasNextDay = hasNextDay)
+            }
         }
     }
 
@@ -114,9 +148,29 @@ class DailyViewModel @Inject constructor(
                 if (habbits.isEmpty()) {
                     _dailyViewState.postValue(DailyViewState.NoItems)
                 } else {
+                    val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+                    val diaryResponse = dailyRepository.fetchDiary()
+                    Log.e("TAG", "response -> $diaryResponse")
+                    val dailyActivities = diaryResponse
+                        .filter { it.date == dateFormat.format(currentDate) }.firstOrNull()
+
+                    val cardItems: List<HabbitCardItemModel> = habbits.map { habbitEntity ->
+                        HabbitCardItemModel(
+                            habbitId = habbitEntity.itemId,
+                            title = habbitEntity.title,
+                            isChecked = if (dailyActivities != null) {
+                                val dailyItem = dailyActivities.habbits.firstOrNull { it.habbitId == habbitEntity.itemId }
+                                dailyItem?.value ?: false
+                            } else {
+                                false
+                            }
+                        )
+                    }
+
+
                     _dailyViewState.postValue(
                         DailyViewState.Display(
-                            items = habbits,
+                            items = cardItems,
                             hasNextDay = setHasNextDay,
                             title = getTitleForADay()
                         )

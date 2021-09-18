@@ -5,4 +5,5 @@ sealed class DailyEvent {
     object ReloadScreen : DailyEvent()
     object PreviousDayClicked : DailyEvent()
     object NextDayClicked : DailyEvent()
+    data class OnHabbitClick(val habbitId: Long, val newValue: Boolean) : DailyEvent()
 }

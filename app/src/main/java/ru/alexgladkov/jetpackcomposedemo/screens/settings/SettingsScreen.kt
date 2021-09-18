@@ -25,7 +25,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import ru.alexgladkov.jetpackcomposedemo.R
+import ru.alexgladkov.jetpackcomposedemo.screens.daily.DailyViewModel
 import ru.alexgladkov.jetpackcomposedemo.screens.daily.views.HabbitCardItem
 import ru.alexgladkov.jetpackcomposedemo.screens.daily.views.HabbitCardItemModel
 import ru.alexgladkov.jetpackcomposedemo.screens.settings.views.MenuItem

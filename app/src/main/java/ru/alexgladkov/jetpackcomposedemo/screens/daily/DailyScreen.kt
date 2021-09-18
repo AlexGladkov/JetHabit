@@ -37,7 +37,8 @@ fun DailyScreen(
             navController = navController,
             viewState = state,
             onPreviousDayClicked = { dailyViewModel.obtainEvent(DailyEvent.PreviousDayClicked) },
-            onNextDayClicked = { dailyViewModel.obtainEvent(DailyEvent.NextDayClicked) }
+            onNextDayClicked = { dailyViewModel.obtainEvent(DailyEvent.NextDayClicked) },
+            onCheckedChange = { itemId, isChecked -> dailyViewModel.obtainEvent(DailyEvent.OnHabbitClick(itemId, isChecked)) }
         )
         else -> throw NotImplementedError("Unexpected daily state")
     }
