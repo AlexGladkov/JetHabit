@@ -6,6 +6,7 @@ object Dependencies {
         const val ui = "androidx.compose.ui:ui:$version"
         const val material = "androidx.compose.material:material:$version"
         const val tooling = "androidx.compose.ui:ui-tooling-preview:$version"
+        const val livedata = "androidx.compose.runtime:runtime-livedata:$version"
 
         const val toolingTest = "androidx.compose.ui:ui-tooling:$version"
         const val uiTest = "androidx.compose.ui:ui-test-junit4:$version"
@@ -13,9 +14,23 @@ object Dependencies {
         const val accompanist = "com.google.accompanist:accompanist-systemuicontroller:0.18.0"
     }
 
-    object Plugins {
-        const val gradlePlugin = "com.android.tools.build:gradle:7.0.0"
-        const val kotlinPlugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.21"
+    object Kotlin {
+        const val serialization = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2"
+    }
+
+    object Hilt {
+        const val version = "2.38.1"
+        const val android = "com.google.dagger:hilt-android:$version"
+        const val navigation = "androidx.hilt:hilt-navigation-compose:1.0.0-alpha03"
+        const val compiler = "com.google.dagger:hilt-compiler:$version"
+    }
+
+    object Room {
+        private const val version = "2.3.0"
+        const val ktx = "androidx.room:room-ktx:$version"
+        const val runtime = "androidx.room:room-runtime:$version"
+        const val paging = "androidx.room:room-paging:2.4.0-alpha04"
+        const val compiler = "androidx.room:room-compiler:$version"
     }
 
     object Navigation {

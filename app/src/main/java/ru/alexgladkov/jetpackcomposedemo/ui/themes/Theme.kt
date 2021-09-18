@@ -64,6 +64,13 @@ fun MainTheme(
                 JetHabbitSize.Big -> 18.sp
             },
             fontWeight = FontWeight.Medium
+        ),
+        caption = TextStyle(
+            fontSize = when (textSize) {
+                JetHabbitSize.Small -> 10.sp
+                JetHabbitSize.Medium -> 12.sp
+                JetHabbitSize.Big -> 14.sp
+            }
         )
     )
 
