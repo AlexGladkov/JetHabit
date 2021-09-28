@@ -1,6 +1,5 @@
 package ru.alexgladkov.jetpackcomposedemo.ui.themes.components
 
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.Button
@@ -10,12 +9,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabbitTheme
+import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabitTheme
 
 @Composable
-fun JetHabbitButton(
+fun JetHabitButton(
     modifier: Modifier = Modifier,
-    backgroundColor: Color = JetHabbitTheme.colors.tintColor,
+    backgroundColor: Color = JetHabitTheme.colors.tintColor,
     onClick: () -> Unit,
     text: String? = null,
     enabled: Boolean = true,
@@ -35,7 +34,7 @@ fun JetHabbitButton(
         text?.let {
             Text(
                 text = it,
-                style = JetHabbitTheme.typography.body,
+                style = JetHabitTheme.typography.body,
                 color = Color.White
             )
         } ?: content.invoke(this)

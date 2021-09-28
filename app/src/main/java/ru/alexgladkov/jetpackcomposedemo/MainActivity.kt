@@ -1,30 +1,23 @@
 package ru.alexgladkov.jetpackcomposedemo
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
-import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -32,10 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
@@ -47,10 +37,10 @@ import dagger.hilt.android.AndroidEntryPoint
 import ru.alexgladkov.jetpackcomposedemo.screens.main.MainBottomScreen
 import ru.alexgladkov.jetpackcomposedemo.screens.settings.SettingsScreen
 import ru.alexgladkov.jetpackcomposedemo.screens.tabs.dailyFlow
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabbitCorners
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabbitSize
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabbitStyle
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabbitTheme
+import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabitCorners
+import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabitSize
+import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabitStyle
+import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabitTheme
 import ru.alexgladkov.jetpackcomposedemo.ui.themes.MainTheme
 import ru.alexgladkov.jetpackcomposedemo.ui.themes.baseDarkPalette
 import ru.alexgladkov.jetpackcomposedemo.ui.themes.baseLightPalette
@@ -66,10 +56,10 @@ class MainActivity : ComponentActivity() {
         setContent {
             val isDarkModeValue = true // isSystemInDarkTheme()
 
-            val currentStyle = remember { mutableStateOf(JetHabbitStyle.Purple) }
-            val currentFontSize = remember { mutableStateOf(JetHabbitSize.Medium) }
-            val currentPaddingSize = remember { mutableStateOf(JetHabbitSize.Medium) }
-            val currentCornersStyle = remember { mutableStateOf(JetHabbitCorners.Rounded) }
+            val currentStyle = remember { mutableStateOf(JetHabitStyle.Purple) }
+            val currentFontSize = remember { mutableStateOf(JetHabitSize.Medium) }
+            val currentPaddingSize = remember { mutableStateOf(JetHabitSize.Medium) }
+            val currentCornersStyle = remember { mutableStateOf(JetHabitCorners.Rounded) }
             val isDarkMode = remember { mutableStateOf(isDarkModeValue) }
 
             MainTheme(
@@ -141,7 +131,7 @@ class MainActivity : ComponentActivity() {
                                         ?.any { it.route == screen.route } == true
 
                                     BottomNavigationItem(
-                                        modifier = Modifier.background(JetHabbitTheme.colors.primaryBackground),
+                                        modifier = Modifier.background(JetHabitTheme.colors.primaryBackground),
                                         icon = {
                                             Icon(
                                                 imageVector = when (screen) {
@@ -149,13 +139,13 @@ class MainActivity : ComponentActivity() {
                                                     MainBottomScreen.Settings -> Icons.Filled.Settings
                                                 },
                                                 contentDescription = null,
-                                                tint = if (isSelected) JetHabbitTheme.colors.tintColor else JetHabbitTheme.colors.controlColor
+                                                tint = if (isSelected) JetHabitTheme.colors.tintColor else JetHabitTheme.colors.controlColor
                                             )
                                         },
                                         label = {
                                             Text(
                                                 stringResource(id = screen.resourceId),
-                                                color = if (isSelected) JetHabbitTheme.colors.primaryText else JetHabbitTheme.colors.controlColor
+                                                color = if (isSelected) JetHabitTheme.colors.primaryText else JetHabitTheme.colors.controlColor
                                             )
                                         },
                                         selected = isSelected,

@@ -7,7 +7,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 
-data class JetHabbitColors(
+data class JetHabitColors(
     val primaryText: Color,
     val primaryBackground: Color,
     val secondaryText: Color,
@@ -17,65 +17,65 @@ data class JetHabbitColors(
     val errorColor: Color
 )
 
-data class JetHabbitTypography(
+data class JetHabitTypography(
     val heading: TextStyle,
     val body: TextStyle,
     val toolbar: TextStyle,
     val caption: TextStyle
 )
 
-data class JetHabbitShape(
+data class JetHabitShape(
     val padding: Dp,
     val cornersStyle: Shape
 )
 
-data class JetHabbitImage(
+data class JetHabitImage(
     val mainIcon: Int,
     val mainIconDescription: String
 )
 
-object JetHabbitTheme {
-    val colors: JetHabbitColors
+object JetHabitTheme {
+    val colors: JetHabitColors
         @Composable
-        get() = LocalJetHabbitColors.current
+        get() = LocalJetHabitColors.current
 
-    val typography: JetHabbitTypography
+    val typography: JetHabitTypography
         @Composable
-        get() = LocalJetHabbitTypography.current
+        get() = LocalJetHabitTypography.current
 
-    val shapes: JetHabbitShape
+    val shapes: JetHabitShape
         @Composable
-        get() = LocalJetHabbitShape.current
+        get() = LocalJetHabitShape.current
 
-    val images: JetHabbitImage
+    val images: JetHabitImage
         @Composable
-        get() = LocalJetHabbitImage.current
+        get() = LocalJetHabitImage.current
 }
 
-enum class JetHabbitStyle {
+enum class JetHabitStyle {
     Purple, Orange, Blue, Red, Green
 }
 
-enum class JetHabbitSize {
+enum class JetHabitSize {
     Small, Medium, Big
 }
 
-enum class JetHabbitCorners {
+enum class JetHabitCorners {
     Flat, Rounded
 }
 
-val LocalJetHabbitColors = staticCompositionLocalOf<JetHabbitColors> {
+val LocalJetHabitColors = staticCompositionLocalOf<JetHabitColors> {
     error("No colors provided")
 }
 
-val LocalJetHabbitTypography = staticCompositionLocalOf<JetHabbitTypography> {
+val LocalJetHabitTypography = staticCompositionLocalOf<JetHabitTypography> {
     error("No font provided")
 }
 
-val LocalJetHabbitShape = staticCompositionLocalOf<JetHabbitShape> {
+val LocalJetHabitShape = staticCompositionLocalOf<JetHabitShape> {
     error("No shapes provided")
 }
 
-val LocalJetHabbitImage = staticCompositionLocalOf<JetHabbitImage> {
+val LocalJetHabitImage = staticCompositionLocalOf<JetHabitImage> {
     error("No images provided")
 }

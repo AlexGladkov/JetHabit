@@ -1,16 +1,13 @@
 package ru.alexgladkov.jetpackcomposedemo.screens.compose
 
-import androidx.compose.ui.platform.ComposeView
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import ru.alexgladkov.jetpackcomposedemo.base.EventHandler
-import ru.alexgladkov.jetpackcomposedemo.data.features.habbit.HabbitEntity
+import ru.alexgladkov.jetpackcomposedemo.data.features.habbit.HabitEntity
 import ru.alexgladkov.jetpackcomposedemo.data.features.habbit.HabbitRepository
 import ru.alexgladkov.jetpackcomposedemo.screens.compose.models.ComposeEvent
 import ru.alexgladkov.jetpackcomposedemo.screens.compose.models.ComposeViewState
@@ -51,7 +48,7 @@ class ComposeViewModel @Inject constructor(
 
             try {
                 habbitRepository.addNewHabbit(
-                    HabbitEntity(
+                    HabitEntity(
                         title = state.habbitTitle,
                         isGood = state.isGoodHabbit
                     )

@@ -8,18 +8,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabbitTheme
+import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabitTheme
 import ru.alexgladkov.jetpackcomposedemo.ui.themes.MainTheme
 
 @Composable
 fun DailyViewLoading() {
     Box(
         modifier = Modifier.fillMaxSize()
-            .background(JetHabbitTheme.colors.primaryBackground)
+            .background(JetHabitTheme.colors.primaryBackground)
     ) {
         CircularProgressIndicator(
             modifier = Modifier.align(Alignment.Center),
-            color = JetHabbitTheme.colors.tintColor
+            color = JetHabitTheme.colors.tintColor
         )
     }
 }

@@ -12,90 +12,90 @@ import ru.alexgladkov.jetpackcomposedemo.R
 
 @Composable
 fun MainTheme(
-    style: JetHabbitStyle = JetHabbitStyle.Purple,
-    textSize: JetHabbitSize = JetHabbitSize.Medium,
-    paddingSize: JetHabbitSize = JetHabbitSize.Medium,
-    corners: JetHabbitCorners = JetHabbitCorners.Rounded,
+    style: JetHabitStyle = JetHabitStyle.Purple,
+    textSize: JetHabitSize = JetHabitSize.Medium,
+    paddingSize: JetHabitSize = JetHabitSize.Medium,
+    corners: JetHabitCorners = JetHabitCorners.Rounded,
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
     val colors = when (darkTheme) {
         true -> {
             when (style) {
-                JetHabbitStyle.Purple -> purpleDarkPalette
-                JetHabbitStyle.Blue -> blueDarkPalette
-                JetHabbitStyle.Orange -> orangeDarkPalette
-                JetHabbitStyle.Red -> redDarkPalette
-                JetHabbitStyle.Green -> greenDarkPalette
+                JetHabitStyle.Purple -> purpleDarkPalette
+                JetHabitStyle.Blue -> blueDarkPalette
+                JetHabitStyle.Orange -> orangeDarkPalette
+                JetHabitStyle.Red -> redDarkPalette
+                JetHabitStyle.Green -> greenDarkPalette
             }
         }
         false -> {
             when (style) {
-                JetHabbitStyle.Purple -> purpleLightPalette
-                JetHabbitStyle.Blue -> blueLightPalette
-                JetHabbitStyle.Orange -> orangeLightPalette
-                JetHabbitStyle.Red -> redLightPalette
-                JetHabbitStyle.Green -> greenLightPalette
+                JetHabitStyle.Purple -> purpleLightPalette
+                JetHabitStyle.Blue -> blueLightPalette
+                JetHabitStyle.Orange -> orangeLightPalette
+                JetHabitStyle.Red -> redLightPalette
+                JetHabitStyle.Green -> greenLightPalette
             }
         }
     }
 
-    val typography = JetHabbitTypography(
+    val typography = JetHabitTypography(
         heading = TextStyle(
             fontSize = when (textSize) {
-                JetHabbitSize.Small -> 24.sp
-                JetHabbitSize.Medium -> 28.sp
-                JetHabbitSize.Big -> 32.sp
+                JetHabitSize.Small -> 24.sp
+                JetHabitSize.Medium -> 28.sp
+                JetHabitSize.Big -> 32.sp
             },
             fontWeight = FontWeight.Bold
         ),
         body = TextStyle(
             fontSize = when (textSize) {
-                JetHabbitSize.Small -> 14.sp
-                JetHabbitSize.Medium -> 16.sp
-                JetHabbitSize.Big -> 18.sp
+                JetHabitSize.Small -> 14.sp
+                JetHabitSize.Medium -> 16.sp
+                JetHabitSize.Big -> 18.sp
             },
             fontWeight = FontWeight.Normal
         ),
         toolbar = TextStyle(
             fontSize = when (textSize) {
-                JetHabbitSize.Small -> 14.sp
-                JetHabbitSize.Medium -> 16.sp
-                JetHabbitSize.Big -> 18.sp
+                JetHabitSize.Small -> 14.sp
+                JetHabitSize.Medium -> 16.sp
+                JetHabitSize.Big -> 18.sp
             },
             fontWeight = FontWeight.Medium
         ),
         caption = TextStyle(
             fontSize = when (textSize) {
-                JetHabbitSize.Small -> 10.sp
-                JetHabbitSize.Medium -> 12.sp
-                JetHabbitSize.Big -> 14.sp
+                JetHabitSize.Small -> 10.sp
+                JetHabitSize.Medium -> 12.sp
+                JetHabitSize.Big -> 14.sp
             }
         )
     )
 
-    val shapes = JetHabbitShape(
+    val shapes = JetHabitShape(
         padding = when (paddingSize) {
-            JetHabbitSize.Small -> 12.dp
-            JetHabbitSize.Medium -> 16.dp
-            JetHabbitSize.Big -> 20.dp
+            JetHabitSize.Small -> 12.dp
+            JetHabitSize.Medium -> 16.dp
+            JetHabitSize.Big -> 20.dp
         },
         cornersStyle = when (corners) {
-            JetHabbitCorners.Flat -> RoundedCornerShape(0.dp)
-            JetHabbitCorners.Rounded -> RoundedCornerShape(8.dp)
+            JetHabitCorners.Flat -> RoundedCornerShape(0.dp)
+            JetHabitCorners.Rounded -> RoundedCornerShape(8.dp)
         }
     )
 
-    val images = JetHabbitImage(
+    val images = JetHabitImage(
         mainIcon = if (darkTheme) R.drawable.ic_baseline_mood_24 else R.drawable.ic_baseline_mood_bad_24,
         mainIconDescription = if (darkTheme) "Good Mood" else "Bad Mood"
     )
 
     CompositionLocalProvider(
-        LocalJetHabbitColors provides colors,
-        LocalJetHabbitTypography provides typography,
-        LocalJetHabbitShape provides shapes,
-        LocalJetHabbitImage provides images,
+        LocalJetHabitColors provides colors,
+        LocalJetHabitTypography provides typography,
+        LocalJetHabitShape provides shapes,
+        LocalJetHabitImage provides images,
         content = content
     )
 }

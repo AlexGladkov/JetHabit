@@ -1,30 +1,20 @@
 package ru.alexgladkov.jetpackcomposedemo.screens.daily.views
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Checkbox
-import androidx.compose.material.CheckboxColors
 import androidx.compose.material.CheckboxDefaults
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import ru.alexgladkov.jetpackcomposedemo.data.features.habbit.HabbitEntity
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabbitStyle
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabbitTheme
+import ru.alexgladkov.jetpackcomposedemo.data.features.habbit.HabitEntity
+import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabitStyle
+import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabitTheme
 import ru.alexgladkov.jetpackcomposedemo.ui.themes.MainTheme
 
 data class HabbitCardItemModel(
@@ -33,7 +23,7 @@ data class HabbitCardItemModel(
     val isChecked: Boolean
 )
 
-fun HabbitEntity.mapToCardItem() =
+fun HabitEntity.mapToCardItem() =
     HabbitCardItemModel(
         habbitId = this.itemId,
         title = this.title,
@@ -48,32 +38,32 @@ fun HabbitCardItem(
     Card(
         modifier = Modifier
             .padding(
-                horizontal = JetHabbitTheme.shapes.padding,
-                vertical = JetHabbitTheme.shapes.padding / 2
+                horizontal = JetHabitTheme.shapes.padding,
+                vertical = JetHabitTheme.shapes.padding / 2
             )
             .fillMaxWidth(),
         elevation = 8.dp,
-        backgroundColor = JetHabbitTheme.colors.primaryBackground,
-        shape = JetHabbitTheme.shapes.cornersStyle
+        backgroundColor = JetHabitTheme.colors.primaryBackground,
+        shape = JetHabitTheme.shapes.cornersStyle
     ) {
         Row(
             modifier = Modifier
-                .padding(JetHabbitTheme.shapes.padding)
+                .padding(JetHabitTheme.shapes.padding)
                 .fillMaxWidth()
         ) {
             Text(
                 modifier = Modifier.weight(1f),
                 text = model.title,
-                style = JetHabbitTheme.typography.body,
-                color = JetHabbitTheme.colors.primaryText
+                style = JetHabitTheme.typography.body,
+                color = JetHabitTheme.colors.primaryText
             )
 
             Checkbox(
                 checked = model.isChecked,
                 onCheckedChange = onCheckedChange,
                 colors = CheckboxDefaults.colors(
-                    checkedColor = JetHabbitTheme.colors.tintColor,
-                    uncheckedColor = JetHabbitTheme.colors.secondaryText
+                    checkedColor = JetHabitTheme.colors.tintColor,
+                    uncheckedColor = JetHabitTheme.colors.secondaryText
                 )
             )
         }
@@ -83,71 +73,71 @@ fun HabbitCardItem(
 @Composable
 @Preview(showBackground = true)
 fun HabbitPurpleLightItem_Preview() {
-    ThemedHabbitCard(isDarkMode = false, style = JetHabbitStyle.Purple)
+    ThemedHabbitCard(isDarkMode = false, style = JetHabitStyle.Purple)
 }
 
 @Composable
 @Preview(showBackground = true)
 fun HabbitPurpleDarkItem_Preview() {
-    ThemedHabbitCard(isDarkMode = true, style = JetHabbitStyle.Purple)
+    ThemedHabbitCard(isDarkMode = true, style = JetHabitStyle.Purple)
 }
 
 @Composable
 @Preview(showBackground = true)
 fun HabbitRedLightItem_Preview() {
-    ThemedHabbitCard(isDarkMode = false, style = JetHabbitStyle.Red)
+    ThemedHabbitCard(isDarkMode = false, style = JetHabitStyle.Red)
 }
 
 @Composable
 @Preview(showBackground = true)
 fun HabbitRedDarkItem_Preview() {
-    ThemedHabbitCard(isDarkMode = true, style = JetHabbitStyle.Red)
+    ThemedHabbitCard(isDarkMode = true, style = JetHabitStyle.Red)
 }
 
 @Composable
 @Preview(showBackground = true)
 fun HabbitGreenLightItem_Preview() {
-    ThemedHabbitCard(isDarkMode = false, style = JetHabbitStyle.Green)
+    ThemedHabbitCard(isDarkMode = false, style = JetHabitStyle.Green)
 }
 
 @Composable
 @Preview(showBackground = true)
 fun HabbitGreenDarkItem_Preview() {
-    ThemedHabbitCard(isDarkMode = true, style = JetHabbitStyle.Green)
+    ThemedHabbitCard(isDarkMode = true, style = JetHabitStyle.Green)
 }
 
 @Composable
 @Preview(showBackground = true)
 fun HabbitOrangeLightItem_Preview() {
-    ThemedHabbitCard(isDarkMode = false, style = JetHabbitStyle.Orange)
+    ThemedHabbitCard(isDarkMode = false, style = JetHabitStyle.Orange)
 }
 
 @Composable
 @Preview(showBackground = true)
 fun HabbitOrangeDarkItem_Preview() {
-    ThemedHabbitCard(isDarkMode = true, style = JetHabbitStyle.Orange)
+    ThemedHabbitCard(isDarkMode = true, style = JetHabitStyle.Orange)
 }
 
 @Composable
 @Preview(showBackground = true)
 fun HabbitBlueLightItem_Preview() {
-    ThemedHabbitCard(isDarkMode = false, style = JetHabbitStyle.Blue)
+    ThemedHabbitCard(isDarkMode = false, style = JetHabitStyle.Blue)
 }
 
 @Composable
 @Preview(showBackground = true)
 fun HabbitBlueDarkItem_Preview() {
-    ThemedHabbitCard(isDarkMode = true, style = JetHabbitStyle.Blue)
+    ThemedHabbitCard(isDarkMode = true, style = JetHabitStyle.Blue)
 }
 
 @Composable
 private fun ThemedHabbitCard(
     isDarkMode: Boolean,
-    style: JetHabbitStyle
+    style: JetHabitStyle
 ) {
     MainTheme(darkTheme = isDarkMode, style = style) {
         Surface(
-            color = JetHabbitTheme.colors.primaryBackground
+            color = JetHabitTheme.colors.primaryBackground
         ) {
             HabbitCardItem(
                 HabbitCardItemModel(

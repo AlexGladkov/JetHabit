@@ -24,13 +24,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import ru.alexgladkov.jetpackcomposedemo.R
-import ru.alexgladkov.jetpackcomposedemo.data.features.habbit.HabbitEntity
 import ru.alexgladkov.jetpackcomposedemo.screens.daily.models.DailyViewState
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabbitTheme
+import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabitTheme
 import ru.alexgladkov.jetpackcomposedemo.ui.themes.MainTheme
 
 @ExperimentalFoundationApi
@@ -45,7 +43,7 @@ fun DailyViewDisplay(
 ) {
     Surface(
         modifier = modifier.fillMaxSize(),
-        color = JetHabbitTheme.colors.primaryBackground
+        color = JetHabitTheme.colors.primaryBackground
     ) {
         Box {
             LazyColumn {
@@ -57,27 +55,27 @@ fun DailyViewDisplay(
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
                                 modifier = Modifier.padding(
-                                    start = JetHabbitTheme.shapes.padding,
-                                    end = JetHabbitTheme.shapes.padding,
-                                    top = JetHabbitTheme.shapes.padding + 8.dp
+                                    start = JetHabitTheme.shapes.padding,
+                                    end = JetHabitTheme.shapes.padding,
+                                    top = JetHabitTheme.shapes.padding + 8.dp
                                 ),
                                 text = viewState.title,
-                                style = JetHabbitTheme.typography.heading,
-                                color = JetHabbitTheme.colors.primaryText
+                                style = JetHabitTheme.typography.heading,
+                                color = JetHabitTheme.colors.primaryText
                             )
 
                             Text(
                                 modifier = Modifier
                                     .padding(
-                                        start = JetHabbitTheme.shapes.padding,
-                                        end = JetHabbitTheme.shapes.padding,
+                                        start = JetHabitTheme.shapes.padding,
+                                        end = JetHabitTheme.shapes.padding,
                                         top = 4.dp,
-                                        bottom = JetHabbitTheme.shapes.padding + 8.dp
+                                        bottom = JetHabitTheme.shapes.padding + 8.dp
                                     )
                                     .clickable { onPreviousDayClicked.invoke() },
                                 text = stringResource(id = R.string.daily_previous_day),
-                                style = JetHabbitTheme.typography.body,
-                                color = JetHabbitTheme.colors.controlColor
+                                style = JetHabitTheme.typography.body,
+                                color = JetHabitTheme.colors.controlColor
                             )
                         }
 
@@ -88,7 +86,7 @@ fun DailyViewDisplay(
                                     .padding(16.dp)
                                     .clickable { onNextDayClicked.invoke() },
                                 imageVector = Icons.Filled.ArrowForward,
-                                tint = JetHabbitTheme.colors.controlColor,
+                                tint = JetHabitTheme.colors.controlColor,
                                 contentDescription = "Next Day"
                             )
                         }
@@ -109,8 +107,8 @@ fun DailyViewDisplay(
             FloatingActionButton(
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
-                    .padding(JetHabbitTheme.shapes.padding),
-                backgroundColor = JetHabbitTheme.colors.tintColor,
+                    .padding(JetHabitTheme.shapes.padding),
+                backgroundColor = JetHabitTheme.colors.tintColor,
                 onClick = {
                     navController.navigate("compose")
                 }) {

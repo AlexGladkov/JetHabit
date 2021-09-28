@@ -7,9 +7,9 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import ru.alexgladkov.jetpackcomposedemo.data.database.JetHabbitDatabase
+import ru.alexgladkov.jetpackcomposedemo.data.database.JetHabitDatabase
 import ru.alexgladkov.jetpackcomposedemo.data.features.daily.DailyDao
-import ru.alexgladkov.jetpackcomposedemo.data.features.habbit.HabbitDao
+import ru.alexgladkov.jetpackcomposedemo.data.features.habbit.HabitDao
 import javax.inject.Singleton
 
 @Module
@@ -18,10 +18,10 @@ class RoomModule {
 
     @Provides
     @Singleton
-    fun provideRoomDatabase(@ApplicationContext context: Context): JetHabbitDatabase =
+    fun provideRoomDatabase(@ApplicationContext context: Context): JetHabitDatabase =
         Room.databaseBuilder(
             context.applicationContext,
-            JetHabbitDatabase::class.java,
+            JetHabitDatabase::class.java,
             "jet_habbit_database"
         )
             .fallbackToDestructiveMigration()
@@ -29,9 +29,9 @@ class RoomModule {
 
     @Provides
     @Singleton
-    fun provideHabbitDao(jetHabbitDatabase: JetHabbitDatabase): HabbitDao = jetHabbitDatabase.habbitDao()
+    fun provideHabbitDao(jetHabitDatabase: JetHabitDatabase): HabitDao = jetHabitDatabase.habitDao()
 
     @Provides
     @Singleton
-    fun provideDailyDao(jetHabbitDatabase: JetHabbitDatabase): DailyDao = jetHabbitDatabase.dailyDao()
+    fun provideDailyDao(jetHabitDatabase: JetHabitDatabase): DailyDao = jetHabitDatabase.dailyDao()
 }

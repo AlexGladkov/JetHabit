@@ -2,7 +2,7 @@ package ru.alexgladkov.jetpackcomposedemo.ui.themes
 
 import androidx.compose.ui.graphics.Color
 
-val baseLightPalette = JetHabbitColors(
+val baseLightPalette = JetHabitColors(
     primaryBackground = Color(0xFFFFFFFF),
     primaryText = Color(0xFF3D454C),
     secondaryBackground = Color(0xFFF3F4F5),
@@ -12,7 +12,7 @@ val baseLightPalette = JetHabbitColors(
     errorColor = Color(0xFFFF3377),
 )
 
-val baseDarkPalette = JetHabbitColors(
+val baseDarkPalette = JetHabitColors(
     primaryBackground = Color(0xFF23282D),
     primaryText = Color(0xFFF2F4F5),
     secondaryBackground = Color(0xFF191E23),

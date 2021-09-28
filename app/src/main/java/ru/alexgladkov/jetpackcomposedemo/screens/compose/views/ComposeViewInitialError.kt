@@ -12,7 +12,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.alexgladkov.jetpackcomposedemo.R
 import ru.alexgladkov.jetpackcomposedemo.screens.compose.models.ComposeError
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabbitTheme
+import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabitTheme
 import ru.alexgladkov.jetpackcomposedemo.ui.themes.MainTheme
 
 @Composable
@@ -23,7 +23,7 @@ fun ComposeViewInitialError(error: ComposeError) {
             text = when (error) {
                 ComposeError.SendingGeneric -> stringResource(id = R.string.error_new_habbit)
             },
-            color = JetHabbitTheme.colors.errorColor
+            color = JetHabitTheme.colors.errorColor
         )
     }
 }

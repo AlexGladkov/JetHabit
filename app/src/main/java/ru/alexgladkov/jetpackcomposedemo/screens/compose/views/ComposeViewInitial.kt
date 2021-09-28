@@ -28,9 +28,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.alexgladkov.jetpackcomposedemo.R
 import ru.alexgladkov.jetpackcomposedemo.screens.compose.models.ComposeError
-import ru.alexgladkov.jetpackcomposedemo.screens.compose.models.ComposeEvent
 import ru.alexgladkov.jetpackcomposedemo.screens.compose.models.ComposeViewState
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabbitTheme
+import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabitTheme
 import ru.alexgladkov.jetpackcomposedemo.ui.themes.MainTheme
 
 @ExperimentalFoundationApi
@@ -42,20 +41,20 @@ fun ComposeViewInitial(
     onTitleChanged: (String) -> Unit,
     onSaveClicked: () -> Unit,
 ) {
-    Surface(modifier = modifier.fillMaxSize(), color = JetHabbitTheme.colors.primaryBackground) {
+    Surface(modifier = modifier.fillMaxSize(), color = JetHabitTheme.colors.primaryBackground) {
         Box {
             LazyColumn(
-                Modifier.background(JetHabbitTheme.colors.primaryBackground),
+                Modifier.background(JetHabitTheme.colors.primaryBackground),
                 content = {
                     stickyHeader {
                         Text(
                             modifier = Modifier.padding(
-                                horizontal = JetHabbitTheme.shapes.padding,
-                                vertical = JetHabbitTheme.shapes.padding + 8.dp
+                                horizontal = JetHabitTheme.shapes.padding,
+                                vertical = JetHabitTheme.shapes.padding + 8.dp
                             ),
                             text = stringResource(id = R.string.compose_new_record),
-                            style = JetHabbitTheme.typography.heading,
-                            color = JetHabbitTheme.colors.primaryText
+                            style = JetHabitTheme.typography.heading,
+                            color = JetHabitTheme.colors.primaryText
                         )
                     }
 
@@ -63,8 +62,8 @@ fun ComposeViewInitial(
                         Column(modifier = Modifier.padding(start = 16.dp, end = 16.dp)) {
                             Text(
                                 text = stringResource(id = R.string.compose_title),
-                                style = JetHabbitTheme.typography.caption,
-                                color = JetHabbitTheme.colors.secondaryText
+                                style = JetHabitTheme.typography.caption,
+                                color = JetHabitTheme.colors.secondaryText
                             )
 
                             TextField(
@@ -76,11 +75,11 @@ fun ComposeViewInitial(
                                 value = state.habbitTitle,
                                 onValueChange = onTitleChanged,
                                 colors = TextFieldDefaults.textFieldColors(
-                                    backgroundColor = JetHabbitTheme.colors.primaryBackground,
-                                    textColor = JetHabbitTheme.colors.primaryText,
-                                    focusedIndicatorColor = JetHabbitTheme.colors.tintColor,
-                                    disabledIndicatorColor = JetHabbitTheme.colors.controlColor,
-                                    cursorColor = JetHabbitTheme.colors.tintColor
+                                    backgroundColor = JetHabitTheme.colors.primaryBackground,
+                                    textColor = JetHabitTheme.colors.primaryText,
+                                    focusedIndicatorColor = JetHabitTheme.colors.tintColor,
+                                    disabledIndicatorColor = JetHabitTheme.colors.controlColor,
+                                    cursorColor = JetHabitTheme.colors.tintColor
                                 )
                             )
                         }
@@ -91,8 +90,8 @@ fun ComposeViewInitial(
                             Text(
                                 modifier = Modifier.padding(end = 16.dp),
                                 text = stringResource(id = R.string.compose_is_good),
-                                style = JetHabbitTheme.typography.body,
-                                color = JetHabbitTheme.colors.primaryText
+                                style = JetHabitTheme.typography.body,
+                                color = JetHabitTheme.colors.primaryText
                             )
 
                             Checkbox(
@@ -100,9 +99,9 @@ fun ComposeViewInitial(
                                 enabled = !state.isSending,
                                 onCheckedChange = onCheckedChange,
                                 colors = CheckboxDefaults.colors(
-                                    checkedColor = JetHabbitTheme.colors.tintColor,
-                                    uncheckedColor = JetHabbitTheme.colors.secondaryText,
-                                    disabledColor = JetHabbitTheme.colors.tintColor.copy(
+                                    checkedColor = JetHabitTheme.colors.tintColor,
+                                    uncheckedColor = JetHabitTheme.colors.secondaryText,
+                                    disabledColor = JetHabitTheme.colors.tintColor.copy(
                                         alpha = 0.3f
                                     )
                                 )
@@ -119,8 +118,8 @@ fun ComposeViewInitial(
                             onClick = onSaveClicked,
                             enabled = !state.isSending,
                             colors = ButtonDefaults.buttonColors(
-                                backgroundColor = JetHabbitTheme.colors.tintColor,
-                                disabledBackgroundColor = JetHabbitTheme.colors.tintColor.copy(
+                                backgroundColor = JetHabitTheme.colors.tintColor,
+                                disabledBackgroundColor = JetHabitTheme.colors.tintColor.copy(
                                     alpha = 0.3f
                                 )
                             )
@@ -134,7 +133,7 @@ fun ComposeViewInitial(
                             } else {
                                 Text(
                                     text = stringResource(id = R.string.action_add),
-                                    style = JetHabbitTheme.typography.body,
+                                    style = JetHabitTheme.typography.body,
                                     color = Color.White
                                 )
                             }

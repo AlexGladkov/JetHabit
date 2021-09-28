@@ -5,10 +5,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.Divider
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
@@ -24,7 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.alexgladkov.jetpackcomposedemo.R
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabbitTheme
+import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabitTheme
 import ru.alexgladkov.jetpackcomposedemo.ui.themes.MainTheme
 
 data class MenuItemModel(
@@ -43,7 +41,7 @@ fun MenuItem(
 
     Box(
         modifier = Modifier
-            .background(JetHabbitTheme.colors.primaryBackground)
+            .background(JetHabitTheme.colors.primaryBackground)
             .fillMaxWidth()
     ) {
         Row(
@@ -51,33 +49,33 @@ fun MenuItem(
                 .clickable {
                     isDropdownOpen.value = true
                 }
-                .padding(JetHabbitTheme.shapes.padding)
-                .background(JetHabbitTheme.colors.primaryBackground),
+                .padding(JetHabitTheme.shapes.padding)
+                .background(JetHabitTheme.colors.primaryBackground),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(end = JetHabbitTheme.shapes.padding),
+                    .padding(end = JetHabitTheme.shapes.padding),
                 text = model.title,
-                style = JetHabbitTheme.typography.body,
-                color = JetHabbitTheme.colors.primaryText
+                style = JetHabitTheme.typography.body,
+                color = JetHabitTheme.colors.primaryText
             )
 
             Text(
                 text = model.values[currentPosition.value],
-                style = JetHabbitTheme.typography.body,
-                color = JetHabbitTheme.colors.secondaryText
+                style = JetHabitTheme.typography.body,
+                color = JetHabitTheme.colors.secondaryText
             )
 
             Icon(
                 modifier = Modifier
-                    .padding(start = JetHabbitTheme.shapes.padding / 4)
+                    .padding(start = JetHabitTheme.shapes.padding / 4)
                     .size(18.dp)
                     .align(Alignment.CenterVertically),
                 painter = painterResource(id = R.drawable.ic_baseline_arrow_forward_ios_24),
                 contentDescription = "Arrow",
-                tint = JetHabbitTheme.colors.secondaryText
+                tint = JetHabitTheme.colors.secondaryText
             )
         }
 
@@ -86,7 +84,7 @@ fun MenuItem(
             onDismissRequest = {
                 isDropdownOpen.value = false
             },
-            modifier = Modifier.fillMaxWidth().background(JetHabbitTheme.colors.primaryBackground)
+            modifier = Modifier.fillMaxWidth().background(JetHabitTheme.colors.primaryBackground)
         ) {
             model.values.forEachIndexed { index, value ->
                 DropdownMenuItem(onClick = {
@@ -96,8 +94,8 @@ fun MenuItem(
                 }) {
                     Text(
                         text = value,
-                        style = JetHabbitTheme.typography.body,
-                        color = JetHabbitTheme.colors.primaryText
+                        style = JetHabitTheme.typography.body,
+                        color = JetHabitTheme.colors.primaryText
                     )
                 }
             }
@@ -106,7 +104,7 @@ fun MenuItem(
         Divider(
             modifier = Modifier.padding(start = 16.dp).align(Alignment.BottomStart),
             thickness = 0.5.dp,
-            color = JetHabbitTheme.colors.secondaryText.copy(
+            color = JetHabitTheme.colors.secondaryText.copy(
                 alpha = 0.3f
             )
         )
