@@ -96,9 +96,9 @@ fun DailyViewDisplay(
                 viewState.items
                     .forEach { cardItem ->
                         item {
-                            HabbitCardItem(
+                            HabitCardItem(
                                 model = cardItem,
-                                onCheckedChange = { onCheckedChange(cardItem.habbitId, !cardItem.isChecked) }
+                                onCheckedChange = { onCheckedChange(cardItem.habitId, !cardItem.isChecked) }
                             )
                         }
                     }
@@ -131,14 +131,14 @@ fun DailyViewDisplay_Preview() {
             navController = rememberNavController(),
             viewState = DailyViewState.Display(
                 items = listOf(
-                    HabbitCardItemModel(
-                        habbitId = 0,
-                        title = "Test habbit",
+                    HabitCardItemModel(
+                        habitId = 0,
+                        title = "Test habit",
                         isChecked = true
                     ),
-                    HabbitCardItemModel(
-                        habbitId = 1,
-                        title = "Test habbit 2",
+                    HabitCardItemModel(
+                        habitId = 1,
+                        title = "Test habit 2",
                         isChecked = false
                     )
                 ),

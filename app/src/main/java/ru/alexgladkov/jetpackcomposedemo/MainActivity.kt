@@ -1,8 +1,13 @@
 package ru.alexgladkov.jetpackcomposedemo
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -18,6 +23,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -48,6 +54,7 @@ import ru.alexgladkov.jetpackcomposedemo.ui.themes.baseLightPalette
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
+    @ExperimentalAnimationApi
     @ExperimentalComposeUiApi
     @ExperimentalMaterialApi
     @ExperimentalFoundationApi
@@ -96,35 +103,38 @@ class MainActivity : ComponentActivity() {
                                 dailyFlow(navController)
 
                                 composable(MainBottomScreen.Settings.route) {
-                                    SettingsScreen(
-                                        isDarkMode = isDarkMode.value,
-                                        currentTextSize = currentFontSize.value,
-                                        currentPaddingSize = currentPaddingSize.value,
-                                        currentCornersStyle = currentCornersStyle.value,
-                                        onDarkModeChanged = {
-                                            isDarkMode.value = it
-                                        },
-                                        onNewStyle = {
-                                            currentStyle.value = it
-                                        },
-                                        onTextSizeChanged = {
-                                            currentFontSize.value = it
-                                        },
-                                        onCornersStyleChanged = {
-                                            currentCornersStyle.value = it
-                                        },
-                                        onPaddingSizeChanged = {
-                                            currentPaddingSize.value = it
-                                        }
-                                    )
+                                        SettingsScreen(
+                                            isDarkMode = isDarkMode.value,
+                                            currentTextSize = currentFontSize.value,
+                                            currentPaddingSize = currentPaddingSize.value,
+                                            currentCornersStyle = currentCornersStyle.value,
+                                            onDarkModeChanged = {
+                                                isDarkMode.value = it
+                                            },
+                                            onNewStyle = {
+                                                currentStyle.value = it
+                                            },
+                                            onTextSizeChanged = {
+                                                currentFontSize.value = it
+                                            },
+                                            onCornersStyleChanged = {
+                                                currentCornersStyle.value = it
+                                            },
+                                            onPaddingSizeChanged = {
+                                                currentPaddingSize.value = it
+                                            }
+                                        )
+                                    }
                                 }
-                            }
                         }
 
-                        Box(modifier = Modifier.height(56.dp).fillMaxWidth()) {
+                        Box(modifier = Modifier
+                            .height(56.dp)
+                            .fillMaxWidth()) {
                             BottomNavigation {
                                 val navBackStackEntry by navController.currentBackStackEntryAsState()
                                 val currentDestination = navBackStackEntry?.destination
+                                val previousDestination = remember { mutableStateOf(items.first().route) }
 
                                 items.forEach { screen ->
                                     val isSelected = currentDestination?.hierarchy
@@ -150,6 +160,9 @@ class MainActivity : ComponentActivity() {
                                         },
                                         selected = isSelected,
                                         onClick = {
+                                            if (screen.route == previousDestination.value) return@BottomNavigationItem
+                                            previousDestination.value = screen.route
+
                                             navController.navigate(screen.route) {
                                                 popUpTo(navController.graph.findStartDestination().id) {
                                                     saveState = true

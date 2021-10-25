@@ -1,11 +1,10 @@
 package ru.alexgladkov.jetpackcomposedemo
 
-import org.junit.Before
 import org.junit.Test
 import ru.alexgladkov.jetpackcomposedemo.data.features.daily.DailyDao
 import ru.alexgladkov.jetpackcomposedemo.data.features.daily.DailyEntity
 import ru.alexgladkov.jetpackcomposedemo.data.features.daily.DailyRepository
-import ru.alexgladkov.jetpackcomposedemo.data.features.daily.models.DailyHabbitContainer
+import ru.alexgladkov.jetpackcomposedemo.data.features.daily.models.DailyHabitContainer
 
 class DailyDaoMock : DailyDao {
 
@@ -30,12 +29,12 @@ class DailyRepositoryTests {
     @Test
     fun testDataCompression() {
         val input = listOf(
-            DailyHabbitContainer(habbitId = 1, value = true),
-            DailyHabbitContainer(habbitId = 2, value = false)
+            DailyHabitContainer(habbitId = 1, value = true),
+            DailyHabitContainer(habbitId = 2, value = false)
         )
 
         val expectedResult = "[{\"habbitId\":1,\"value\":true},{\"habbitId\":2,\"value\":false}]"
-        val testResult = dailyRepository.compressHabbitsWithValues(input)
+        val testResult = dailyRepository.compressHabitsWithValues(input)
 
         assert(expectedResult == testResult)
     }
@@ -43,7 +42,7 @@ class DailyRepositoryTests {
     @Test
     fun testDataDecompression() {
         val input = "[{ \"habbitId\": 1, \"value\": true }, { \"habbitId\": 2, \"value\": false }]"
-        val result = dailyRepository.decompressHabbitsWithValues(input)
+        val result = dailyRepository.decompressHabitsWithValues(input)
 
         assert(result[0].habbitId == 1L)
         assert(result[0].value)
@@ -54,12 +53,12 @@ class DailyRepositoryTests {
     @Test
     fun testEndToEndCompression() {
         val input = listOf(
-            DailyHabbitContainer(habbitId = 1, value = true),
-            DailyHabbitContainer(habbitId = 2, value = false)
+            DailyHabitContainer(habbitId = 1, value = true),
+            DailyHabitContainer(habbitId = 2, value = false)
         )
 
-        val compressed = dailyRepository.compressHabbitsWithValues(input)
-        val decompressed = dailyRepository.decompressHabbitsWithValues(compressed)
+        val compressed = dailyRepository.compressHabitsWithValues(input)
+        val decompressed = dailyRepository.decompressHabitsWithValues(compressed)
 
         assert(decompressed[0].habbitId == 1L)
         assert(decompressed[0].value)

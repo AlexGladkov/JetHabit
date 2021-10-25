@@ -1,4 +1,4 @@
-package ru.alexgladkov.jetpackcomposedemo.data.features.habbit
+package ru.alexgladkov.jetpackcomposedemo.data.features.habit
 
 import androidx.room.Dao
 import androidx.room.Insert

@@ -11,10 +11,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.alexgladkov.jetpackcomposedemo.base.EventHandler
 import ru.alexgladkov.jetpackcomposedemo.data.features.daily.DailyRepository
-import ru.alexgladkov.jetpackcomposedemo.data.features.habbit.HabbitRepository
+import ru.alexgladkov.jetpackcomposedemo.data.features.habit.HabitRepository
 import ru.alexgladkov.jetpackcomposedemo.screens.daily.models.DailyEvent
 import ru.alexgladkov.jetpackcomposedemo.screens.daily.models.DailyViewState
-import ru.alexgladkov.jetpackcomposedemo.screens.daily.views.HabbitCardItemModel
+import ru.alexgladkov.jetpackcomposedemo.screens.daily.views.HabitCardItemModel
 import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -25,7 +25,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DailyViewModel @Inject constructor(
-    private val habbitRepository: HabbitRepository,
+    private val habitRepository: HabitRepository,
     private val dailyRepository: DailyRepository
 ) : ViewModel(), EventHandler<DailyEvent> {
 
@@ -60,9 +60,9 @@ class DailyViewModel @Inject constructor(
             DailyEvent.EnterScreen -> fetchHabbitForDate()
             DailyEvent.NextDayClicked -> performNextClick(currentState.hasNextDay)
             DailyEvent.PreviousDayClicked -> performPreviousClick()
-            is DailyEvent.OnHabbitClick -> performHabbitClick(
+            is DailyEvent.OnHabitClick -> performHabbitClick(
                 hasNextDay = currentState.hasNextDay,
-                habbitId = event.habbitId,
+                habbitId = event.habitId,
                 newValue = event.newValue
             )
         }
@@ -79,7 +79,7 @@ class DailyViewModel @Inject constructor(
             val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
             dailyRepository.addOrUpdate(
                 date = dateFormat.format(currentDate),
-                habbitId = habbitId,
+                habitId = habbitId,
                 value = newValue
             )
 
@@ -143,7 +143,7 @@ class DailyViewModel @Inject constructor(
 
         viewModelScope.launch {
             try {
-                val habbits = habbitRepository.fetchHabbitsList()
+                val habbits = habitRepository.fetchHabitsList()
 
                 if (habbits.isEmpty()) {
                     _dailyViewState.postValue(DailyViewState.NoItems)
@@ -154,12 +154,12 @@ class DailyViewModel @Inject constructor(
                     val dailyActivities = diaryResponse
                         .filter { it.date == dateFormat.format(currentDate) }.firstOrNull()
 
-                    val cardItems: List<HabbitCardItemModel> = habbits.map { habbitEntity ->
-                        HabbitCardItemModel(
-                            habbitId = habbitEntity.itemId,
+                    val cardItems: List<HabitCardItemModel> = habbits.map { habbitEntity ->
+                        HabitCardItemModel(
+                            habitId = habbitEntity.itemId,
                             title = habbitEntity.title,
                             isChecked = if (dailyActivities != null) {
-                                val dailyItem = dailyActivities.habbits.firstOrNull { it.habbitId == habbitEntity.itemId }
+                                val dailyItem = dailyActivities.habits.firstOrNull { it.habbitId == habbitEntity.itemId }
                                 dailyItem?.value ?: false
                             } else {
                                 false

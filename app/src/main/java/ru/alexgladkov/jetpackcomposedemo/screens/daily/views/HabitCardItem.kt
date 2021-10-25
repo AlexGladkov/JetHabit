@@ -12,27 +12,27 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import ru.alexgladkov.jetpackcomposedemo.data.features.habbit.HabitEntity
+import ru.alexgladkov.jetpackcomposedemo.data.features.habit.HabitEntity
 import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabitStyle
 import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabitTheme
 import ru.alexgladkov.jetpackcomposedemo.ui.themes.MainTheme
 
-data class HabbitCardItemModel(
-    val habbitId: Long,
+data class HabitCardItemModel(
+    val habitId: Long,
     val title: String,
     val isChecked: Boolean
 )
 
 fun HabitEntity.mapToCardItem() =
-    HabbitCardItemModel(
-        habbitId = this.itemId,
+    HabitCardItemModel(
+        habitId = this.itemId,
         title = this.title,
         isChecked = false
     )
 
 @Composable
-fun HabbitCardItem(
-    model: HabbitCardItemModel,
+fun HabitCardItem(
+    model: HabitCardItemModel,
     onCheckedChange: ((Boolean) -> Unit)? = null
 ) {
     Card(
@@ -72,66 +72,66 @@ fun HabbitCardItem(
 
 @Composable
 @Preview(showBackground = true)
-fun HabbitPurpleLightItem_Preview() {
-    ThemedHabbitCard(isDarkMode = false, style = JetHabitStyle.Purple)
+fun HabitPurpleLightItem_Preview() {
+    ThemedHabitCard(isDarkMode = false, style = JetHabitStyle.Purple)
 }
 
 @Composable
 @Preview(showBackground = true)
-fun HabbitPurpleDarkItem_Preview() {
-    ThemedHabbitCard(isDarkMode = true, style = JetHabitStyle.Purple)
+fun HabitPurpleDarkItem_Preview() {
+    ThemedHabitCard(isDarkMode = true, style = JetHabitStyle.Purple)
 }
 
 @Composable
 @Preview(showBackground = true)
-fun HabbitRedLightItem_Preview() {
-    ThemedHabbitCard(isDarkMode = false, style = JetHabitStyle.Red)
+fun HabitRedLightItem_Preview() {
+    ThemedHabitCard(isDarkMode = false, style = JetHabitStyle.Red)
 }
 
 @Composable
 @Preview(showBackground = true)
-fun HabbitRedDarkItem_Preview() {
-    ThemedHabbitCard(isDarkMode = true, style = JetHabitStyle.Red)
+fun HabitRedDarkItem_Preview() {
+    ThemedHabitCard(isDarkMode = true, style = JetHabitStyle.Red)
 }
 
 @Composable
 @Preview(showBackground = true)
-fun HabbitGreenLightItem_Preview() {
-    ThemedHabbitCard(isDarkMode = false, style = JetHabitStyle.Green)
+fun HabitGreenLightItem_Preview() {
+    ThemedHabitCard(isDarkMode = false, style = JetHabitStyle.Green)
 }
 
 @Composable
 @Preview(showBackground = true)
-fun HabbitGreenDarkItem_Preview() {
-    ThemedHabbitCard(isDarkMode = true, style = JetHabitStyle.Green)
+fun HabitGreenDarkItem_Preview() {
+    ThemedHabitCard(isDarkMode = true, style = JetHabitStyle.Green)
 }
 
 @Composable
 @Preview(showBackground = true)
-fun HabbitOrangeLightItem_Preview() {
-    ThemedHabbitCard(isDarkMode = false, style = JetHabitStyle.Orange)
+fun HabitOrangeLightItem_Preview() {
+    ThemedHabitCard(isDarkMode = false, style = JetHabitStyle.Orange)
 }
 
 @Composable
 @Preview(showBackground = true)
-fun HabbitOrangeDarkItem_Preview() {
-    ThemedHabbitCard(isDarkMode = true, style = JetHabitStyle.Orange)
+fun HabitOrangeDarkItem_Preview() {
+    ThemedHabitCard(isDarkMode = true, style = JetHabitStyle.Orange)
 }
 
 @Composable
 @Preview(showBackground = true)
-fun HabbitBlueLightItem_Preview() {
-    ThemedHabbitCard(isDarkMode = false, style = JetHabitStyle.Blue)
+fun HabitBlueLightItem_Preview() {
+    ThemedHabitCard(isDarkMode = false, style = JetHabitStyle.Blue)
 }
 
 @Composable
 @Preview(showBackground = true)
-fun HabbitBlueDarkItem_Preview() {
-    ThemedHabbitCard(isDarkMode = true, style = JetHabitStyle.Blue)
+fun HabitBlueDarkItem_Preview() {
+    ThemedHabitCard(isDarkMode = true, style = JetHabitStyle.Blue)
 }
 
 @Composable
-private fun ThemedHabbitCard(
+private fun ThemedHabitCard(
     isDarkMode: Boolean,
     style: JetHabitStyle
 ) {
@@ -139,9 +139,9 @@ private fun ThemedHabbitCard(
         Surface(
             color = JetHabitTheme.colors.primaryBackground
         ) {
-            HabbitCardItem(
-                HabbitCardItemModel(
-                    habbitId = 0,
+            HabitCardItem(
+                HabitCardItemModel(
+                    habitId = 0,
                     title = "Чистить зубы",
                     isChecked = true
                 )

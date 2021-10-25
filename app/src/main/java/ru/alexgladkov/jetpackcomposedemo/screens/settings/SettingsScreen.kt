@@ -23,8 +23,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import ru.alexgladkov.jetpackcomposedemo.R
-import ru.alexgladkov.jetpackcomposedemo.screens.daily.views.HabbitCardItem
-import ru.alexgladkov.jetpackcomposedemo.screens.daily.views.HabbitCardItemModel
+import ru.alexgladkov.jetpackcomposedemo.screens.daily.views.HabitCardItem
+import ru.alexgladkov.jetpackcomposedemo.screens.daily.views.HabitCardItemModel
 import ru.alexgladkov.jetpackcomposedemo.screens.settings.views.MenuItem
 import ru.alexgladkov.jetpackcomposedemo.screens.settings.views.MenuItemModel
 import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabitCorners
@@ -208,9 +208,9 @@ fun SettingsScreen(
                     })
             }
 
-            HabbitCardItem(
-                model = HabbitCardItemModel(
-                    habbitId = 0,
+            HabitCardItem(
+                model = HabitCardItemModel(
+                    habitId = 0,
                     title = "Пример карточки",
                     isChecked = true
                 )

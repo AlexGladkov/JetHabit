@@ -21,7 +21,7 @@ fun ComposeViewInitialError(error: ComposeError) {
         Text(
             modifier = Modifier.padding(16.dp).align(Alignment.Center),
             text = when (error) {
-                ComposeError.SendingGeneric -> stringResource(id = R.string.error_new_habbit)
+                ComposeError.SendingGeneric -> stringResource(id = R.string.error_new_habit)
             },
             color = JetHabitTheme.colors.errorColor
         )

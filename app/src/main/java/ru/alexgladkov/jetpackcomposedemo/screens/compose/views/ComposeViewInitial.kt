@@ -72,7 +72,7 @@ fun ComposeViewInitial(
                                     .fillMaxWidth(),
                                 singleLine = true,
                                 enabled = !state.isSending,
-                                value = state.habbitTitle,
+                                value = state.habitTitle,
                                 onValueChange = onTitleChanged,
                                 colors = TextFieldDefaults.textFieldColors(
                                     backgroundColor = JetHabitTheme.colors.primaryBackground,
@@ -95,7 +95,7 @@ fun ComposeViewInitial(
                             )
 
                             Checkbox(
-                                checked = state.isGoodHabbit,
+                                checked = state.isGoodHabit,
                                 enabled = !state.isSending,
                                 onCheckedChange = onCheckedChange,
                                 colors = CheckboxDefaults.colors(
@@ -172,8 +172,8 @@ fun ComposeViewInitialFilled_Preview() {
         ComposeViewInitial(
             state = ComposeViewState
                 .ViewStateInitial(
-                    habbitTitle = "Test habbit",
-                    isGoodHabbit = false,
+                    habitTitle = "Test habbit",
+                    isGoodHabit = false,
                     sendingError = ComposeError.SendingGeneric,
                     isSending = true
                 ),

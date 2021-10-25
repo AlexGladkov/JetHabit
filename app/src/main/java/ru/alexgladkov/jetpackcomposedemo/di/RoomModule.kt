@@ -9,7 +9,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import ru.alexgladkov.jetpackcomposedemo.data.database.JetHabitDatabase
 import ru.alexgladkov.jetpackcomposedemo.data.features.daily.DailyDao
-import ru.alexgladkov.jetpackcomposedemo.data.features.habbit.HabitDao
+import ru.alexgladkov.jetpackcomposedemo.data.features.habit.HabitDao
 import javax.inject.Singleton
 
 @Module
@@ -22,7 +22,7 @@ class RoomModule {
         Room.databaseBuilder(
             context.applicationContext,
             JetHabitDatabase::class.java,
-            "jet_habbit_database"
+            "jet_habit_database"
         )
             .fallbackToDestructiveMigration()
             .build()

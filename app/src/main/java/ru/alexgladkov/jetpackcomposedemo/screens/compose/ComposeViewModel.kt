@@ -7,15 +7,15 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import ru.alexgladkov.jetpackcomposedemo.base.EventHandler
-import ru.alexgladkov.jetpackcomposedemo.data.features.habbit.HabitEntity
-import ru.alexgladkov.jetpackcomposedemo.data.features.habbit.HabbitRepository
+import ru.alexgladkov.jetpackcomposedemo.data.features.habit.HabitEntity
+import ru.alexgladkov.jetpackcomposedemo.data.features.habit.HabitRepository
 import ru.alexgladkov.jetpackcomposedemo.screens.compose.models.ComposeEvent
 import ru.alexgladkov.jetpackcomposedemo.screens.compose.models.ComposeViewState
 import javax.inject.Inject
 
 @HiltViewModel
 class ComposeViewModel @Inject constructor(
-    private val habbitRepository: HabbitRepository
+    private val habitRepository: HabitRepository
 ) : ViewModel(), EventHandler<ComposeEvent> {
 
     private val _composeViewState: MutableLiveData<ComposeViewState> =
@@ -28,29 +28,29 @@ class ComposeViewModel @Inject constructor(
         }
     }
 
-    private fun reduce(event: ComposeEvent, currentState: ComposeViewState.ViewStateInitial, ) {
+    private fun reduce(event: ComposeEvent, currentState: ComposeViewState.ViewStateInitial) {
         when (event) {
             is ComposeEvent.TitleChanged -> _composeViewState.postValue(
-                currentState.copy(habbitTitle = event.newValue)
+                currentState.copy(habitTitle = event.newValue)
             )
 
             is ComposeEvent.CheckboxClicked -> _composeViewState.postValue(
-                currentState.copy(isGoodHabbit = event.newValue)
+                currentState.copy(isGoodHabit = event.newValue)
             )
 
-            ComposeEvent.SaveClicked -> saveHabbitToDatabase(currentState)
+            ComposeEvent.SaveClicked -> saveHabitToDatabase(currentState)
         }
     }
 
-    private fun saveHabbitToDatabase(state: ComposeViewState.ViewStateInitial) {
+    private fun saveHabitToDatabase(state: ComposeViewState.ViewStateInitial) {
         viewModelScope.launch {
             _composeViewState.postValue(state.copy(isSending = true))
 
             try {
-                habbitRepository.addNewHabbit(
+                habitRepository.addNewHabit(
                     HabitEntity(
-                        title = state.habbitTitle,
-                        isGood = state.isGoodHabbit
+                        title = state.habitTitle,
+                        isGood = state.isGoodHabit
                     )
                 )
 
