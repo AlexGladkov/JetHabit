@@ -1,9 +1,12 @@
 package ru.alexgladkov.jetpackcomposedemo.screens.settings.views
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -39,52 +42,68 @@ fun MenuItem(
     val isDropdownOpen = remember { mutableStateOf(false) }
     val currentPosition = remember { mutableStateOf(model.currentIndex) }
 
-    Box(
-        modifier = Modifier
-            .background(JetHabitTheme.colors.primaryBackground)
-            .fillMaxWidth()
-    ) {
-        Row(
-            Modifier
-                .clickable {
-                    isDropdownOpen.value = true
-                }
-                .padding(JetHabitTheme.shapes.padding)
-                .background(JetHabitTheme.colors.primaryBackground),
-            verticalAlignment = Alignment.CenterVertically
+    Column {
+        Box(
+            modifier = Modifier
+                .background(JetHabitTheme.colors.primaryBackground)
+                .fillMaxWidth()
         ) {
-            Text(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(end = JetHabitTheme.shapes.padding),
-                text = model.title,
-                style = JetHabitTheme.typography.body,
-                color = JetHabitTheme.colors.primaryText
-            )
+            Row(
+                Modifier
+                    .clickable {
+                        isDropdownOpen.value = true
+                    }
+                    .padding(JetHabitTheme.shapes.padding)
+                    .background(JetHabitTheme.colors.primaryBackground),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(end = JetHabitTheme.shapes.padding),
+                    text = model.title,
+                    style = JetHabitTheme.typography.body,
+                    color = JetHabitTheme.colors.primaryText
+                )
 
-            Text(
-                text = model.values[currentPosition.value],
-                style = JetHabitTheme.typography.body,
-                color = JetHabitTheme.colors.secondaryText
-            )
+                Text(
+                    text = model.values[currentPosition.value],
+                    style = JetHabitTheme.typography.body,
+                    color = JetHabitTheme.colors.secondaryText
+                )
 
-            Icon(
+                Icon(
+                    modifier = Modifier
+                        .padding(start = JetHabitTheme.shapes.padding / 4)
+                        .size(18.dp)
+                        .align(Alignment.CenterVertically),
+                    painter = painterResource(id = R.drawable.ic_baseline_arrow_forward_ios_24),
+                    contentDescription = "Arrow",
+                    tint = JetHabitTheme.colors.secondaryText
+                )
+            }
+
+            Divider(
                 modifier = Modifier
-                    .padding(start = JetHabitTheme.shapes.padding / 4)
-                    .size(18.dp)
-                    .align(Alignment.CenterVertically),
-                painter = painterResource(id = R.drawable.ic_baseline_arrow_forward_ios_24),
-                contentDescription = "Arrow",
-                tint = JetHabitTheme.colors.secondaryText
+                    .padding(start = 16.dp)
+                    .align(Alignment.BottomStart),
+                thickness = 0.5.dp,
+                color = JetHabitTheme.colors.secondaryText.copy(
+                    alpha = 0.3f
+                )
             )
         }
 
+        // Dropdown doesnt work
+        // https://issuetracker.google.com/u/1/issues/211474319
         DropdownMenu(
             expanded = isDropdownOpen.value,
             onDismissRequest = {
                 isDropdownOpen.value = false
             },
-            modifier = Modifier.fillMaxWidth().background(JetHabitTheme.colors.primaryBackground)
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(JetHabitTheme.colors.primaryBackground)
         ) {
             model.values.forEachIndexed { index, value ->
                 DropdownMenuItem(onClick = {
@@ -100,14 +119,6 @@ fun MenuItem(
                 }
             }
         }
-
-        Divider(
-            modifier = Modifier.padding(start = 16.dp).align(Alignment.BottomStart),
-            thickness = 0.5.dp,
-            color = JetHabitTheme.colors.secondaryText.copy(
-                alpha = 0.3f
-            )
-        )
     }
 }
 

@@ -32,6 +32,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
@@ -40,8 +41,13 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
+import ru.alexgladkov.jetpackcomposedemo.domain.SettingsBundle
+import ru.alexgladkov.jetpackcomposedemo.screens.compose.ComposeScreen
+import ru.alexgladkov.jetpackcomposedemo.screens.compose.ComposeViewModel
 import ru.alexgladkov.jetpackcomposedemo.screens.main.MainBottomScreen
+import ru.alexgladkov.jetpackcomposedemo.screens.main.MainScreen
 import ru.alexgladkov.jetpackcomposedemo.screens.settings.SettingsScreen
+import ru.alexgladkov.jetpackcomposedemo.screens.splash.SplashScreen
 import ru.alexgladkov.jetpackcomposedemo.screens.tabs.dailyFlow
 import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabitCorners
 import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabitSize
@@ -54,10 +60,10 @@ import ru.alexgladkov.jetpackcomposedemo.ui.themes.baseLightPalette
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    @ExperimentalAnimationApi
-    @ExperimentalComposeUiApi
-    @ExperimentalMaterialApi
-    @ExperimentalFoundationApi
+    @OptIn(
+        ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class,
+        ExperimentalMaterialApi::class
+    )
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -87,93 +93,35 @@ class MainActivity : ComponentActivity() {
                     )
                 }
 
-                // Navigation Items
-                val items = listOf(
-                    MainBottomScreen.Daily,
-                    MainBottomScreen.Settings,
-                )
-
                 Surface {
-                    Column {
-                        Box(modifier = Modifier.weight(1f)) {
-                            NavHost(
-                                navController = navController,
-                                startDestination = MainBottomScreen.Daily.route
-                            ) {
-                                dailyFlow(navController)
-
-                                composable(MainBottomScreen.Settings.route) {
-                                        SettingsScreen(
-                                            isDarkMode = isDarkMode.value,
-                                            currentTextSize = currentFontSize.value,
-                                            currentPaddingSize = currentPaddingSize.value,
-                                            currentCornersStyle = currentCornersStyle.value,
-                                            onDarkModeChanged = {
-                                                isDarkMode.value = it
-                                            },
-                                            onNewStyle = {
-                                                currentStyle.value = it
-                                            },
-                                            onTextSizeChanged = {
-                                                currentFontSize.value = it
-                                            },
-                                            onCornersStyleChanged = {
-                                                currentCornersStyle.value = it
-                                            },
-                                            onPaddingSizeChanged = {
-                                                currentPaddingSize.value = it
-                                            }
-                                        )
-                                    }
-                                }
+                    NavHost(navController = navController, startDestination = "splash") {
+                        composable("splash") {
+                            SplashScreen(navController = navController)
                         }
 
-                        Box(modifier = Modifier
-                            .height(56.dp)
-                            .fillMaxWidth()) {
-                            BottomNavigation {
-                                val navBackStackEntry by navController.currentBackStackEntryAsState()
-                                val currentDestination = navBackStackEntry?.destination
-                                val previousDestination = remember { mutableStateOf(items.first().route) }
+                        composable("main") {
+                            val settings = SettingsBundle(
+                                isDarkMode = isDarkMode.value,
+                                style = currentStyle.value,
+                                textSize = currentFontSize.value,
+                                cornerStyle = currentCornersStyle.value,
+                                paddingSize = currentPaddingSize.value
+                            )
 
-                                items.forEach { screen ->
-                                    val isSelected = currentDestination?.hierarchy
-                                        ?.any { it.route == screen.route } == true
-
-                                    BottomNavigationItem(
-                                        modifier = Modifier.background(JetHabitTheme.colors.primaryBackground),
-                                        icon = {
-                                            Icon(
-                                                imageVector = when (screen) {
-                                                    MainBottomScreen.Daily -> Icons.Filled.Favorite
-                                                    MainBottomScreen.Settings -> Icons.Filled.Settings
-                                                },
-                                                contentDescription = null,
-                                                tint = if (isSelected) JetHabitTheme.colors.tintColor else JetHabitTheme.colors.controlColor
-                                            )
-                                        },
-                                        label = {
-                                            Text(
-                                                stringResource(id = screen.resourceId),
-                                                color = if (isSelected) JetHabitTheme.colors.primaryText else JetHabitTheme.colors.controlColor
-                                            )
-                                        },
-                                        selected = isSelected,
-                                        onClick = {
-                                            if (screen.route == previousDestination.value) return@BottomNavigationItem
-                                            previousDestination.value = screen.route
-
-                                            navController.navigate(screen.route) {
-                                                popUpTo(navController.graph.findStartDestination().id) {
-                                                    saveState = true
-                                                }
-
-                                                launchSingleTop = true
-                                                restoreState = true
-                                            }
-                                        })
+                            MainScreen(navController = navController,
+                                settings = settings, onSettingsChanged = {
+                                    isDarkMode.value = it.isDarkMode
+                                    currentStyle.value = it.style
+                                    currentFontSize.value = it.textSize
+                                    currentCornersStyle.value = it.cornerStyle
+                                    currentPaddingSize.value = it.paddingSize
                                 }
-                            }
+                            )
+                        }
+
+                        composable("compose") {
+                            val composeViewModel = hiltViewModel<ComposeViewModel>()
+                            ComposeScreen(navController = navController, composeViewModel = composeViewModel)
                         }
                     }
                 }
