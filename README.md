@@ -1,4 +1,4 @@
-#Jet Habit
+# Jet Habit
 
 This is Demo repository for Jetpack Compose features demonstration
 Feel free to make issues, forks and pull requests
