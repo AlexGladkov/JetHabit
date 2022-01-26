@@ -1,0 +1,10 @@
+version: "1.0"
+profile:
+  name: qodana.starter
+include:
+  - name: AndroidLintJcenterRepositoryObsolete
+  - name: KotlinUnusedImport
+  - name: MemberVisibilityCanBePrivate
+  - name: RemoveRedundantQualifierName
+  - name: SimplifiableCallChain
+  - name: UnusedSymbol
