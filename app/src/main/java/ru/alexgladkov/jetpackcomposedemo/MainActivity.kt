@@ -7,8 +7,10 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Surface
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
@@ -21,10 +23,8 @@ import ru.alexgladkov.jetpackcomposedemo.screens.compose.ComposeScreen
 import ru.alexgladkov.jetpackcomposedemo.screens.compose.ComposeViewModel
 import ru.alexgladkov.jetpackcomposedemo.screens.main.MainScreen
 import ru.alexgladkov.jetpackcomposedemo.screens.splash.SplashScreen
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabitCorners
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabitSize
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabitStyle
 import ru.alexgladkov.jetpackcomposedemo.ui.themes.MainTheme
+import ru.alexgladkov.jetpackcomposedemo.ui.themes.MainThemeDefaultSettings
 import ru.alexgladkov.jetpackcomposedemo.ui.themes.baseDarkPalette
 import ru.alexgladkov.jetpackcomposedemo.ui.themes.baseLightPalette
 
@@ -40,18 +40,12 @@ class MainActivity : ComponentActivity() {
         setContent {
             val isDarkModeValue = true // isSystemInDarkTheme()
 
-            val currentStyle = remember { mutableStateOf(JetHabitStyle.Purple) }
-            val currentFontSize = remember { mutableStateOf(JetHabitSize.Medium) }
-            val currentPaddingSize = remember { mutableStateOf(JetHabitSize.Medium) }
-            val currentCornersStyle = remember { mutableStateOf(JetHabitCorners.Rounded) }
-            val isDarkMode = remember { mutableStateOf(isDarkModeValue) }
+            var jetHabitThemeSettings by remember { mutableStateOf(MainThemeDefaultSettings.copy(
+                isDarkMode = isDarkModeValue
+            )) }
 
             MainTheme(
-                style = currentStyle.value,
-                darkTheme = isDarkMode.value,
-                textSize = currentFontSize.value,
-                corners = currentCornersStyle.value,
-                paddingSize = currentPaddingSize.value
+                jetHabitThemeSettings = jetHabitThemeSettings,
             ) {
                 val navController = rememberNavController()
                 val systemUiController = rememberSystemUiController()
@@ -59,8 +53,8 @@ class MainActivity : ComponentActivity() {
                 // Set status bar color
                 SideEffect {
                     systemUiController.setSystemBarsColor(
-                        color = if (isDarkMode.value) baseDarkPalette.primaryBackground else baseLightPalette.primaryBackground,
-                        darkIcons = !isDarkMode.value
+                        color = if (jetHabitThemeSettings.isDarkMode) baseDarkPalette.primaryBackground else baseLightPalette.primaryBackground,
+                        darkIcons = !jetHabitThemeSettings.isDarkMode
                     )
                 }
 
@@ -72,20 +66,22 @@ class MainActivity : ComponentActivity() {
 
                         composable("main") {
                             val settings = SettingsBundle(
-                                isDarkMode = isDarkMode.value,
-                                style = currentStyle.value,
-                                textSize = currentFontSize.value,
-                                cornerStyle = currentCornersStyle.value,
-                                paddingSize = currentPaddingSize.value
+                                isDarkMode = jetHabitThemeSettings.isDarkMode,
+                                style = jetHabitThemeSettings.style,
+                                textSize = jetHabitThemeSettings.textSize,
+                                cornerStyle = jetHabitThemeSettings.corners,
+                                paddingSize = jetHabitThemeSettings.paddingSize
                             )
 
                             MainScreen(navController = navController,
                                 settings = settings, onSettingsChanged = {
-                                    isDarkMode.value = it.isDarkMode
-                                    currentStyle.value = it.style
-                                    currentFontSize.value = it.textSize
-                                    currentCornersStyle.value = it.cornerStyle
-                                    currentPaddingSize.value = it.paddingSize
+                                    jetHabitThemeSettings = jetHabitThemeSettings.copy(
+                                        isDarkMode = it.isDarkMode,
+                                        style = it.style,
+                                        textSize = it.textSize,
+                                        corners = it.cornerStyle,
+                                        paddingSize = it.paddingSize
+                                    )
                                 }
                             )
                         }

@@ -52,6 +52,14 @@ object JetHabitTheme {
         get() = LocalJetHabitImage.current
 }
 
+data class JetHabitThemeSettings(
+    val style: JetHabitStyle,
+    val textSize: JetHabitSize,
+    val paddingSize: JetHabitSize,
+    val corners: JetHabitCorners,
+    val isDarkMode: Boolean,
+)
+
 enum class JetHabitStyle {
     Purple, Orange, Blue, Red, Green
 }

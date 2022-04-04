@@ -1,6 +1,5 @@
 package ru.alexgladkov.jetpackcomposedemo.ui.themes
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -12,14 +11,10 @@ import ru.alexgladkov.jetpackcomposedemo.R
 
 @Composable
 fun MainTheme(
-    style: JetHabitStyle = JetHabitStyle.Purple,
-    textSize: JetHabitSize = JetHabitSize.Medium,
-    paddingSize: JetHabitSize = JetHabitSize.Medium,
-    corners: JetHabitCorners = JetHabitCorners.Rounded,
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    jetHabitThemeSettings: JetHabitThemeSettings = MainThemeDefaultSettings,
     content: @Composable () -> Unit
-) {
-    val colors = when (darkTheme) {
+) = with(jetHabitThemeSettings) {
+    val colors = when (isDarkMode) {
         true -> {
             when (style) {
                 JetHabitStyle.Purple -> purpleDarkPalette
@@ -87,8 +82,8 @@ fun MainTheme(
     )
 
     val images = JetHabitImage(
-        mainIcon = if (darkTheme) R.drawable.ic_baseline_mood_24 else R.drawable.ic_baseline_mood_bad_24,
-        mainIconDescription = if (darkTheme) "Good Mood" else "Bad Mood"
+        mainIcon = if (isDarkMode) R.drawable.ic_baseline_mood_24 else R.drawable.ic_baseline_mood_bad_24,
+        mainIconDescription = if (isDarkMode) "Good Mood" else "Bad Mood"
     )
 
     CompositionLocalProvider(
@@ -99,3 +94,11 @@ fun MainTheme(
         content = content
     )
 }
+
+val MainThemeDefaultSettings = JetHabitThemeSettings(
+    isDarkMode = true,
+    style = JetHabitStyle.Purple,
+    textSize = JetHabitSize.Medium,
+    paddingSize = JetHabitSize.Medium,
+    corners = JetHabitCorners.Rounded
+)

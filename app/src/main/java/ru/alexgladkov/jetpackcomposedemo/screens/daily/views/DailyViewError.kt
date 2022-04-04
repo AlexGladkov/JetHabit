@@ -65,7 +65,7 @@ fun DailyViewError(
 @Composable
 @Preview
 fun DailyViewError_Preview() {
-    MainTheme(darkTheme = true) {
+    MainTheme {
        DailyViewError(onReloadClick = {})
     }
 }

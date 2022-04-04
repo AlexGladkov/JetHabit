@@ -65,7 +65,7 @@ fun DailyViewNoItems(
 @Preview
 @Composable
 fun DailyViewNoItem_Preview() {
-    MainTheme(darkTheme = true) {
+    MainTheme {
         DailyViewNoItems(
             onComposeClick = {}
         )

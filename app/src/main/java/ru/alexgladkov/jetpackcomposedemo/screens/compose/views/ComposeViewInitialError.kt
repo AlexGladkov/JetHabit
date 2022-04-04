@@ -31,7 +31,7 @@ fun ComposeViewInitialError(error: ComposeError) {
 @Preview
 @Composable
 fun ComposeViewInitialErrorView_Preview() {
-    MainTheme(darkTheme = true) {
+    MainTheme {
         ComposeViewInitialError(error = ComposeError.SendingGeneric)
     }
 }

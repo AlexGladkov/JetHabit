@@ -16,6 +16,7 @@ import ru.alexgladkov.jetpackcomposedemo.data.features.habit.HabitEntity
 import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabitStyle
 import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabitTheme
 import ru.alexgladkov.jetpackcomposedemo.ui.themes.MainTheme
+import ru.alexgladkov.jetpackcomposedemo.ui.themes.MainThemeDefaultSettings
 
 data class HabitCardItemModel(
     val habitId: Long,
@@ -135,7 +136,7 @@ private fun ThemedHabitCard(
     isDarkMode: Boolean,
     style: JetHabitStyle
 ) {
-    MainTheme(darkTheme = isDarkMode, style = style) {
+    MainTheme(MainThemeDefaultSettings.copy(isDarkMode = isDarkMode, style = style)) {
         Surface(
             color = JetHabitTheme.colors.primaryBackground
         ) {

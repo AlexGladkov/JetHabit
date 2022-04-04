@@ -126,7 +126,7 @@ fun DailyViewDisplay(
 @Preview
 @Composable
 fun DailyViewDisplay_Preview() {
-    MainTheme(darkTheme = true) {
+    MainTheme {
         DailyViewDisplay(
             navController = rememberNavController(),
             viewState = DailyViewState.Display(

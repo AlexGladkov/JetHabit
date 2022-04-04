@@ -154,7 +154,7 @@ fun ComposeViewInitial(
 @Preview
 @Composable
 fun ComposeViewInitial_Preview() {
-    MainTheme(darkTheme = true) {
+    MainTheme {
         ComposeViewInitial(
             state = ComposeViewState.ViewStateInitial(),
             onCheckedChange = {},
@@ -168,7 +168,7 @@ fun ComposeViewInitial_Preview() {
 @Preview
 @Composable
 fun ComposeViewInitialFilled_Preview() {
-    MainTheme(darkTheme = true) {
+    MainTheme {
         ComposeViewInitial(
             state = ComposeViewState
                 .ViewStateInitial(

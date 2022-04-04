@@ -27,7 +27,7 @@ fun DailyViewLoading() {
 @Preview
 @Composable
 fun DailyViewLoading_Preview() {
-    MainTheme(darkTheme = true) {
+    MainTheme {
         DailyViewLoading()
     }
 }

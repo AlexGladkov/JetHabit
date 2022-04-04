@@ -82,7 +82,7 @@ fun ComposeViewSuccess(modifier: Modifier = Modifier, onCloseClick: () -> Unit) 
 @Composable
 @Preview
 fun ComposeViewSuccess_Preview() {
-    MainTheme(darkTheme = true) {
+    MainTheme {
         ComposeViewSuccess(onCloseClick = {})
     }
 }
