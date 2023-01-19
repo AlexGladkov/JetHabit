@@ -1,0 +1,5 @@
+CREATE TABLE HabitEntity (
+  itemID LONG PRIMARY KEY AUTOINCREMENT,
+  title TEXT NOT NULL,
+  isGood INTEGER AS Boolean DEFAULT 0
+);

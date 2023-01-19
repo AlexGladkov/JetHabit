@@ -2,7 +2,7 @@
 object Dependencies {
 
     object Compose {
-        const val version = "1.0.5"
+        const val version = "1.4.0-alpha02"
         const val ui = "androidx.compose.ui:ui:$version"
         const val material = "androidx.compose.material:material:$version"
         const val tooling = "androidx.compose.ui:ui-tooling-preview:$version"
@@ -15,7 +15,8 @@ object Dependencies {
     }
 
     object Kotlin {
-        const val serialization = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2"
+        const val serialization = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1"
+        const val serializationPlugin = "org.jetbrains.kotlin:kotlin-serialization:$1.7.10"
     }
 
     object Hilt {
@@ -26,7 +27,7 @@ object Dependencies {
     }
 
     object Room {
-        private const val version = "2.3.0"
+        private const val version = "2.4.3"
         const val ktx = "androidx.room:room-ktx:$version"
         const val runtime = "androidx.room:room-runtime:$version"
         const val paging = "androidx.room:room-paging:2.4.0-alpha04"
