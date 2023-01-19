@@ -8,6 +8,7 @@ pluginManagement {
     }
     resolutionStrategy {
         eachPlugin {
+            println("requested ${requested.id.id}")
             if (requested.id.id.startsWith("com.android")) {
                 useModule("com.android.tools.build:gradle:7.2.0")
             }
@@ -21,6 +22,7 @@ pluginManagement {
     plugins {
         val kotlinVersion = extra["kotlin.version"] as String
         kotlin("multiplatform").version(kotlinVersion)
+        kotlin("plugin.serialization").version(kotlinVersion)
 
         val composeVersion = extra["compose.version"] as String
         id("org.jetbrains.compose").version(composeVersion)

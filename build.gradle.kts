@@ -14,6 +14,7 @@ plugins {
     kotlin("multiplatform")
     id("org.jetbrains.compose")
     id("com.squareup.sqldelight")
+    kotlin("plugin.serialization")
 }
 
 group = "ru.alexgladkov"
@@ -89,6 +90,9 @@ kotlin {
                 implementation(compose.foundation)
                 implementation(compose.material)
                 implementation(compose.runtime)
+
+                implementation(Dependencies.Kodein.core)
+                implementation(Dependencies.Kotlin.serialization)
 
                 val odysseyVersion = "1.3.1"
                 implementation("io.github.alexgladkov:odyssey-core:$odysseyVersion")

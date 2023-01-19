@@ -15,8 +15,9 @@ object Dependencies {
     }
 
     object Kotlin {
+        const val version = "1.7.10"
         const val serialization = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1"
-        const val serializationPlugin = "org.jetbrains.kotlin:kotlin-serialization:$1.7.10"
+        const val serializationPlugin = "org.jetbrains.kotlin:kotlin-serialization:$version"
     }
 
     object Hilt {
@@ -54,5 +55,9 @@ object Dependencies {
         const val jUnit = "junit:junit:4.+"
         const val androidJUnit = "androidx.test.ext:junit:1.1.2"
         const val espresso = "androidx.test.espresso:espresso-core:3.3.0"
+    }
+
+    object Kodein {
+        const val core = "org.kodein.di:kodein-di:7.1.0"
     }
 }
