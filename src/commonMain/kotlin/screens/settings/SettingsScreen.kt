@@ -22,8 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import domain.LocalSettingsBundle
-import domain.SettingsBundle
+import data.features.settings.LocalSettingsEventBus
 import ru.alexgladkov.jetpackcomposedemo.AppRes
 import screens.daily.views.HabitCardItem
 import screens.daily.views.HabitCardItemModel
@@ -48,7 +47,8 @@ import ru.alexgladkov.jetpackcomposedemo.ui.themes.redLightPalette
 @ExperimentalFoundationApi
 @Composable
 fun SettingsScreen() {
-    val settings = LocalSettingsBundle.current
+    val settingsEventBus = LocalSettingsEventBus.current
+    val currentSettings = settingsEventBus.currentSettings.value
 
     Surface(
         color = JetHabitTheme.colors.primaryBackground,
@@ -81,8 +81,8 @@ fun SettingsScreen() {
                     style = JetHabitTheme.typography.body
                 )
                 Checkbox(
-                    checked = settings.isDarkMode, onCheckedChange = {
-//                        onSettingsChanged.invoke(settings.copy(isDarkMode = !settings.isDarkMode))
+                    checked = currentSettings.isDarkMode, onCheckedChange = {
+                        settingsEventBus.updateDarkMode(!currentSettings.isDarkMode)
                     },
                     colors = CheckboxDefaults.colors(
                         checkedColor = JetHabitTheme.colors.tintColor,
@@ -102,7 +102,7 @@ fun SettingsScreen() {
             MenuItem(
                 model = MenuItemModel(
                     title = AppRes.string.title_font_size,
-                    currentIndex = when (settings.textSize) {
+                    currentIndex = when (currentSettings.textSize) {
                         JetHabitSize.Small -> 0
                         JetHabitSize.Medium -> 1
                         JetHabitSize.Big -> 2
@@ -114,23 +114,21 @@ fun SettingsScreen() {
                     )
                 ),
                 onItemSelected = {
-                    val settingsNew = settings.copy(
-                        textSize = when (it) {
+                    settingsEventBus.updateTextSize(
+                        when (it) {
                             0 -> JetHabitSize.Small
                             1 -> JetHabitSize.Medium
                             2 -> JetHabitSize.Big
                             else -> throw NotImplementedError("No valid value for this $it")
                         }
                     )
-
-//                    onSettingsChanged.invoke(settingsNew)
                 }
             )
 
             MenuItem(
                 model = MenuItemModel(
                     title = AppRes.string.title_padding_size,
-                    currentIndex = when (settings.paddingSize) {
+                    currentIndex = when (currentSettings.paddingSize) {
                         JetHabitSize.Small -> 0
                         JetHabitSize.Medium -> 1
                         JetHabitSize.Big -> 2
@@ -142,23 +140,21 @@ fun SettingsScreen() {
                     )
                 ),
                 onItemSelected = {
-                    val settingsNew = settings.copy(
-                        paddingSize = when (it) {
+                    settingsEventBus.updatePaddingSize(
+                        when (it) {
                             0 -> JetHabitSize.Small
                             1 -> JetHabitSize.Medium
                             2 -> JetHabitSize.Big
                             else -> throw NotImplementedError("No valid value for this $it")
                         }
                     )
-
-//                    onSettingsChanged.invoke(settingsNew)
                 }
             )
 
             MenuItem(
                 model = MenuItemModel(
                     title = AppRes.string.title_corners_style,
-                    currentIndex = when (settings.cornerStyle) {
+                    currentIndex = when (currentSettings.cornerStyle) {
                         JetHabitCorners.Rounded -> 0
                         JetHabitCorners.Flat -> 1
                     },
@@ -168,15 +164,13 @@ fun SettingsScreen() {
                     )
                 ),
                 onItemSelected = {
-                    val settingsNew = settings.copy(
-                        cornerStyle = when (it) {
+                    settingsEventBus.updateCornerStyle(
+                        when (it) {
                             0 -> JetHabitCorners.Rounded
                             1 -> JetHabitCorners.Flat
                             else -> throw NotImplementedError("No valid value for this $it")
                         }
                     )
-
-//                    onSettingsChanged.invoke(settingsNew)
                 }
             )
 
@@ -186,23 +180,17 @@ fun SettingsScreen() {
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                ColorCard(color = if (settings.isDarkMode) purpleDarkPalette.tintColor else purpleLightPalette.tintColor,
+                ColorCard(color = if (currentSettings.isDarkMode) purpleDarkPalette.tintColor else purpleLightPalette.tintColor,
                     onClick = {
-//                        onSettingsChanged.invoke(settings.copy(
-//                            style = JetHabitStyle.Purple
-//                        ))
+                        settingsEventBus.updateStyle(JetHabitStyle.Purple)
                     })
-                ColorCard(color = if (settings.isDarkMode) orangeDarkPalette.tintColor else orangeLightPalette.tintColor,
+                ColorCard(color = if (currentSettings.isDarkMode) orangeDarkPalette.tintColor else orangeLightPalette.tintColor,
                     onClick = {
-//                        onSettingsChanged.invoke(settings.copy(
-//                            style = JetHabitStyle.Orange
-//                        ))
+                        settingsEventBus.updateStyle(JetHabitStyle.Orange)
                     })
-                ColorCard(color = if (settings.isDarkMode) blueDarkPalette.tintColor else blueLightPalette.tintColor,
+                ColorCard(color = if (currentSettings.isDarkMode) blueDarkPalette.tintColor else blueLightPalette.tintColor,
                     onClick = {
-//                        onSettingsChanged.invoke(settings.copy(
-//                            style = JetHabitStyle.Blue
-//                        ))
+                        settingsEventBus.updateStyle(JetHabitStyle.Blue)
                     })
             }
 
@@ -212,17 +200,13 @@ fun SettingsScreen() {
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                ColorCard(color = if (settings.isDarkMode) redDarkPalette.tintColor else redLightPalette.tintColor,
+                ColorCard(color = if (currentSettings.isDarkMode) redDarkPalette.tintColor else redLightPalette.tintColor,
                     onClick = {
-//                        onSettingsChanged.invoke(settings.copy(
-//                            style = JetHabitStyle.Red
-//                        ))
+                        settingsEventBus.updateStyle(JetHabitStyle.Red)
                     })
-                ColorCard(color = if (settings.isDarkMode) greenDarkPalette.tintColor else greenLightPalette.tintColor,
+                ColorCard(color = if (currentSettings.isDarkMode) greenDarkPalette.tintColor else greenLightPalette.tintColor,
                     onClick = {
-//                        onSettingsChanged.invoke(settings.copy(
-//                            style = JetHabitStyle.Green
-//                        ))
+                        settingsEventBus.updateStyle(JetHabitStyle.Green)
                     })
             }
 

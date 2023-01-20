@@ -12,7 +12,3 @@ data class SettingsBundle(
     val cornerStyle: JetHabitCorners,
     val style: JetHabitStyle
 )
-
-val LocalSettingsBundle = staticCompositionLocalOf<SettingsBundle> {
-    error("No default bundle instance provided")
-}

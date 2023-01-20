@@ -4,15 +4,14 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.toArgb
+import data.features.settings.LocalSettingsEventBus
+import data.features.settings.SettingsEventBus
 import di.PlatformConfiguration
 import di.PlatformSDK
-import domain.LocalSettingsBundle
-import domain.SettingsBundle
 import navigation.navigationGraph
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabitCorners
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabitSize
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabitStyle
 import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabitTheme
 import ru.alexgladkov.odyssey.compose.setup.OdysseyConfiguration
 import ru.alexgladkov.odyssey.compose.setup.setNavigationContent
@@ -26,9 +25,16 @@ class MainActivity : ComponentActivity() {
         PlatformSDK.init(PlatformConfiguration(this))
 
         setContent {
+            val settingsEventBus = remember { SettingsEventBus() }
+            val currentSettings = settingsEventBus.currentSettings.collectAsState().value
+
+            println("DEBUG: Main $currentSettings")
             MainTheme(
-                style = JetHabitStyle.Green,
-                darkTheme = true
+                style = currentSettings.style,
+                darkTheme = currentSettings.isDarkMode,
+                corners = currentSettings.cornerStyle,
+                textSize = currentSettings.textSize,
+                paddingSize = currentSettings.paddingSize
             ) {
                 val configuration = OdysseyConfiguration(
                     canvas = this,
@@ -37,13 +43,8 @@ class MainActivity : ComponentActivity() {
                     backgroundColor = JetHabitTheme.colors.primaryBackground
                 )
 
-                val settingsBundle = SettingsBundle(
-                    isDarkMode = true, cornerStyle = JetHabitCorners.Flat,
-                    style = JetHabitStyle.Blue, paddingSize = JetHabitSize.Medium, textSize = JetHabitSize.Medium
-                )
-
                 CompositionLocalProvider(
-                    LocalSettingsBundle provides settingsBundle
+                    LocalSettingsEventBus provides settingsEventBus
                 ) {
                     setNavigationContent(configuration) {
                         navigationGraph()
