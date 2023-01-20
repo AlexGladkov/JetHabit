@@ -1,9 +1,23 @@
 package screens.daily
 
+import androidx.compose.ui.text.capitalize
+import androidx.compose.ui.text.toLowerCase
 import com.adeo.kviewmodel.BaseSharedViewModel
+import data.features.daily.DailyRepository
+import data.features.habit.HabitRepository
+import di.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.datetime.Clock
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.minus
+import kotlinx.datetime.plus
+import kotlinx.datetime.toInstant
+import kotlinx.datetime.toLocalDateTime
+import org.kodein.di.instance
 import ru.alexgladkov.jetpackcomposedemo.screens.daily.models.DailyEvent
 import screens.daily.models.DailyViewState
 import screens.daily.views.HabitCardItemModel
@@ -12,10 +26,10 @@ class DailyViewModel : BaseSharedViewModel<DailyViewState, Unit, DailyEvent>(
     initialState = DailyViewState.Loading
 ) {
 
-//    private val habitRepository: HabitRepository,
-//    private val dailyRepository: DailyRepository
+    private val habitRepository: HabitRepository = Inject.instance()
+    private val dailyRepository: DailyRepository = Inject.instance()
 
-//    private var currentDate: Date = Calendar.getInstance().time
+    private var currentDate: LocalDateTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
 
     override fun obtainEvent(event: DailyEvent) {
         when (viewState) {
@@ -65,110 +79,92 @@ class DailyViewModel : BaseSharedViewModel<DailyViewState, Unit, DailyEvent>(
 
     private fun performHabbitClick(hasNextDay: Boolean, habbitId: Long, newValue: Boolean) {
         viewModelScope.launch {
-//            val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
-//            dailyRepository.addOrUpdate(
-//                date = dateFormat.format(currentDate),
-//                habitId = habbitId,
-//                value = newValue
-//            )
-//
-//            withContext(Dispatchers.Main) {
-//                fetchHabbitForDate(setHasNextDay = hasNextDay)
-//            }
+            dailyRepository.addOrUpdate(
+                date = currentDate.toString(),
+                habitId = habbitId,
+                value = newValue
+            )
+
+            withContext(Dispatchers.Main) {
+                fetchHabbitForDate(setHasNextDay = hasNextDay)
+            }
         }
     }
 
     private fun performNextClick(hasNextDay: Boolean) {
-//        val calendar = Calendar.getInstance()
-//        calendar.time = currentDate
-//        calendar.add(Calendar.DAY_OF_MONTH, 1)
-//        currentDate = calendar.time
-//
-//        val todayCalendar = Calendar.getInstance()
-//        val todayDay = todayCalendar.get(Calendar.DAY_OF_MONTH)
-//        val todayMonth = todayCalendar.get(Calendar.MONTH)
-//        val todayYear = todayCalendar.get(Calendar.YEAR)
-//
-//        val currentDay = calendar.get(Calendar.DAY_OF_MONTH)
-//        val currentMonth = calendar.get(Calendar.MONTH)
-//        val currentYear = calendar.get(Calendar.YEAR)
-//
-//        fetchHabbitForDate(
-//            setHasNextDay = if (
-//                currentDay == todayDay
-//                && currentMonth == todayMonth
-//                && currentYear == todayYear
-//            ) false else hasNextDay
-//        )
+        val systemTimeZone = TimeZone.currentSystemDefault()
+        val instantCurrentDate = currentDate.toInstant(systemTimeZone)
+        val tomorrow = instantCurrentDate.plus(1, DateTimeUnit.DAY, systemTimeZone)
+        currentDate = tomorrow.toLocalDateTime(systemTimeZone)
+        val duration = Clock.System.now() - instantCurrentDate
+
+        fetchHabbitForDate(
+            setHasNextDay = duration.inWholeDays > 1
+        )
     }
 
     private fun performPreviousClick() {
-//        val calendar = Calendar.getInstance()
-//        calendar.time = currentDate
-//        calendar.add(Calendar.DAY_OF_MONTH, -1)
-//        currentDate = calendar.time
-//
-//        fetchHabbitForDate(setHasNextDay = true)
+        val systemTimeZone = TimeZone.currentSystemDefault()
+        val now = currentDate.toInstant(systemTimeZone)
+        val yesterday = now.minus(1, DateTimeUnit.DAY, systemTimeZone)
+        currentDate = yesterday.toLocalDateTime(systemTimeZone)
+
+        fetchHabbitForDate(setHasNextDay = true)
     }
 
     private fun getTitleForADay(): String {
-//        val calendar = Calendar.getInstance()
-//        calendar.time = currentDate
-//
-//        val difference = Calendar.getInstance().timeInMillis - calendar.timeInMillis
-//        val dateFormat = SimpleDateFormat("dd MMM", Locale.getDefault())
-//
-//        return when (TimeUnit.MILLISECONDS.toDays(difference)) {
-//            0L -> "Today"
-//            1L -> "Yesterday"
-//            else -> dateFormat.format(currentDate)
-//        }
-        return ""
+        val systemTimeZone = TimeZone.currentSystemDefault()
+        val instantCurrentDate = currentDate.toInstant(systemTimeZone)
+        val now = Clock.System.now()
+
+        val difference = now - instantCurrentDate
+
+        return when (difference.inWholeDays) {
+            0L -> "Today"
+            1L -> "Yesterday"
+            else -> "${currentDate.dayOfMonth} ${currentDate.month.name.take(3).toLowerCase().capitalize()}"
+        }
     }
 
     private fun fetchHabbitForDate(needsToRefresh: Boolean = false, setHasNextDay: Boolean = false) {
-//        if (needsToRefresh) {
-//            _dailyViewState.postValue(DailyViewState.Loading)
-//        }
-//
-//        viewModelScope.launch {
-//            try {
-//                val habbits = habitRepository.fetchHabitsList()
-//
-//                if (habbits.isEmpty()) {
-//                    _dailyViewState.postValue(DailyViewState.NoItems)
-//                } else {
-//                    val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
-//                    val diaryResponse = dailyRepository.fetchDiary()
-//                    Log.e("TAG", "response -> $diaryResponse")
-//                    val dailyActivities = diaryResponse
-//                        .filter { it.date == dateFormat.format(currentDate) }.firstOrNull()
-//
-//                    val cardItems: List<HabitCardItemModel> = habbits.map { habbitEntity ->
-//                        HabitCardItemModel(
-//                            habitId = habbitEntity.itemId,
-//                            title = habbitEntity.title,
-//                            isChecked = if (dailyActivities != null) {
-//                                val dailyItem = dailyActivities.habits.firstOrNull { it.habbitId == habbitEntity.itemId }
-//                                dailyItem?.value ?: false
-//                            } else {
-//                                false
-//                            }
-//                        )
-//                    }
-//
-//
-//                    _dailyViewState.postValue(
-//                        DailyViewState.Display(
-//                            items = cardItems,
-//                            hasNextDay = setHasNextDay,
-//                            title = getTitleForADay()
-//                        )
-//                    )
-//                }
-//            } catch (e: Exception) {
-//                _dailyViewState.postValue(DailyViewState.Error)
-//            }
-//        }
+        if (needsToRefresh) {
+            viewState = DailyViewState.Loading
+        }
+
+        viewModelScope.launch {
+            try {
+                val habits = habitRepository.fetchHabitsList()
+
+                if (habits.isEmpty()) {
+                    viewState = DailyViewState.NoItems
+                } else {
+                    val diaryResponse = dailyRepository.fetchDiary()
+                    val dailyActivities = diaryResponse.firstOrNull { it.date == currentDate.toString() }
+
+                    val cardItems: List<HabitCardItemModel> = habits.map { habbitEntity ->
+                        HabitCardItemModel(
+                            habitId = habbitEntity.itemID,
+                            title = habbitEntity.title,
+                            isChecked = if (dailyActivities != null) {
+                                val dailyItem =
+                                    dailyActivities.habits.firstOrNull { it.habbitId == habbitEntity.itemID }
+                                dailyItem?.value ?: false
+                            } else {
+                                false
+                            }
+                        )
+                    }
+
+
+                    viewState = DailyViewState.Display(
+                        items = cardItems,
+                        hasNextDay = setHasNextDay,
+                        title = getTitleForADay()
+                    )
+                }
+            } catch (e: Exception) {
+                viewState = DailyViewState.Error
+            }
+        }
     }
 }

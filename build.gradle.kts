@@ -15,6 +15,7 @@ plugins {
     id("org.jetbrains.compose")
     id("com.squareup.sqldelight")
     kotlin("plugin.serialization")
+    id("com.adeo.libres")
 }
 
 group = "ru.alexgladkov"
@@ -93,6 +94,7 @@ kotlin {
 
                 implementation(Dependencies.Kodein.core)
                 implementation(Dependencies.Kotlin.serialization)
+                implementation(Dependencies.Kotlin.dateTime)
 
                 val odysseyVersion = "1.3.1"
                 implementation("io.github.alexgladkov:odyssey-core:$odysseyVersion")
@@ -170,6 +172,20 @@ kotlin {
             dependsOn(uikitMain)
         }
     }
+}
+
+sqldelight {
+    database("Database") {
+        packageName = ""
+        schemaOutputDirectory = file("src/commonMain/sqldelight/data/schema")
+        migrationOutputDirectory = file("src/commonMain/sqldelight/data/migrations")
+    }
+}
+
+libres {
+    generatedClassName = "AppRes"
+    generateNamedArguments = true
+    baseLocaleLanguageCode = "en"
 }
 
 android {

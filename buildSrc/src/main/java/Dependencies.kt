@@ -18,6 +18,7 @@ object Dependencies {
         const val version = "1.7.10"
         const val serialization = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1"
         const val serializationPlugin = "org.jetbrains.kotlin:kotlin-serialization:$version"
+        const val dateTime = "org.jetbrains.kotlinx:kotlinx-datetime:0.4.0"
     }
 
     object Hilt {

@@ -1,11 +1,11 @@
 package data
 
-import android.content.Context
 import com.squareup.sqldelight.android.AndroidSqliteDriver
 import com.squareup.sqldelight.db.SqlDriver
+import di.PlatformConfiguration
 
-actual class DriverFactory(private val context: Context) {
-    actual suspend fun createDriver(schema: SqlDriver.Schema, name: String): SqlDriver {
-        return AndroidSqliteDriver(schema, context, name)
+actual class DriverFactory actual constructor(private val platformConfiguration: PlatformConfiguration) {
+    actual fun createDriver(name: String): SqlDriver {
+        return AndroidSqliteDriver(Database.Schema, platformConfiguration.activityContext, name)
     }
 }

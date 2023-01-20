@@ -1,4 +1,4 @@
-package ru.alexgladkov.jetpackcomposedemo.screens.daily.views
+package screens.daily.views
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
@@ -22,9 +22,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import ru.alexgladkov.jetpackcomposedemo.AppRes
 import screens.daily.models.DailyViewState
 import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabitTheme
-import screens.daily.views.HabitCardItem
+import ru.alexgladkov.odyssey.compose.extensions.present
+import ru.alexgladkov.odyssey.compose.local.LocalRootController
 
 @ExperimentalFoundationApi
 @Composable
@@ -35,6 +37,8 @@ fun DailyViewDisplay(
     onNextDayClicked: () -> Unit,
     onCheckedChange: (Long, Boolean) -> Unit
 ) {
+    val rootController = LocalRootController.current
+
     Surface(
         modifier = modifier.fillMaxSize(),
         color = JetHabitTheme.colors.primaryBackground
@@ -67,7 +71,7 @@ fun DailyViewDisplay(
                                         bottom = JetHabitTheme.shapes.padding + 8.dp
                                     )
                                     .clickable { onPreviousDayClicked.invoke() },
-                                text = "", // stringResource(id = R.string.daily_previous_day),
+                                text = AppRes.string.daily_previous_day,
                                 style = JetHabitTheme.typography.body,
                                 color = JetHabitTheme.colors.controlColor
                             )
@@ -104,7 +108,7 @@ fun DailyViewDisplay(
                     .padding(JetHabitTheme.shapes.padding),
                 backgroundColor = JetHabitTheme.colors.tintColor,
                 onClick = {
-
+                    rootController.findRootController().present("compose")
                 }) {
                 Icon(
                     imageVector = Icons.Filled.Create,

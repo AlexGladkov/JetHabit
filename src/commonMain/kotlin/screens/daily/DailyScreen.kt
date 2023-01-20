@@ -4,17 +4,15 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.Modifier
 import com.adeo.kviewmodel.odyssey.StoredViewModel
 import ru.alexgladkov.jetpackcomposedemo.screens.daily.models.DailyEvent
 import screens.daily.models.DailyViewState
-import ru.alexgladkov.jetpackcomposedemo.screens.daily.views.DailyViewDisplay
+import screens.daily.views.DailyViewDisplay
 import ru.alexgladkov.jetpackcomposedemo.screens.daily.views.DailyViewError
 import screens.daily.views.DailyViewLoading
-import ru.alexgladkov.jetpackcomposedemo.screens.daily.views.DailyViewNoItems
+import screens.daily.views.DailyViewNoItems
 import ru.alexgladkov.odyssey.compose.extensions.present
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
-import screens.daily.DailyViewModel
 
 @ExperimentalFoundationApi
 @Composable

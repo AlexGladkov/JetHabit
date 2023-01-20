@@ -1,4 +1,4 @@
-package ru.alexgladkov.jetpackcomposedemo.data.features.daily
+package data.features.daily
 
 data class DailyEntity(
     val date: String,

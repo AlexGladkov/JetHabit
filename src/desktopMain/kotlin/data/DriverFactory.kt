@@ -2,10 +2,11 @@ package data
 
 import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
+import di.PlatformConfiguration
 
-actual class DriverFactory {
+actual class DriverFactory actual constructor(private val platformConfiguration: PlatformConfiguration) {
 
-    actual suspend fun createDriver(schema: SqlDriver.Schema, name: String): SqlDriver {
+    actual fun createDriver(name: String): SqlDriver {
         return JdbcSqliteDriver("jdbc:sqlite:$name")
     }
 

@@ -16,6 +16,8 @@ pluginManagement {
             if (requested.id.id.startsWith("com.squareup.sqldelight")) {
                 useModule("com.squareup.sqldelight:gradle-plugin:1.5.4")
             }
+
+
         }
     }
 
@@ -26,6 +28,7 @@ pluginManagement {
 
         val composeVersion = extra["compose.version"] as String
         id("org.jetbrains.compose").version(composeVersion)
+        id("com.adeo.libres").version("1.1.2")
     }
 }
 

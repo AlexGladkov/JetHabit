@@ -1,16 +1,17 @@
 package screens.compose
 
 import com.adeo.kviewmodel.BaseSharedViewModel
+import data.features.habit.HabitRepository
+import di.Inject
 import kotlinx.coroutines.launch
 import screens.compose.models.ComposeEvent
 import screens.compose.models.ComposeViewState
 
-//@HiltViewModel
-class ComposeViewModel(
-
-) : BaseSharedViewModel<ComposeViewState, Unit, ComposeEvent>(
+class ComposeViewModel: BaseSharedViewModel<ComposeViewState, Unit, ComposeEvent>(
     initialState = ComposeViewState.ViewStateInitial()
 ) {
+
+    private val habitRepository: HabitRepository = Inject.instance()
 
     override fun obtainEvent(event: ComposeEvent) {
         when (viewState) {
@@ -31,18 +32,16 @@ class ComposeViewModel(
         viewModelScope.launch {
             viewState = state.copy(isSending = true)
 
-//            try {
-//                habitRepository.addNewHabit(
-//                    HabitEntity(
-//                        title = state.habitTitle,
-//                        isGood = state.isGoodHabit
-//                    )
-//                )
-//
-//                _composeViewState.postValue(ComposeViewState.ViewStateSuccess)
-//            } catch (e: Exception) {
-//                _composeViewState.postValue(state.copy(isSending = false))
-//            }
+            viewState = try {
+                habitRepository.addNewHabit(
+                    title = state.habitTitle,
+                    isGood = state.isGoodHabit
+                )
+
+                ComposeViewState.ViewStateSuccess
+            } catch (e: Exception) {
+                state.copy(isSending = false)
+            }
         }
     }
 }

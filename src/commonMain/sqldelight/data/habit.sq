@@ -1,0 +1,13 @@
+CREATE TABLE HabitEntity (
+  itemID INTEGER PRIMARY KEY AUTOINCREMENT,
+  title TEXT NOT NULL,
+  isGood INTEGER AS Boolean DEFAULT 0
+);
+
+selectAll:
+SELECT *
+FROM HabitEntity;
+
+insert:
+INSERT INTO HabitEntity(itemID, title, isGood)
+VALUES (?, ?, ?);

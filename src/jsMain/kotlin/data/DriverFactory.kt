@@ -2,12 +2,13 @@ package data
 
 import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.drivers.sqljs.initSqlDriver
+import di.PlatformConfiguration
 import kotlinx.coroutines.await
 import kotlin.js.Promise
 
-actual class DriverFactory {
+actual class DriverFactory actual constructor(private val platformConfiguration: PlatformConfiguration) {
 
-    actual suspend fun createDriver(schema: SqlDriver.Schema, name: String): SqlDriver {
-        return initSqlDriver(schema).await()
+    actual fun createDriver(name: String): SqlDriver {
+        throw IllegalStateException("JS Not Implemented")
     }
 }

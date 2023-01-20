@@ -18,11 +18,13 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import domain.LocalSettingsBundle
 import domain.SettingsBundle
+import ru.alexgladkov.jetpackcomposedemo.AppRes
 import screens.daily.views.HabitCardItem
 import screens.daily.views.HabitCardItemModel
 import screens.settings.views.MenuItem
@@ -62,18 +64,19 @@ fun SettingsScreen() {
                     modifier = Modifier
                         .weight(1f)
                         .padding(start = JetHabitTheme.shapes.padding),
-                    text = "", // stringResource(id = R.string.title_settings),
+                    text = AppRes.string.title_settings,
                     color = JetHabitTheme.colors.primaryText,
                     style = JetHabitTheme.typography.toolbar
                 )
             }
 
             Row(
-                modifier = Modifier.padding(JetHabitTheme.shapes.padding)
+                modifier = Modifier.padding(JetHabitTheme.shapes.padding),
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     modifier = Modifier.weight(1f),
-                    text = "", // stringResource(id = R.string.action_dark_theme_enable),
+                    text = AppRes.string.action_dark_theme_enable,
                     color = JetHabitTheme.colors.primaryText,
                     style = JetHabitTheme.typography.body
                 )
@@ -98,18 +101,17 @@ fun SettingsScreen() {
 
             MenuItem(
                 model = MenuItemModel(
-                    title = "", // stringResource(id = R.string.title_font_size),
+                    title = AppRes.string.title_font_size,
                     currentIndex = when (settings.textSize) {
                         JetHabitSize.Small -> 0
                         JetHabitSize.Medium -> 1
                         JetHabitSize.Big -> 2
                     },
-                    values = emptyList()
-//                        listOf(
-//                        stringResource(id = R.string.title_font_size_small),
-//                        stringResource(id = R.string.title_font_size_medium),
-//                        stringResource(id = R.string.title_font_size_big)
-//                    )
+                    values = listOf(
+                        AppRes.string.title_font_size_small,
+                        AppRes.string.title_font_size_medium,
+                        AppRes.string.title_font_size_big
+                    )
                 ),
                 onItemSelected = {
                     val settingsNew = settings.copy(
@@ -127,18 +129,17 @@ fun SettingsScreen() {
 
             MenuItem(
                 model = MenuItemModel(
-                    title = "", // stringResource(id = R.string.title_padding_size),
+                    title = AppRes.string.title_padding_size,
                     currentIndex = when (settings.paddingSize) {
                         JetHabitSize.Small -> 0
                         JetHabitSize.Medium -> 1
                         JetHabitSize.Big -> 2
                     },
-                    values = emptyList(),
-//                    listOf(
-//                        stringResource(id = R.string.title_padding_small),
-//                        stringResource(id = R.string.title_padding_medium),
-//                        stringResource(id = R.string.title_padding_big)
-//                    )
+                    values = listOf(
+                        AppRes.string.title_padding_small,
+                        AppRes.string.title_padding_medium,
+                        AppRes.string.title_padding_big
+                    )
                 ),
                 onItemSelected = {
                     val settingsNew = settings.copy(
@@ -156,16 +157,15 @@ fun SettingsScreen() {
 
             MenuItem(
                 model = MenuItemModel(
-                    title = "", // stringResource(id = R.string.title_corners_style),
+                    title = AppRes.string.title_corners_style,
                     currentIndex = when (settings.cornerStyle) {
                         JetHabitCorners.Rounded -> 0
                         JetHabitCorners.Flat -> 1
                     },
-                    values = emptyList()
-//                        listOf(
-//                        stringResource(id = R.string.title_corners_style_rounded),
-//                        stringResource(id = R.string.title_corners_style_flat)
-//                    )
+                    values = listOf(
+                        AppRes.string.title_corners_style_rounded,
+                        AppRes.string.title_corners_style_flat
+                    )
                 ),
                 onItemSelected = {
                     val settingsNew = settings.copy(
@@ -229,7 +229,7 @@ fun SettingsScreen() {
             HabitCardItem(
                 model = HabitCardItemModel(
                     habitId = 0,
-                    title = "Пример карточки",
+                    title = AppRes.string.card_example,
                     isChecked = true
                 )
             )

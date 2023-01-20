@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import ru.alexgladkov.jetpackcomposedemo.AppRes
 import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabitTheme
 
 @Composable
@@ -33,7 +34,7 @@ fun ComposeViewSuccess(modifier: Modifier = Modifier, onCloseClick: () -> Unit) 
                 modifier = Modifier
                     .padding(16.dp)
                     .align(Alignment.Center),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = CenterHorizontally
             ) {
                 Icon(
                     modifier = Modifier
@@ -46,7 +47,7 @@ fun ComposeViewSuccess(modifier: Modifier = Modifier, onCloseClick: () -> Unit) 
 
                 Text(
                     modifier = Modifier.padding(top = 24.dp),
-                    text = "", // stringResource(id = R.string.compose_success_add),
+                    text = AppRes.string.compose_success_add,
                     style = JetHabitTheme.typography.body,
                     color = JetHabitTheme.colors.primaryText
                 )
@@ -65,7 +66,7 @@ fun ComposeViewSuccess(modifier: Modifier = Modifier, onCloseClick: () -> Unit) 
                     )
                 ) {
                     Text(
-                        text = "", // stringResource(id = R.string.action_close),
+                        text = AppRes.string.action_close,
                         style = JetHabitTheme.typography.body,
                         color = Color.White
                     )
