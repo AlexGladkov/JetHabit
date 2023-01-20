@@ -262,13 +262,18 @@ compose.desktop {
 compose.experimental {
     web.application {}
     uikit.application {
-        bundleIdPrefix = "ru.agladkov"
-        projectName = "Simple Do"
+        bundleIdPrefix = "ru.alexgladkov"
+        projectName = "JetHabit"
         deployConfigurations {
             simulator("IPhone13") {
                 //Usage: ./gradlew iosDeployIPhone13Debug
                 device = org.jetbrains.compose.experimental.dsl.IOSDevices.IPHONE_13_PRO
             }
+            simulator("IPhone11") {
+                //Usage: ./gradlew iosDeployIPhone11Debug
+                device = org.jetbrains.compose.experimental.dsl.IOSDevices.IPHONE_11_PRO
+            }
+
             simulator("IPadUI") {
                 //Usage: ./gradlew iosDeployIPadUIDebug
                 device = org.jetbrains.compose.experimental.dsl.IOSDevices.IPAD_MINI_6th_Gen
@@ -294,7 +299,7 @@ compose.desktop.nativeApplication {
     targets(kotlin.targets.getByName("macosX64"))
     distributions {
         targetFormats(org.jetbrains.compose.desktop.application.dsl.TargetFormat.Dmg)
-        packageName = "Simple Do"
+        packageName = "JetHabit"
         packageVersion = "1.0.0"
     }
 }

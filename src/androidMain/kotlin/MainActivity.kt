@@ -28,7 +28,6 @@ class MainActivity : ComponentActivity() {
             val settingsEventBus = remember { SettingsEventBus() }
             val currentSettings = settingsEventBus.currentSettings.collectAsState().value
 
-            println("DEBUG: Main $currentSettings")
             MainTheme(
                 style = currentSettings.style,
                 darkTheme = currentSettings.isDarkMode,
