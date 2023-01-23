@@ -23,7 +23,6 @@ class SettingsEventBus {
 
     fun updateDarkMode(isDarkMode: Boolean) {
         _currentSettings.value = _currentSettings.value.copy(isDarkMode = isDarkMode)
-        println("DEBUG: ${_currentSettings.value}")
     }
 
     fun updateCornerStyle(corners: JetHabitCorners) {

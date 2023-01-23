@@ -139,7 +139,12 @@ class DailyViewModel : BaseSharedViewModel<DailyViewState, Unit, DailyEvent>(
                     viewState = DailyViewState.NoItems
                 } else {
                     val diaryResponse = dailyRepository.fetchDiary()
-                    val dailyActivities = diaryResponse.firstOrNull { it.date == currentDate.toString() }
+                    val dailyActivities = diaryResponse.firstOrNull {
+                        val itDate = it.date.toLocalDateTime()
+                        val currentDate = currentDate
+                        itDate.dayOfMonth == currentDate.dayOfMonth && itDate.year == currentDate.year &&
+                            itDate.monthNumber == currentDate.monthNumber
+                    }
 
                     val cardItems: List<HabitCardItemModel> = habits.map { habbitEntity ->
                         HabitCardItemModel(

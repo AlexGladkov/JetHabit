@@ -14,14 +14,18 @@ data class DailyItem(
 
 class DailyRepository(private val database: Database) {
 
-    suspend fun fetchDiary(): List<DailyItem> = database.dailyQueries.selectAll()
-        .executeAsList()
-        .map {
-            DailyItem(
-                date = it.date,
-                habits = decompressHabitsWithValues(it.habitItemIdsWithStatuses)
-            )
-        }
+    fun fetchDiary(): List<DailyItem> {
+        val result = database.dailyQueries.selectAll()
+            .executeAsList()
+            .map {
+                DailyItem(
+                    date = it.date,
+                    habits = decompressHabitsWithValues(it.habitItemIdsWithStatuses)
+                )
+            }
+
+        return result
+    }
 
     @OptIn(ExperimentalSerializationApi::class)
     suspend fun addOrUpdate(date: String, habitId: Long, value: Boolean) {

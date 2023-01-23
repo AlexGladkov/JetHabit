@@ -14,6 +14,10 @@ object Dependencies {
         const val accompanist = "com.google.accompanist:accompanist-systemuicontroller:0.18.0"
     }
 
+    object LibRes {
+        const val compose = "com.adeo.libres:libres-compose:1.1.2"
+    }
+
     object Kotlin {
         const val version = "1.7.10"
         const val serialization = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1"
@@ -28,16 +32,43 @@ object Dependencies {
         const val compiler = "com.google.dagger:hilt-compiler:$version"
     }
 
-    object Room {
-        private const val version = "2.4.3"
-        const val ktx = "androidx.room:room-ktx:$version"
-        const val runtime = "androidx.room:room-runtime:$version"
-        const val paging = "androidx.room:room-paging:2.4.0-alpha04"
-        const val compiler = "androidx.room:room-compiler:$version"
+    object Database {
+        object Room {
+            private const val version = "2.4.3"
+            const val ktx = "androidx.room:room-ktx:$version"
+            const val runtime = "androidx.room:room-runtime:$version"
+            const val paging = "androidx.room:room-paging:2.4.0-alpha04"
+            const val compiler = "androidx.room:room-compiler:$version"
+        }
+
+        object SqlDelight {
+            private const val version = "1.5.4"
+            const val desktop = "com.squareup.sqldelight:sqlite-driver:$version"
+            const val android = "com.squareup.sqldelight:android-driver:$version"
+            const val js = "com.squareup.sqldelight:sqljs-driver:$version"
+            const val native = "com.squareup.sqldelight:native-driver:$version"
+        }
     }
 
     object Navigation {
         const val navigationCompose = "androidx.navigation:navigation-compose:2.4.0-alpha10"
+
+        object Odyssey {
+            const val version = "1.3.3"
+            const val core = "io.github.alexgladkov:odyssey-core:$version"
+            const val compose = "io.github.alexgladkov:odyssey-compose:$version"
+        }
+    }
+
+    object Arch {
+        const val kodein = "org.kodein.di:kodein-di:7.17.0"
+
+        object KViewModel {
+            const val kviewmodel = "0.12"
+            const val core = "com.adeo:kviewmodel:$kviewmodel"
+            const val compose = "com.adeo:kviewmodel-compose:$kviewmodel"
+            const val odyssey = "com.adeo:kviewmodel-odyssey:$kviewmodel"
+        }
     }
 
     object Android {
@@ -56,9 +87,5 @@ object Dependencies {
         const val jUnit = "junit:junit:4.+"
         const val androidJUnit = "androidx.test.ext:junit:1.1.2"
         const val espresso = "androidx.test.espresso:espresso-core:3.3.0"
-    }
-
-    object Kodein {
-        const val core = "org.kodein.di:kodein-di:7.1.0"
     }
 }

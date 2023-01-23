@@ -92,20 +92,19 @@ kotlin {
                 implementation(compose.material)
                 implementation(compose.runtime)
 
-                implementation(Dependencies.Kodein.core)
                 implementation(Dependencies.Kotlin.serialization)
                 implementation(Dependencies.Kotlin.dateTime)
 
-                val odysseyVersion = "1.3.1"
-                implementation("io.github.alexgladkov:odyssey-core:$odysseyVersion")
-                implementation("io.github.alexgladkov:odyssey-compose:$odysseyVersion")
+                implementation(Dependencies.Navigation.Odyssey.core)
+                implementation(Dependencies.Navigation.Odyssey.compose)
 
-                implementation("org.kodein.di:kodein-di:7.17.0")
+                implementation(Dependencies.Arch.kodein)
 
-                val kviewmodel = "0.12"
-                implementation("com.adeo:kviewmodel:$kviewmodel")
-                implementation("com.adeo:kviewmodel-compose:$kviewmodel")
-                implementation("com.adeo:kviewmodel-odyssey:$kviewmodel")
+                implementation(Dependencies.Arch.KViewModel.core)
+                implementation(Dependencies.Arch.KViewModel.compose)
+                implementation(Dependencies.Arch.KViewModel.odyssey)
+
+                implementation(Dependencies.LibRes.compose)
             }
         }
 
@@ -119,7 +118,7 @@ kotlin {
         val desktopMain by getting {
             dependencies {
                 implementation(compose.desktop.currentOs)
-                implementation("com.squareup.sqldelight:sqlite-driver:1.5.4")
+                implementation(Dependencies.Database.SqlDelight.desktop)
             }
         }
 
@@ -137,20 +136,20 @@ kotlin {
 
                 implementation(Dependencies.Kotlin.serialization)
 
-                implementation("com.squareup.sqldelight:android-driver:1.5.4")
+                implementation(Dependencies.Database.SqlDelight.android)
             }
         }
 
         val jsMain by getting {
             dependencies {
-                implementation("com.squareup.sqldelight:sqljs-driver:1.5.4")
+                implementation(Dependencies.Database.SqlDelight.js)
             }
         }
 
         val iosMain by creating {
             dependsOn(commonMain)
             dependencies {
-                implementation("com.squareup.sqldelight:native-driver:1.5.4")
+                implementation(Dependencies.Database.SqlDelight.native)
             }
         }
         val macosMain by creating {
@@ -247,7 +246,7 @@ compose.desktop {
                 org.jetbrains.compose.desktop.application.dsl.TargetFormat.Msi,
                 org.jetbrains.compose.desktop.application.dsl.TargetFormat.Deb
             )
-            packageName = "Simple Do"
+            packageName = "JetHabit"
             packageVersion = "1.0.0"
 
             windows {

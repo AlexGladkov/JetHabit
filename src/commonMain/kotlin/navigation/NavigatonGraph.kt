@@ -2,12 +2,17 @@ package navigation
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.adeo.libres.compose.painterResource
+import ru.alexgladkov.jetpackcomposedemo.AppRes
 import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabitTheme
 import ru.alexgladkov.odyssey.compose.extensions.bottomNavigation
 import screens.splash.SplashScreen
@@ -70,6 +75,8 @@ class DailyTab : TabItem() {
                 title = "Daily",
                 selectedColor = JetHabitTheme.colors.primaryText,
                 unselectedColor = JetHabitTheme.colors.controlColor,
+                selectedIcon = painterResource(AppRes.image.ic_calendar),
+                unselectedIcon = painterResource(AppRes.image.ic_calendar),
                 titleStyle = TextStyle(
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Medium
@@ -86,6 +93,8 @@ class SettingsTab : TabItem() {
                 title = "Settings",
                 selectedColor = JetHabitTheme.colors.primaryText,
                 unselectedColor = JetHabitTheme.colors.controlColor,
+                selectedIcon = painterResource(AppRes.image.ic_settings),
+                unselectedIcon = painterResource(AppRes.image.ic_settings),
                 titleStyle = TextStyle(
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Medium
