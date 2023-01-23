@@ -1,4 +1,4 @@
-package ru.alexgladkov.jetpackcomposedemo.ui.themes.components
+package ui.themes.components
 
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.height
@@ -9,10 +9,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabitTheme
+import ui.themes.JetHabitTheme
 
 @Composable
-fun JetHabitButton(
+internal fun JetHabitButton(
     modifier: Modifier = Modifier,
     backgroundColor: Color = JetHabitTheme.colors.tintColor,
     onClick: () -> Unit,

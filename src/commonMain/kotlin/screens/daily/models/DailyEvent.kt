@@ -1,4 +1,4 @@
-package ru.alexgladkov.jetpackcomposedemo.screens.daily.models
+package screens.daily.models
 
 sealed class DailyEvent {
     object EnterScreen : DailyEvent()

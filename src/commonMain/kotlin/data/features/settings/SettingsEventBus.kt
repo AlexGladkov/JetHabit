@@ -4,9 +4,9 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import domain.SettingsBundle
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabitCorners
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabitSize
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabitStyle
+import ui.themes.JetHabitCorners
+import ui.themes.JetHabitSize
+import ui.themes.JetHabitStyle
 
 class SettingsEventBus {
 

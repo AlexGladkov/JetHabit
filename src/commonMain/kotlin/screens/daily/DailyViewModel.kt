@@ -1,7 +1,5 @@
 package screens.daily
 
-import androidx.compose.ui.text.capitalize
-import androidx.compose.ui.text.toLowerCase
 import com.adeo.kviewmodel.BaseSharedViewModel
 import data.features.daily.DailyRepository
 import data.features.habit.HabitRepository
@@ -17,8 +15,7 @@ import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
-import org.kodein.di.instance
-import ru.alexgladkov.jetpackcomposedemo.screens.daily.models.DailyEvent
+import screens.daily.models.DailyEvent
 import screens.daily.models.DailyViewState
 import screens.daily.views.HabitCardItemModel
 

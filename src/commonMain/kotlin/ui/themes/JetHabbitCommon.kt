@@ -1,4 +1,4 @@
-package ru.alexgladkov.jetpackcomposedemo.ui.themes
+package ui.themes
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.staticCompositionLocalOf

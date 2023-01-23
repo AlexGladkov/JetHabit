@@ -16,6 +16,7 @@ plugins {
     id("com.squareup.sqldelight")
     kotlin("plugin.serialization")
     id("com.adeo.libres")
+    kotlin("native.cocoapods")
 }
 
 group = "ru.alexgladkov"
@@ -37,13 +38,13 @@ kotlin {
         binaries.executable()
     }
 
+    ios()
+    iosSimulatorArm64()
+
     macosX64 {
         binaries {
             executable {
                 entryPoint = "main"
-                freeCompilerArgs += listOf(
-                    "-linker-option", "-framework", "-linker-option", "Metal"
-                )
             }
         }
     }
@@ -51,37 +52,20 @@ kotlin {
         binaries {
             executable {
                 entryPoint = "main"
-                freeCompilerArgs += listOf(
-                    "-linker-option", "-framework", "-linker-option", "Metal"
-                )
             }
         }
     }
-    iosX64("uikitX64") {
-        binaries {
-            executable() {
-                entryPoint = "main"
-                freeCompilerArgs += listOf(
-                    "-linker-option", "-framework", "-linker-option", "Metal",
-                    "-linker-option", "-framework", "-linker-option", "CoreText",
-                    "-linker-option", "-framework", "-linker-option", "CoreGraphics"
-                )
-            }
+
+    cocoapods {
+        summary = "Some description for the Shared Module"
+        homepage = "Link to the Shared Module homepage"
+        version = "0.0.2"
+        ios.deploymentTarget = "14.1"
+        framework {
+            baseName = "KMMShared"
+            isStatic = true
         }
-    }
-    iosArm64("uikitArm64") {
-        binaries {
-            executable() {
-                entryPoint = "main"
-                freeCompilerArgs += listOf(
-                    "-linker-option", "-framework", "-linker-option", "Metal",
-                    "-linker-option", "-framework", "-linker-option", "CoreText",
-                    "-linker-option", "-framework", "-linker-option", "CoreGraphics"
-                )
-                // TODO: the current compose binary surprises LLVM, so disable checks for now.
-                freeCompilerArgs += "-Xdisable-phases=VerifyBitcode"
-            }
-        }
+        extraSpecAttributes["resources"] = "['src/commonMain/resources/**', 'src/iosMain/resources/**']"
     }
 
     sourceSets {
@@ -146,29 +130,22 @@ kotlin {
             }
         }
 
-        val iosMain by creating {
+        val macosArm64Main by getting
+        val macosX64Main by getting
+
+        val macosMain by creating {
             dependsOn(commonMain)
+            macosArm64Main.dependsOn(this)
+            macosX64Main.dependsOn(this)
+        }
+
+        val iosMain by getting {
             dependencies {
                 implementation(Dependencies.Database.SqlDelight.native)
             }
         }
-        val macosMain by creating {
+        val iosSimulatorArm64Main by getting {
             dependsOn(iosMain)
-        }
-        val macosX64Main by getting {
-            dependsOn(macosMain)
-        }
-        val macosArm64Main by getting {
-            dependsOn(macosMain)
-        }
-        val uikitMain by creating {
-            dependsOn(iosMain)
-        }
-        val uikitX64Main by getting {
-            dependsOn(uikitMain)
-        }
-        val uikitArm64Main by getting {
-            dependsOn(uikitMain)
         }
     }
 }
@@ -260,25 +237,6 @@ compose.desktop {
 
 compose.experimental {
     web.application {}
-    uikit.application {
-        bundleIdPrefix = "ru.alexgladkov"
-        projectName = "JetHabit"
-        deployConfigurations {
-            simulator("IPhone13") {
-                //Usage: ./gradlew iosDeployIPhone13Debug
-                device = org.jetbrains.compose.experimental.dsl.IOSDevices.IPHONE_13_PRO
-            }
-            simulator("IPhone11") {
-                //Usage: ./gradlew iosDeployIPhone11Debug
-                device = org.jetbrains.compose.experimental.dsl.IOSDevices.IPHONE_11_PRO
-            }
-
-            simulator("IPadUI") {
-                //Usage: ./gradlew iosDeployIPadUIDebug
-                device = org.jetbrains.compose.experimental.dsl.IOSDevices.IPAD_MINI_6th_Gen
-            }
-        }
-    }
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {

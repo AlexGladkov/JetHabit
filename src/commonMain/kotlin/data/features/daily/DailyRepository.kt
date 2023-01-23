@@ -14,7 +14,7 @@ data class DailyItem(
 
 class DailyRepository(private val database: Database) {
 
-    fun fetchDiary(): List<DailyItem> {
+    suspend fun fetchDiary(): List<DailyItem> {
         val result = database.dailyQueries.selectAll()
             .executeAsList()
             .map {

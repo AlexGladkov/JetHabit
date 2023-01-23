@@ -8,29 +8,9 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabitCorners
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabitImage
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabitShape
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabitSize
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabitStyle
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabitTypography
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.LocalJetHabitColors
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.LocalJetHabitImage
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.LocalJetHabitShape
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.LocalJetHabitTypography
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.blueDarkPalette
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.blueLightPalette
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.greenDarkPalette
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.greenLightPalette
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.orangeDarkPalette
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.orangeLightPalette
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.purpleDarkPalette
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.purpleLightPalette
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.redDarkPalette
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.redLightPalette
 
 @Composable
-fun MainTheme(
+internal fun MainTheme(
     style: JetHabitStyle = JetHabitStyle.Purple,
     textSize: JetHabitSize = JetHabitSize.Medium,
     paddingSize: JetHabitSize = JetHabitSize.Medium,

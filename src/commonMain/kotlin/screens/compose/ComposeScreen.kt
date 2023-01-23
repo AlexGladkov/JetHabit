@@ -16,7 +16,7 @@ import screens.compose.views.ComposeViewSuccess
 @ExperimentalComposeUiApi
 @ExperimentalFoundationApi
 @Composable
-fun ComposeScreen() {
+internal fun ComposeScreen() {
     val rootController = LocalRootController.current
 
     StoredViewModel(factory = { ComposeViewModel() }) { viewModel ->

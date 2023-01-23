@@ -5,10 +5,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import com.adeo.kviewmodel.odyssey.StoredViewModel
-import ru.alexgladkov.jetpackcomposedemo.screens.daily.models.DailyEvent
+import screens.daily.models.DailyEvent
 import screens.daily.models.DailyViewState
 import screens.daily.views.DailyViewDisplay
-import ru.alexgladkov.jetpackcomposedemo.screens.daily.views.DailyViewError
+import screens.daily.views.DailyViewError
 import screens.daily.views.DailyViewLoading
 import screens.daily.views.DailyViewNoItems
 import ru.alexgladkov.odyssey.compose.extensions.present
@@ -16,7 +16,7 @@ import ru.alexgladkov.odyssey.compose.local.LocalRootController
 
 @ExperimentalFoundationApi
 @Composable
-fun DailyScreen() {
+internal fun DailyScreen() {
     val rootController = LocalRootController.current
 
     StoredViewModel(factory = { DailyViewModel() }) { viewModel ->

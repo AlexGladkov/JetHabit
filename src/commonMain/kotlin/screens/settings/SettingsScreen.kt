@@ -28,25 +28,25 @@ import screens.daily.views.HabitCardItem
 import screens.daily.views.HabitCardItemModel
 import screens.settings.views.MenuItem
 import screens.settings.views.MenuItemModel
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabitCorners
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabitSize
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabitStyle
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabitTheme
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.blueDarkPalette
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.blueLightPalette
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.greenDarkPalette
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.greenLightPalette
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.orangeDarkPalette
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.orangeLightPalette
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.purpleDarkPalette
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.purpleLightPalette
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.redDarkPalette
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.redLightPalette
+import ui.themes.JetHabitCorners
+import ui.themes.JetHabitSize
+import ui.themes.JetHabitStyle
+import ui.themes.JetHabitTheme
+import ui.themes.blueDarkPalette
+import ui.themes.blueLightPalette
+import ui.themes.greenDarkPalette
+import ui.themes.greenLightPalette
+import ui.themes.orangeDarkPalette
+import ui.themes.orangeLightPalette
+import ui.themes.purpleDarkPalette
+import ui.themes.purpleLightPalette
+import ui.themes.redDarkPalette
+import ui.themes.redLightPalette
 
 @ExperimentalMaterialApi
 @ExperimentalFoundationApi
 @Composable
-fun SettingsScreen() {
+internal fun SettingsScreen() {
     val settingsEventBus = LocalSettingsEventBus.current
     val currentSettings = settingsEventBus.currentSettings.value
 
@@ -222,7 +222,7 @@ fun SettingsScreen() {
 }
 
 @Composable
-fun ColorCard(
+internal fun ColorCard(
     color: Color,
     onClick: () -> Unit
 ) {

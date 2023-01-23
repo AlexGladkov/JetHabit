@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabitTheme
+import ui.themes.JetHabitTheme
 
 data class HabitCardItemModel(
     val habitId: Long,
@@ -19,15 +19,8 @@ data class HabitCardItemModel(
     val isChecked: Boolean
 )
 
-//fun HabitEntity.mapToCardItem() =
-//    HabitCardItemModel(
-//        habitId = this.itemId,
-//        title = this.title,
-//        isChecked = false
-//    )
-
 @Composable
-fun HabitCardItem(
+internal fun HabitCardItem(
     model: HabitCardItemModel,
     onCheckedChange: ((Boolean) -> Unit)? = null
 ) {

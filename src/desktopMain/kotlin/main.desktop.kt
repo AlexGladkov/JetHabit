@@ -12,7 +12,7 @@ import data.features.settings.SettingsEventBus
 import di.PlatformConfiguration
 import di.PlatformSDK
 import navigation.navigationGraph
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabitTheme
+import ui.themes.JetHabitTheme
 import ru.alexgladkov.odyssey.compose.setup.OdysseyConfiguration
 import ru.alexgladkov.odyssey.compose.setup.setNavigationContent
 import ui.themes.MainTheme

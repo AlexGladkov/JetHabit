@@ -13,12 +13,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabitTheme
+import ui.themes.JetHabitTheme
 import ru.alexgladkov.odyssey.compose.extensions.present
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
 
 @Composable
-fun SplashScreen() {
+internal fun SplashScreen() {
     val rootController = LocalRootController.current
 
     Box(

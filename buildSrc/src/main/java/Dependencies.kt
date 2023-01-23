@@ -64,7 +64,7 @@ object Dependencies {
         const val kodein = "org.kodein.di:kodein-di:7.17.0"
 
         object KViewModel {
-            const val kviewmodel = "0.12"
+            const val kviewmodel = "0.13"
             const val core = "com.adeo:kviewmodel:$kviewmodel"
             const val compose = "com.adeo:kviewmodel-compose:$kviewmodel"
             const val odyssey = "com.adeo:kviewmodel-odyssey:$kviewmodel"

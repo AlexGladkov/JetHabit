@@ -24,13 +24,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import ru.alexgladkov.jetpackcomposedemo.AppRes
 import screens.daily.models.DailyViewState
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabitTheme
+import ui.themes.JetHabitTheme
 import ru.alexgladkov.odyssey.compose.extensions.present
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
 
 @ExperimentalFoundationApi
 @Composable
-fun DailyViewDisplay(
+internal fun DailyViewDisplay(
     modifier: Modifier = Modifier,
     viewState: DailyViewState.Display,
     onPreviousDayClicked: () -> Unit,

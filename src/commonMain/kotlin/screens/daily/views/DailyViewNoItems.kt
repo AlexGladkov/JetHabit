@@ -17,11 +17,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import ru.alexgladkov.jetpackcomposedemo.AppRes
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabitTheme
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.components.JetHabitButton
+import ui.themes.JetHabitTheme
+import ui.themes.components.JetHabitButton
 
 @Composable
-fun DailyViewNoItems(
+internal fun DailyViewNoItems(
     onComposeClick: () -> Unit
 ) {
     Surface(

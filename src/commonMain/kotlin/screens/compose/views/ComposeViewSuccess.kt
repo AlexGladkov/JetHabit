@@ -21,10 +21,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import ru.alexgladkov.jetpackcomposedemo.AppRes
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabitTheme
+import ui.themes.JetHabitTheme
 
 @Composable
-fun ComposeViewSuccess(modifier: Modifier = Modifier, onCloseClick: () -> Unit) {
+internal fun ComposeViewSuccess(modifier: Modifier = Modifier, onCloseClick: () -> Unit) {
     Surface(
         modifier = modifier.fillMaxSize(),
         color = JetHabitTheme.colors.primaryBackground

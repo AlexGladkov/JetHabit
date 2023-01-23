@@ -25,13 +25,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import ru.alexgladkov.jetpackcomposedemo.AppRes
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabitTheme
+import ui.themes.JetHabitTheme
 import screens.compose.models.ComposeViewState
 
 @ExperimentalFoundationApi
 @Composable
-fun ComposeViewInitial(
+internal fun ComposeViewInitial(
     modifier: Modifier = Modifier,
     state: ComposeViewState.ViewStateInitial,
     onCheckedChange: (Boolean) -> Unit,
@@ -49,7 +48,7 @@ fun ComposeViewInitial(
                                 horizontal = JetHabitTheme.shapes.padding,
                                 vertical = JetHabitTheme.shapes.padding + 8.dp
                             ),
-                            text = AppRes.string.compose_new_record,
+                            text = "", // AppRes.string.compose_new_record,
                             style = JetHabitTheme.typography.heading,
                             color = JetHabitTheme.colors.primaryText
                         )
@@ -58,7 +57,7 @@ fun ComposeViewInitial(
                     item {
                         Column(modifier = Modifier.padding(start = 16.dp, end = 16.dp)) {
                             Text(
-                                text = AppRes.string.compose_title,
+                                text = "", // AppRes.string.compose_title,
                                 style = JetHabitTheme.typography.caption,
                                 color = JetHabitTheme.colors.secondaryText
                             )
@@ -89,7 +88,7 @@ fun ComposeViewInitial(
                         ) {
                             Text(
                                 modifier = Modifier.padding(end = 16.dp),
-                                text = AppRes.string.compose_is_good,
+                                text = "", // AppRes.string.compose_is_good,
                                 style = JetHabitTheme.typography.body,
                                 color = JetHabitTheme.colors.primaryText
                             )
@@ -132,7 +131,7 @@ fun ComposeViewInitial(
                                 )
                             } else {
                                 Text(
-                                    text = AppRes.string.action_add,
+                                    text = "", // AppRes.string.action_add,
                                     style = JetHabitTheme.typography.body,
                                     color = Color.White
                                 )

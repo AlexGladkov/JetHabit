@@ -1,9 +1,8 @@
 package domain
 
-import androidx.compose.runtime.staticCompositionLocalOf
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabitCorners
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabitSize
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabitStyle
+import ui.themes.JetHabitCorners
+import ui.themes.JetHabitSize
+import ui.themes.JetHabitStyle
 
 data class SettingsBundle(
     val isDarkMode: Boolean,

@@ -7,10 +7,10 @@ import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import ru.alexgladkov.jetpackcomposedemo.ui.themes.JetHabitTheme
+import ui.themes.JetHabitTheme
 
 @Composable
-fun DailyViewLoading() {
+internal fun DailyViewLoading() {
     Box(
         modifier = Modifier.fillMaxSize()
             .background(JetHabitTheme.colors.primaryBackground)
