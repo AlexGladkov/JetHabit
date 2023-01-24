@@ -28,7 +28,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        PlatformSDK.init(PlatformConfiguration(this))
+        PlatformSDK.init(PlatformConfiguration(this, "JetHabit"))
 
         setContent {
             val settingsEventBus = remember { SettingsEventBus() }

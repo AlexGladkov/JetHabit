@@ -1,3 +1,5 @@
 package di
 
-expect class PlatformConfiguration
+expect class PlatformConfiguration {
+    val appName: String
+}

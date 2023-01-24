@@ -165,6 +165,7 @@ class DailyViewModel : BaseSharedViewModel<DailyViewState, Unit, DailyEvent>(
                     )
                 }
             } catch (e: Exception) {
+                e.printStackTrace()
                 viewState = DailyViewState.Error
             }
         }

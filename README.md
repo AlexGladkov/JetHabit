@@ -3,6 +3,20 @@
 This is Demo repository for Jetpack Compose features demonstration
 Feel free to make issues, forks and pull requests
 
+Adopted to full Compose Multiplatform
+**WARNING!** Compose Multiplatform doesn't work in iOS and Web due Compose Multiplatform bugs fixed
+
+### Tech Stack:
+- Navigation. Odyssey
+- Presentation: KViewModel
+- Database: SqlDelight
+- Resources: LibRes
+- DI: Kodein
+- UI: Compose Multiplatform
+
+### Supported Platforms
+Android | iOS | Web | Windows | MacOS | Linux (In Progress)
+
 ### Youtube support
 
 All this code has video support on Youtube (only in Russian)

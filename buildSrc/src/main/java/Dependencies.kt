@@ -42,7 +42,7 @@ object Dependencies {
         }
 
         object SqlDelight {
-            private const val version = "1.5.4"
+            private const val version = "1.5.5"
             const val desktop = "com.squareup.sqldelight:sqlite-driver:$version"
             const val android = "com.squareup.sqldelight:android-driver:$version"
             const val js = "com.squareup.sqldelight:sqljs-driver:$version"
