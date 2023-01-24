@@ -1,19 +1,19 @@
 Pod::Spec.new do |spec|
     spec.name                     = 'JetpackComposeDemo'
-    spec.version                  = '0.0.2'
+    spec.version                  = '0.0.3'
     spec.homepage                 = 'Link to the Shared Module homepage'
     spec.source                   = { :http=> ''}
     spec.authors                  = ''
     spec.license                  = ''
     spec.summary                  = 'Some description for the Shared Module'
-    spec.vendored_frameworks      = 'build/cocoapods/framework/KMMShared.framework'
+    spec.vendored_frameworks      = 'build/cocoapods/framework/shared.framework'
     spec.libraries                = 'c++'
     spec.ios.deployment_target = '14.1'
                 
                 
     spec.pod_target_xcconfig = {
         'KOTLIN_PROJECT_PATH' => ':',
-        'PRODUCT_MODULE_NAME' => 'KMMShared',
+        'PRODUCT_MODULE_NAME' => 'shared',
     }
                 
     spec.script_phases = [

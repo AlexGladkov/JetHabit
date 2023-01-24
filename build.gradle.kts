@@ -59,10 +59,10 @@ kotlin {
     cocoapods {
         summary = "Some description for the Shared Module"
         homepage = "Link to the Shared Module homepage"
-        version = "0.0.2"
+        version = "0.0.3"
         ios.deploymentTarget = "14.1"
         framework {
-            baseName = "KMMShared"
+            baseName = "shared"
             isStatic = true
         }
         extraSpecAttributes["resources"] = "['src/commonMain/resources/**', 'src/iosMain/resources/**']"

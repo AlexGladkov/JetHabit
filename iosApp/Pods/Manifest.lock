@@ -1,0 +1,16 @@
+PODS:
+  - JetpackComposeDemo (0.0.3)
+
+DEPENDENCIES:
+  - JetpackComposeDemo (from `../`)
+
+EXTERNAL SOURCES:
+  JetpackComposeDemo:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  JetpackComposeDemo: 0de9cfba32edd02d789286fbcf6b75ea9bedf768
+
+PODFILE CHECKSUM: 738e9602a24c26e380faf4ca96785a07fcec694c
+
+COCOAPODS: 1.11.3
