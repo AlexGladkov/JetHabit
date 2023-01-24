@@ -3,7 +3,7 @@
 This is Demo repository for Jetpack Compose features demonstration
 Feel free to make issues, forks and pull requests
 
-Adopted to full Compose Multiplatform
+Adopted to full Compose Multiplatform and Kotlin Multiplatform
 **WARNING!** Compose Multiplatform doesn't work in iOS and Web due Compose Multiplatform bugs fixed
 
 ### Tech Stack:
