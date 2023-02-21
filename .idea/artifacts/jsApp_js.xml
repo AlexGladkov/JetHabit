@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="jsApp-js">
+    <output-path>$PROJECT_DIR$/jsApp/build/libs</output-path>
+    <root id="archive" name="jsApp-js.jar">
+      <element id="module-output" name="JetHabit.jsApp.jsMain" />
+    </root>
+  </artifact>
+</component>

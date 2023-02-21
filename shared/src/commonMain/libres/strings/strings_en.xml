@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">JetpackComposeDemo</string>
+    <string name="days_today">Today</string>
+    <string name="title_font_size">Font size</string>
+    <string name="title_font_size_small">Small</string>
+    <string name="title_font_size_medium">Medium</string>
+    <string name="title_font_size_big">Big</string>
+
+    <string name="title_padding_size">Margins</string>
+    <string name="title_padding_small">Small</string>
+    <string name="title_padding_medium">Medium</string>
+    <string name="title_padding_big">Big</string>
+
+    <string name="title_daily">Daily</string>
+    <string name="title_settings">Settings</string>
+
+    <string name="title_corners_style">Card style</string>
+    <string name="title_corners_style_rounded">Rounded</string>
+    <string name="title_corners_style_flat">Flat</string>
+
+    <string name="action_dark_theme_enable">Enable dark theme</string>
+
+    <string name="compose_new_record">New habit</string>
+    <string name="compose_title">Title</string>
+    <string name="compose_is_good">Good habit</string>
+    <string name="compose_success_add">New habit successfully created</string>
+
+    <string name="action_add">Add</string>
+    <string name="action_close">Close</string>
+    <string name="action_refresh">Refresh</string>
+    <string name="action_delete_item">Delete Item</string>
+
+    <string name="error_new_habit">Can\'t create new habit. Sorry</string>
+
+    <string name="daily_no_items">You haven't any habits to track. Please add new habit to use application</string>
+    <string name="daily_error_loading">Error while loading data. Try to refresh</string>
+    <string name="daily_previous_day">Show previous day</string>
+
+    <string name="card_example">Card Example</string>
+</resources>

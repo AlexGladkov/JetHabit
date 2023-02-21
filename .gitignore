@@ -1,0 +1,8 @@
+local.properties
+iosApp/Podfile.lock
+iosApp/Pods/*
+iosApp/JetHabit.xcworkspace/*
+iosApp/JetHabit.xcodeproj/*
+!iosApp/JetHabit.xcodeproj/project.pbxproj
+shared/shared.podspec
+build

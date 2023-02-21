@@ -1,0 +1,17 @@
+CREATE TABLE DailyEntity (
+  date TEXT NOT NULL,
+  habitItemIdsWithStatuses TEXT NOT NULL,
+  PRIMARY KEY (date)
+);
+
+insert:
+INSERT INTO DailyEntity(date, habitItemIdsWithStatuses)
+VALUES (?, ?);
+
+selectAll:
+SELECT *
+FROM DailyEntity;
+
+update:
+INSERT OR REPLACE INTO DailyEntity(date, habitItemIdsWithStatuses)
+VALUES (?, ?);
