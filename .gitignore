@@ -6,3 +6,5 @@ iosApp/JetHabit.xcodeproj/*
 !iosApp/JetHabit.xcodeproj/project.pbxproj
 shared/shared.podspec
 build
+.gradle
+.run
