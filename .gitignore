@@ -7,4 +7,3 @@ iosApp/JetHabit.xcodeproj/*
 shared/shared.podspec
 build
 .gradle
-.run
