@@ -19,7 +19,6 @@ import di.LocalPlatform
 import di.Platform
 import di.PlatformConfiguration
 import di.PlatformSDK
-import navigation.NavigationView
 import navigation.navigationGraph
 import platform.AppKit.NSApp
 import platform.AppKit.NSApplication

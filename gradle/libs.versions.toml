@@ -1,5 +1,5 @@
 [versions]
-odyssey = "1.3.200-native-experimental"
+odyssey = "1.3.400-native-experimental"
 kviewmodel = "0.13"
 libres = "1.1.5"
 kodein = "7.17.0"
