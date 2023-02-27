@@ -51,18 +51,14 @@ fun MainView(activity: ComponentActivity) {
             LocalPlatform provides Platform.Android,
             LocalSettingsEventBus provides settingsEventBus
         ) {
-            Column {
-                Box(modifier = Modifier.fillMaxWidth().height(30.dp).background(backgroundColor))
-                setNavigationContent(odysseyConfiguration) {
-                    navigationGraph(
-                        backgroundColor = backgroundColor,
-                        selectedColor = selectedColor,
-                        unselectedColor = unselectedColor,
-                        dailyIcon = dailyIcon,
-                        settingsIcon = settingsIcon
-                    )
-                }
-                Box(modifier = Modifier.fillMaxWidth().height(30.dp).background(backgroundColor))
+            setNavigationContent(odysseyConfiguration) {
+                navigationGraph(
+                    backgroundColor = backgroundColor,
+                    selectedColor = selectedColor,
+                    unselectedColor = unselectedColor,
+                    dailyIcon = dailyIcon,
+                    settingsIcon = settingsIcon
+                )
             }
         }
     }
