@@ -22,6 +22,10 @@ internal fun DetailScreen(cardModel: HabitCardItemModel) {
             viewModel.obtainEvent(DetailEvent.CloseScreen)
         }, onDeleteItemClicked = {
             viewModel.obtainEvent(DetailEvent.DeleteItem)
+        }, onStartDateSelected = {
+            viewModel.obtainEvent(DetailEvent.StartDateSelected(it))
+        }, onEndDateSelected = {
+            viewModel.obtainEvent(DetailEvent.EndDateSelected(it))
         })
 
         when (viewAction) {

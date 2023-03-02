@@ -1,14 +1,8 @@
 package screens.detail
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.CircularProgressIndicator
@@ -25,17 +19,33 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import di.LocalPlatform
 import di.Platform
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
+import ru.alexgladkov.odyssey.compose.extensions.present
+import ru.alexgladkov.odyssey.compose.local.LocalRootController
+import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.ModalSheetConfiguration
 import screens.detail.models.DetailViewState
+import screens.settings.views.MenuItem
+import screens.settings.views.MenuItemModel
 import tech.mobiledeveloper.shared.AppRes
+import ui.themes.JetHabitSize
 import ui.themes.JetHabitTheme
+import ui.themes.components.CCalendar
+import ui.themes.components.JetMenu
 
 @Composable
 internal fun DetailView(
     viewState: DetailViewState,
     onCloseClicked: () -> Unit,
-    onDeleteItemClicked: () -> Unit
+    onDeleteItemClicked: () -> Unit,
+    onStartDateSelected: (Instant) -> Unit,
+    onEndDateSelected: (Instant) -> Unit
 ) {
     val platform = LocalPlatform.current
+    val rootController = LocalRootController.current
+    val modalController = rootController.findModalController()
 
     Column(
         modifier = Modifier.fillMaxSize().padding(vertical = 16.dp),
@@ -74,6 +84,62 @@ internal fun DetailView(
                     style = JetHabitTheme.typography.caption,
                     color = JetHabitTheme.colors.controlColor
                 )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        JetMenu(
+            title = AppRes.string.title_start_date,
+            value = viewState.startDate
+        ) {
+            val configuration = ModalSheetConfiguration(
+                maxHeight = 0.6f,
+                cornerRadius = 16,
+            )
+            modalController.present(configuration) { key ->
+                Box(
+                    modifier = Modifier.fillMaxWidth()
+                        .background(JetHabitTheme.colors.primaryBackground)
+                        .padding(16.dp)
+                ) {
+                    CCalendar(
+                        selectedDate = Clock.System.now(),
+                        textColor = JetHabitTheme.colors.primaryText,
+                        dayOfWeekColor = JetHabitTheme.colors.controlColor,
+                        selectedColor = JetHabitTheme.colors.tintColor
+                    ) {
+                        onStartDateSelected.invoke(it)
+                        modalController.popBackStack(key)
+                    }
+                }
+            }
+        }
+
+        JetMenu(
+            title = AppRes.string.title_end_date,
+            value = viewState.endDate
+        ) {
+            val configuration = ModalSheetConfiguration(
+                maxHeight = 0.6f,
+                cornerRadius = 16,
+            )
+            modalController.present(configuration) { key ->
+                Box(
+                    modifier = Modifier.fillMaxWidth()
+                        .background(JetHabitTheme.colors.primaryBackground)
+                        .padding(16.dp)
+                ) {
+                    CCalendar(
+                        selectedDate = Clock.System.now(),
+                        textColor = JetHabitTheme.colors.primaryText,
+                        dayOfWeekColor = JetHabitTheme.colors.controlColor,
+                        selectedColor = JetHabitTheme.colors.tintColor
+                    ) {
+                        onEndDateSelected.invoke(it)
+                        modalController.popBackStack(key)
+                    }
+                }
             }
         }
 

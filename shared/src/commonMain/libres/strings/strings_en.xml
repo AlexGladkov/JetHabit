@@ -16,9 +16,20 @@
     <string name="title_settings">Settings</string>
     <string name="title_statistics">Statistics</string>
 
+    <string name="title_start_date">Start Date</string>
+    <string name="title_end_date">End Date</string>
+
     <string name="title_corners_style">Card style</string>
     <string name="title_corners_style_rounded">Rounded</string>
     <string name="title_corners_style_flat">Flat</string>
+
+    <string name="days_monday_short">MON</string>
+    <string name="days_tuesday_short">TUE</string>
+    <string name="days_wednesday_short">WED</string>
+    <string name="days_thursday_short">THU</string>
+    <string name="days_friday_short">FRI</string>
+    <string name="days_saturday_short">SAT</string>
+    <string name="days_sunday_short">SUN</string>
 
     <string name="action_dark_theme_enable">Enable dark theme</string>
 
@@ -39,4 +50,6 @@
     <string name="daily_previous_day">Show previous day</string>
 
     <string name="card_example">Card Example</string>
+
+    <string name="not_selected">Unselected</string>
 </resources>
