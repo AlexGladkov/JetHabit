@@ -9,7 +9,7 @@ internal val baseLightPalette = JetHabitColors(
     secondaryText = Color(0xCC7A8A99),
     tintColor = Color.Magenta,
     controlColor = Color(0xFF7A8A99),
-    errorColor = Color(0xFFFF3377),
+    errorColor = Color(0xFFFF3377)
 )
 
 internal val baseDarkPalette = JetHabitColors(

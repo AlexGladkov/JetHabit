@@ -6,7 +6,7 @@ import data.HabitEntity
 class HabitRepository(private val database: Database) {
 
     suspend fun addNewHabit(title: String, isGood: Boolean) {
-        database.habitQueries.insert(null, title, if (isGood) 1 else 0)
+        database.habitQueries.insert(null, title, if (isGood) 1 else 0, "",  "", -1)
     }
 
     suspend fun fetchHabitsList(): List<HabitEntity> =

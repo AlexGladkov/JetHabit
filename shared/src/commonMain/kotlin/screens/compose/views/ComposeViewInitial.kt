@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.dp
 import di.LocalPlatform
 import di.Platform
 import screens.compose.models.ComposeViewState
-import tech.mobiledeveloper.JetHabit.AppRes
+import tech.mobiledeveloper.shared.AppRes
 import ui.themes.JetHabitTheme
 
 @ExperimentalFoundationApi

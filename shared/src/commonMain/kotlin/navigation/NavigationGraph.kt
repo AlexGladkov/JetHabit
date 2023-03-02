@@ -23,6 +23,7 @@ import screens.daily.views.HabitCardItemModel
 import screens.detail.DetailScreen
 import screens.settings.SettingsScreen
 import screens.splash.SplashScreen
+import screens.stats.StatisticsScreen
 import ui.themes.JetHabitTheme
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
@@ -31,6 +32,7 @@ fun RootComposeBuilder.navigationGraph(
     selectedColor: Color,
     unselectedColor: Color,
     dailyIcon: Painter,
+    statisticsIcon: Painter,
     settingsIcon: Painter
 ) {
     screen("splash") {
@@ -48,6 +50,12 @@ fun RootComposeBuilder.navigationGraph(
 
             screen("detail") {
                 DetailScreen(it as HabitCardItemModel)
+            }
+        }
+
+        tab(StatisticsTab(selectedColor, unselectedColor, statisticsIcon)) {
+            screen("statistics") {
+                StatisticsScreen()
             }
         }
 
@@ -87,6 +95,26 @@ class DailyTab(
         get() {
             return TabConfiguration(
                 title = "Daily",
+                selectedColor = selectedColor,
+                unselectedColor = unselectedColor,
+                selectedIcon = icon,
+                unselectedIcon = icon,
+                titleStyle = TextStyle(
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Medium
+                )
+            )
+        }
+}
+
+class StatisticsTab(
+    private val selectedColor: Color, private val unselectedColor: Color,
+    private val icon: Painter
+) : TabItem() {
+    override val configuration: TabConfiguration
+        get() {
+            return TabConfiguration(
+                title = "Statistics",
                 selectedColor = selectedColor,
                 unselectedColor = unselectedColor,
                 selectedIcon = icon,

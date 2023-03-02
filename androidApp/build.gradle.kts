@@ -21,15 +21,24 @@ android {
     compileSdk = 33
     sourceSets["main"].manifest.srcFile("src/main/AndroidManifest.xml")
 
+    namespace = "tech.mobiledeveloper.jethabit"
+
     defaultConfig {
-        applicationId = "tech.mobiledeveloper.JetHabit"
+        applicationId = "tech.mobiledeveloper.jethabit"
         minSdk = 24
         targetSdk = 33
         versionCode = 1
         versionName = "1.0"
     }
+
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
+
+    kotlin {
+        jvmToolchain {
+            languageVersion.set(JavaLanguageVersion.of("11"))
+        }
     }
 }

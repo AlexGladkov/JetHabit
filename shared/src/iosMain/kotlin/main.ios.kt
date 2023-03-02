@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
@@ -47,6 +48,7 @@ fun MainViewController(): UIViewController =
             val selectedColor = JetHabitTheme.colors.primaryText
             val unselectedColor = JetHabitTheme.colors.controlColor
             val dailyIcon = rememberVectorPainter(Icons.Filled.DateRange)
+            val statisticsIcon = rememberVectorPainter(Icons.Filled.Star)
             val settingsIcon = rememberVectorPainter(Icons.Filled.Settings)
 
             CompositionLocalProvider(
@@ -61,6 +63,7 @@ fun MainViewController(): UIViewController =
                             selectedColor = selectedColor,
                             unselectedColor = unselectedColor,
                             dailyIcon = dailyIcon,
+                            statisticsIcon = statisticsIcon,
                             settingsIcon = settingsIcon
                         )
                     }

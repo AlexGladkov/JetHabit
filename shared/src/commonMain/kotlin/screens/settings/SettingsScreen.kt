@@ -10,13 +10,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import data.features.settings.LocalSettingsEventBus
-import di.LocalPlatform
-import di.Platform
 import screens.daily.views.HabitCardItem
 import screens.daily.views.HabitCardItemModel
 import screens.settings.views.MenuItem
 import screens.settings.views.MenuItemModel
-import tech.mobiledeveloper.JetHabit.AppRes
+import tech.mobiledeveloper.shared.AppRes
 import ui.themes.*
 
 @ExperimentalMaterialApi
