@@ -10,6 +10,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,6 +27,7 @@ import kotlinx.datetime.toLocalDateTime
 import ru.alexgladkov.odyssey.compose.extensions.present
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
 import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.ModalSheetConfiguration
+import screens.detail.models.DetailEvent
 import screens.detail.models.DetailViewState
 import screens.settings.views.MenuItem
 import screens.settings.views.MenuItemModel
@@ -38,10 +40,7 @@ import ui.themes.components.JetMenu
 @Composable
 internal fun DetailView(
     viewState: DetailViewState,
-    onCloseClicked: () -> Unit,
-    onDeleteItemClicked: () -> Unit,
-    onStartDateSelected: (Instant) -> Unit,
-    onEndDateSelected: (Instant) -> Unit
+    eventHandler: (DetailEvent) -> Unit
 ) {
     val platform = LocalPlatform.current
     val rootController = LocalRootController.current
@@ -55,7 +54,7 @@ internal fun DetailView(
             if (platform == Platform.iOS) {
                 Icon(
                     modifier = Modifier
-                        .clickable { onCloseClicked() }
+                        .clickable { eventHandler.invoke(DetailEvent.CloseScreen) }
                         .size(56.dp).padding(16.dp),
                     imageVector = Icons.Filled.ArrowBack,
                     contentDescription = "Back",
@@ -63,7 +62,7 @@ internal fun DetailView(
                 )
             }
 
-            Column {
+            Column(modifier = Modifier.weight(1f)) {
                 Text(
                     modifier = Modifier.padding(
                         start = JetHabitTheme.shapes.padding,
@@ -85,6 +84,13 @@ internal fun DetailView(
                     color = JetHabitTheme.colors.controlColor
                 )
             }
+
+            Icon(
+                modifier = Modifier.clickable { eventHandler.invoke(DetailEvent.DeleteItem) }
+                    .size(56.dp).padding(16.dp),
+                imageVector = Icons.Filled.Delete,
+                contentDescription = "Delete Item",
+                tint = JetHabitTheme.colors.controlColor)
         }
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -109,7 +115,7 @@ internal fun DetailView(
                         dayOfWeekColor = JetHabitTheme.colors.controlColor,
                         selectedColor = JetHabitTheme.colors.tintColor
                     ) {
-                        onStartDateSelected.invoke(it)
+                        eventHandler.invoke(DetailEvent.StartDateSelected(it))
                         modalController.popBackStack(key)
                     }
                 }
@@ -136,7 +142,7 @@ internal fun DetailView(
                         dayOfWeekColor = JetHabitTheme.colors.controlColor,
                         selectedColor = JetHabitTheme.colors.tintColor
                     ) {
-                        onEndDateSelected.invoke(it)
+                        eventHandler.invoke(DetailEvent.EndDateSelected(it))
                         modalController.popBackStack(key)
                     }
                 }
@@ -150,28 +156,20 @@ internal fun DetailView(
                 .padding(top = 24.dp, start = 16.dp, end = 16.dp, bottom = 24.dp)
                 .height(48.dp)
                 .fillMaxWidth(),
-            onClick = onDeleteItemClicked,
+            onClick = { eventHandler.invoke(DetailEvent.SaveChanges) },
             enabled = !viewState.isDeleting,
             colors = ButtonDefaults.buttonColors(
-                backgroundColor = JetHabitTheme.colors.errorColor,
-                disabledBackgroundColor = JetHabitTheme.colors.errorColor.copy(
+                backgroundColor = JetHabitTheme.colors.tintColor,
+                disabledBackgroundColor = JetHabitTheme.colors.tintColor.copy(
                     alpha = 0.3f
                 )
             )
         ) {
-            if (viewState.isDeleting) {
-                CircularProgressIndicator(
-                    modifier = Modifier.size(20.dp),
-                    color = Color.White,
-                    strokeWidth = 2.dp
-                )
-            } else {
-                Text(
-                    text = AppRes.string.action_delete_item,
-                    style = JetHabitTheme.typography.body,
-                    color = Color.White
-                )
-            }
+            Text(
+                text = AppRes.string.action_save,
+                style = JetHabitTheme.typography.body,
+                color = Color.White
+            )
         }
     }
 }

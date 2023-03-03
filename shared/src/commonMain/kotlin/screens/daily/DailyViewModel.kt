@@ -3,6 +3,7 @@ package screens.daily
 import com.adeo.kviewmodel.BaseSharedViewModel
 import data.features.daily.DailyRepository
 import data.features.habit.HabitRepository
+import data.features.habit.models.Habit
 import di.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -135,6 +136,7 @@ class DailyViewModel : BaseSharedViewModel<DailyViewState, DailyAction, DailyEve
         viewModelScope.launch {
             try {
                 val habits = habitRepository.fetchHabitsList()
+                    .filter { isHabitInDates(it) }
 
                 if (habits.isEmpty()) {
                     viewState = DailyViewState.NoItems
@@ -146,13 +148,13 @@ class DailyViewModel : BaseSharedViewModel<DailyViewState, DailyAction, DailyEve
                         it.date == convertDateToString(currentDate)
                     }
 
-                    val cardItems: List<HabitCardItemModel> = habits.map { habbitEntity ->
+                    val cardItems: List<HabitCardItemModel> = habits.map { habit ->
                         HabitCardItemModel(
-                            habitId = habbitEntity.itemID,
-                            title = habbitEntity.title,
+                            habitId = habit.itemId,
+                            title = habit.title,
                             isChecked = if (dailyActivities != null) {
                                 val dailyItem =
-                                    dailyActivities.habits.firstOrNull { it.habbitId == habbitEntity.itemID }
+                                    dailyActivities.habits.firstOrNull { it.habbitId == habit.itemId }
                                 dailyItem?.value ?: false
                             } else {
                                 false
@@ -181,5 +183,26 @@ class DailyViewModel : BaseSharedViewModel<DailyViewState, DailyAction, DailyEve
     private fun calculateHasNextDay(): Boolean {
         return convertDateToString(Clock.System.now().toLocalDateTime(
             TimeZone.currentSystemDefault())) != convertDateToString(currentDate)
+    }
+
+    private fun isHabitInDates(habit: Habit): Boolean {
+        val startDate = habit.startDate?.toLocalDateTime(TimeZone.currentSystemDefault()) ?: return true
+        val endDate = habit.endDate?.toLocalDateTime(TimeZone.currentSystemDefault()) ?: return true
+
+        val currentDateYear = currentDate.year
+        val currentDateMonth = currentDate.monthNumber
+        val currentDateDay = currentDate.dayOfMonth
+
+        return if (startDate.year > currentDateYear) {
+            false
+        } else if (endDate.year < currentDateYear) {
+            false
+        } else if (startDate.monthNumber > currentDateMonth) {
+            false
+        } else if (endDate.monthNumber < currentDateMonth) {
+            false
+        } else if (startDate.dayOfMonth > currentDateDay) {
+            false
+        } else endDate.dayOfMonth >= currentDateDay
     }
 }

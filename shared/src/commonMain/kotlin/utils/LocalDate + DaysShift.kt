@@ -18,4 +18,6 @@ fun LocalDate.daysInAMonth(): Int {
     return this.until(end, DateTimeUnit.DAY)
 }
 
+fun LocalDateTime.printDate(): String = "${shrinkMonthName()} $dayOfMonth, $year"
+
 fun LocalDateTime.shrinkMonthName(): String = month.name.take(3).lowercase().capitalize()

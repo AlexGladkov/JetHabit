@@ -11,6 +11,12 @@ selectAll:
 SELECT *
 FROM HabitEntity;
 
+updateDate:
+UPDATE HabitEntity
+SET startDate = ?,
+    endDate = ?
+WHERE itemID = ?;
+
 insert:
 INSERT INTO HabitEntity(itemID, title, isGood, startDate, endDate, type)
 VALUES (?, ?, ?, ?, ?, ?);
