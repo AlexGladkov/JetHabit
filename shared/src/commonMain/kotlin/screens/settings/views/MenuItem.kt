@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ui.themes.JetHabitTheme
+import androidx.compose.material.*
 
 data class MenuItemModel(
     val title: String,
@@ -87,29 +88,29 @@ internal fun MenuItem(
 
         // Dropdown doesnt work
         // https://issuetracker.google.com/u/1/issues/211474319
-//        DropdownMenu(
-//            expanded = isDropdownOpen.value,
-//            onDismissRequest = {
-//                isDropdownOpen.value = false
-//            },
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .background(JetHabitTheme.colors.primaryBackground)
-//        ) {
-//            model.values.forEachIndexed { index, value ->
-//                DropdownMenuItem(onClick = {
-//                    currentPosition.value = index
-//                    isDropdownOpen.value = false
-//                    onItemSelected?.invoke(index)
-//                }) {
-//                    Text(
-//                        text = value,
-//                        style = JetHabitTheme.typography.body,
-//                        color = JetHabitTheme.colors.primaryText
-//                    )
-//                }
-//            }
-//        }
+        DropdownMenu(
+            expanded = isDropdownOpen.value,
+            onDismissRequest = {
+                isDropdownOpen.value = false
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(JetHabitTheme.colors.primaryBackground)
+        ) {
+            model.values.forEachIndexed { index, value ->
+                DropdownMenuItem(onClick = {
+                    currentPosition.value = index
+                    isDropdownOpen.value = false
+                    onItemSelected?.invoke(index)
+                }) {
+                    Text(
+                        text = value,
+                        style = JetHabitTheme.typography.body,
+                        color = JetHabitTheme.colors.primaryText
+                    )
+                }
+            }
+        }
     }
 }
 
