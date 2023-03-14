@@ -21,6 +21,8 @@ import screens.daily.models.DailyAction
 import screens.daily.models.DailyEvent
 import screens.daily.models.DailyViewState
 import screens.daily.views.HabitCardItemModel
+import utils.convertDateToString
+import utils.isInDates
 
 class DailyViewModel : BaseSharedViewModel<DailyViewState, DailyAction, DailyEvent>(
     initialState = DailyViewState.Loading
@@ -29,7 +31,8 @@ class DailyViewModel : BaseSharedViewModel<DailyViewState, DailyAction, DailyEve
     private val habitRepository: HabitRepository = Inject.instance()
     private val dailyRepository: DailyRepository = Inject.instance()
 
-    private var currentDate: LocalDateTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+    private var currentDate: LocalDateTime =
+        Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
 
     override fun obtainEvent(event: DailyEvent) {
         if (event is DailyEvent.CloseAction) {
@@ -84,7 +87,7 @@ class DailyViewModel : BaseSharedViewModel<DailyViewState, DailyAction, DailyEve
     private fun performHabbitClick(hasNextDay: Boolean, habbitId: Long, newValue: Boolean) {
         viewModelScope.launch {
             dailyRepository.addOrUpdate(
-                date = convertDateToString(currentDate),
+                date = currentDate.convertDateToString(),
                 habitId = habbitId,
                 value = newValue
             )
@@ -124,7 +127,9 @@ class DailyViewModel : BaseSharedViewModel<DailyViewState, DailyAction, DailyEve
         return when (difference.inWholeDays) {
             0L -> "Today"
             1L -> "Yesterday"
-            else -> "${currentDate.dayOfMonth} ${currentDate.month.name.take(3).toLowerCase().capitalize()}"
+            else -> "${currentDate.dayOfMonth} ${
+                currentDate.month.name.take(3).toLowerCase().capitalize()
+            }"
         }
     }
 
@@ -136,7 +141,7 @@ class DailyViewModel : BaseSharedViewModel<DailyViewState, DailyAction, DailyEve
         viewModelScope.launch {
             try {
                 val habits = habitRepository.fetchHabitsList()
-                    .filter { isHabitInDates(it) }
+                    .filter { it.isInDates(currentDate) }
 
                 if (habits.isEmpty()) {
                     viewState = DailyViewState.NoItems
@@ -145,7 +150,7 @@ class DailyViewModel : BaseSharedViewModel<DailyViewState, DailyAction, DailyEve
 
                     val dailyActivities = diaryResponse.firstOrNull {
                         val currentDate = currentDate
-                        it.date == convertDateToString(currentDate)
+                        it.date == currentDate.convertDateToString()
                     }
 
                     val cardItems: List<HabitCardItemModel> = habits.map { habit ->
@@ -176,33 +181,9 @@ class DailyViewModel : BaseSharedViewModel<DailyViewState, DailyAction, DailyEve
         }
     }
 
-    private fun convertDateToString(date: LocalDateTime): String {
-        return "${date.year}.${date.monthNumber}.${date.dayOfMonth}"
-    }
-
     private fun calculateHasNextDay(): Boolean {
-        return convertDateToString(Clock.System.now().toLocalDateTime(
-            TimeZone.currentSystemDefault())) != convertDateToString(currentDate)
-    }
-
-    private fun isHabitInDates(habit: Habit): Boolean {
-        val startDate = habit.startDate?.toLocalDateTime(TimeZone.currentSystemDefault()) ?: return true
-        val endDate = habit.endDate?.toLocalDateTime(TimeZone.currentSystemDefault()) ?: return true
-
-        val currentDateYear = currentDate.year
-        val currentDateMonth = currentDate.monthNumber
-        val currentDateDay = currentDate.dayOfMonth
-
-        return if (startDate.year > currentDateYear) {
-            false
-        } else if (endDate.year < currentDateYear) {
-            false
-        } else if (startDate.monthNumber > currentDateMonth) {
-            false
-        } else if (endDate.monthNumber < currentDateMonth) {
-            false
-        } else if (startDate.dayOfMonth > currentDateDay) {
-            false
-        } else endDate.dayOfMonth >= currentDateDay
+        return Clock.System.now().toLocalDateTime(
+            TimeZone.currentSystemDefault()
+        ).convertDateToString() != currentDate.convertDateToString()
     }
 }

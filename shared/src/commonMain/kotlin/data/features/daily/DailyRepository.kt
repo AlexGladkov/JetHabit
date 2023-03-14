@@ -17,6 +17,9 @@ class DailyRepository(private val database: Database) {
     suspend fun fetchDiary(): List<DailyItem> {
         val result = database.dailyQueries.selectAll()
             .executeAsList()
+            .filter {
+                !it.date.contains("T")
+            }
             .map {
                 DailyItem(
                     date = it.date,

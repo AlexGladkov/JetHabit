@@ -19,7 +19,7 @@ import tech.mobiledeveloper.shared.AppRes
 import ui.themes.JetHabitTheme
 
 @Composable
-fun StatisticsScreen() {
+internal fun StatisticsScreen() {
     val rootController = LocalRootController.current
 
     StoredViewModel(factory = { StatisticsViewModel() }) { viewModel ->
@@ -31,7 +31,7 @@ fun StatisticsScreen() {
 }
 
 @Composable
-fun StatisticsView(viewState: StatsViewState) {
+internal fun StatisticsView(viewState: StatsViewState) {
     Column {
         Text(
             modifier = Modifier.padding(

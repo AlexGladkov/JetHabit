@@ -14,11 +14,14 @@ import ui.themes.JetHabitTheme
 data class StatisticCellModel(
     val title: String,
     val activeDayList: List<Boolean>,
+    val duration: String,
+    val fact: String,
+    val percentage: Float,
     val isPeriodic: Boolean
 )
 
 @Composable
-fun StatisticCell(model: StatisticCellModel) {
+internal fun StatisticCell(model: StatisticCellModel) {
     Card(
         modifier = Modifier
             .padding(
@@ -31,12 +34,8 @@ fun StatisticCell(model: StatisticCellModel) {
         shape = JetHabitTheme.shapes.cornersStyle
     ) {
         Column {
-            val activeDays = model.activeDayList.count { it }
-            val totalDays = model.activeDayList.size
-            val percentage = activeDays.toFloat() / totalDays.toFloat()
-
             Divider(
-                modifier = Modifier.fillMaxWidth(percentage).height(2.dp)
+                modifier = Modifier.fillMaxWidth(model.percentage).height(2.dp)
                     .background(JetHabitTheme.colors.tintColor)
             )
 
@@ -51,8 +50,8 @@ fun StatisticCell(model: StatisticCellModel) {
                     color = JetHabitTheme.colors.primaryText
                 )
 
-                val countText = if (!model.isPeriodic) activeDays.toString() else
-                    "$activeDays / ${model.activeDayList.size}"
+                val countText = if (!model.isPeriodic) model.duration else
+                    "${model.fact} / ${model.duration}"
 
                 Text(
                     modifier = Modifier.padding(start = 16.dp),

@@ -15,7 +15,7 @@ class MainActivity : AppCompatActivity() {
             appName = AppRes.string.app_name))
 
         setContent {
-            MainView(this)
+            MainView()
         }
     }
 }
