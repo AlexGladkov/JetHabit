@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Application
+import androidx.compose.ui.window.ComposeUIViewController
 import data.features.settings.LocalSettingsEventBus
 import data.features.settings.SettingsEventBus
 import di.LocalPlatform
@@ -28,7 +29,7 @@ import ui.themes.JetHabitTheme
 import ui.themes.MainTheme
 
 fun MainViewController(): UIViewController =
-    Application("JetHabit") {
+    ComposeUIViewController {
         PlatformSDK.init(PlatformConfiguration())
         val settingsEventBus = remember { SettingsEventBus() }
         val currentSettings = settingsEventBus.currentSettings.collectAsState().value
@@ -45,11 +46,6 @@ fun MainViewController(): UIViewController =
             )
 
             val backgroundColor = JetHabitTheme.colors.primaryBackground
-            val selectedColor = JetHabitTheme.colors.primaryText
-            val unselectedColor = JetHabitTheme.colors.controlColor
-            val dailyIcon = rememberVectorPainter(Icons.Filled.DateRange)
-            val statisticsIcon = rememberVectorPainter(Icons.Filled.Star)
-            val settingsIcon = rememberVectorPainter(Icons.Filled.Settings)
 
             CompositionLocalProvider(
                 LocalPlatform provides Platform.iOS,
