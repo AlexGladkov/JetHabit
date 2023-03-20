@@ -22,7 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import di.LocalPlatform
 import di.Platform
-import tech.mobiledeveloper.JetHabit.AppRes
+import tech.mobiledeveloper.shared.AppRes
 import ui.themes.JetHabitTheme
 
 @Composable

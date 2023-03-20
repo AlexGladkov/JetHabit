@@ -14,7 +14,7 @@ data class JetHabitColors(
     val secondaryBackground: Color,
     val tintColor: Color,
     val controlColor: Color,
-    val errorColor: Color
+    val errorColor: Color,
 )
 
 data class JetHabitTypography(

@@ -1,0 +1,3 @@
+ALTER TABLE HabitEntity ADD COLUMN startDate TEXT;
+ALTER TABLE HabitEntity ADD COLUMN endDate TEXT;
+ALTER TABLE HabitEntity ADD COLUMN type INTEGER;

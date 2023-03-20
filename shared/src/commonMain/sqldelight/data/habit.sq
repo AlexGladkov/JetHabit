@@ -1,16 +1,25 @@
 CREATE TABLE HabitEntity (
   itemID INTEGER PRIMARY KEY AUTOINCREMENT,
   title TEXT NOT NULL,
-  isGood INTEGER DEFAULT 0
+  isGood INTEGER DEFAULT 0,
+  startDate TEXT DEFAULT "",
+  endDate TEXT DEFAULT "",
+  type INTEGER DEFAULT -1
 );
 
 selectAll:
 SELECT *
 FROM HabitEntity;
 
+updateDate:
+UPDATE HabitEntity
+SET startDate = ?,
+    endDate = ?
+WHERE itemID = ?;
+
 insert:
-INSERT INTO HabitEntity(itemID, title, isGood)
-VALUES (?, ?, ?);
+INSERT INTO HabitEntity(itemID, title, isGood, startDate, endDate, type)
+VALUES (?, ?, ?, ?, ?, ?);
 
 deleteItem:
 DELETE FROM HabitEntity WHERE itemID = ?;

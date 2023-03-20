@@ -133,7 +133,7 @@ sqldelight {
         create("Database") {
             packageName.set("")
             schemaOutputDirectory.set(file("src/commonMain/sqldelight/data/schema"))
-            migrationOutputDirectory.set(file("src/commonMain/sqldelight/data/migrations"))
+            migrationOutputDirectory.set(file("src/commonMain/sqldelight/migrations"))
         }
     }
 }
@@ -147,12 +147,22 @@ libres {
 android {
     compileSdk = 33
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
+
+    namespace = "tech.mobiledeveloper.shared"
+
     defaultConfig {
         minSdk = 24
         targetSdk = 33
     }
+
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
+
+    kotlin {
+        jvmToolchain {
+            languageVersion.set(JavaLanguageVersion.of("11"))
+        }
     }
 }

@@ -27,7 +27,7 @@ import di.Platform
 import screens.daily.models.DailyViewState
 import ru.alexgladkov.odyssey.compose.extensions.present
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
-import tech.mobiledeveloper.JetHabit.AppRes
+import tech.mobiledeveloper.shared.AppRes
 import ui.themes.JetHabitTheme
 
 @ExperimentalFoundationApi

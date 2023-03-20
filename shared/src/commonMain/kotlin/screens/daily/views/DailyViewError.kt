@@ -16,7 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import tech.mobiledeveloper.JetHabit.AppRes
+import tech.mobiledeveloper.shared.AppRes
 import ui.themes.JetHabitTheme
 import ui.themes.components.JetHabitButton
 
