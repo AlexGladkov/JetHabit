@@ -14,7 +14,7 @@ import ui.themes.JetHabitTheme
 import ui.themes.MainTheme
 
 @Composable
-fun MainView() {
+fun MainView(activity: ComponentActivity) {
     val settingsEventBus = remember { SettingsEventBus() }
     val currentSettings = settingsEventBus.currentSettings.collectAsState().value
 
@@ -26,6 +26,7 @@ fun MainView() {
         paddingSize = currentSettings.paddingSize
     ) {
         val odysseyConfiguration = OdysseyConfiguration(
+            canvas = activity,
             backgroundColor = JetHabitTheme.colors.primaryBackground
         )
 
@@ -33,7 +34,9 @@ fun MainView() {
             LocalPlatform provides Platform.Android,
             LocalSettingsEventBus provides settingsEventBus
         ) {
-            setNavigationContent(odysseyConfiguration) {
+            setNavigationContent(odysseyConfiguration, onApplicationFinish = {
+                activity.finishAffinity()
+            }) {
                 navigationGraph()
             }
         }

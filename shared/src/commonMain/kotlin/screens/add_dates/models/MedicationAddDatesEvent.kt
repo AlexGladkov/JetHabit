@@ -9,4 +9,5 @@ sealed class MedicationAddDatesEvent {
     object WeekCountClicked : MedicationAddDatesEvent()
     object ActionInvoked : MedicationAddDatesEvent()
     data class StarDateSelected(val value: Instant) : MedicationAddDatesEvent()
+    data class CountSelected(val type: MedicationAddDateCountType, val value: String) : MedicationAddDatesEvent()
 }

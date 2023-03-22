@@ -4,5 +4,6 @@ data class MedicationAddDatesViewState(
     val name: String = "",
     val frequency: String = "1",
     val weekCount: String = "1",
+    val periodicity: String = "1",
     val startDate: String? = null
 )

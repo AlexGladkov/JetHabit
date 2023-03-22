@@ -3,6 +3,7 @@ package screens.add_dates
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -31,6 +32,7 @@ import ru.alexgladkov.odyssey.compose.extensions.present
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
 import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.ModalConfiguration
 import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.ModalSheetConfiguration
+import screens.add_dates.models.MedicationAddDateCountType
 import screens.add_dates.models.MedicationAddDatesAction
 import screens.add_dates.models.MedicationAddDatesEvent
 import screens.add_name.models.MedicationAddNameEvent
@@ -38,6 +40,7 @@ import screens.detail.models.DetailEvent
 import tech.mobiledeveloper.shared.AppRes
 import ui.themes.JetHabitTheme
 import ui.themes.components.CCalendar
+import ui.themes.components.CounterModalSheet
 import ui.themes.components.JetHabitButton
 
 @Composable
@@ -143,20 +146,38 @@ fun MedicationAddDates() {
                     .padding(vertical = 16.dp)
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Image(
-                        modifier = Modifier.padding(start = 16.dp).size(16.dp),
-                        painter = painterResource(AppRes.image.ic_add),
-                        contentDescription = "Add Start Date"
-                    )
+                    if (viewState.startDate == null) {
+                        Image(
+                            modifier = Modifier.padding(start = 16.dp).size(16.dp),
+                            painter = painterResource(AppRes.image.ic_add),
+                            contentDescription = "Add Start Date"
+                        )
 
-                    Text(
-                        modifier = Modifier.clickable {
-                            viewModel.obtainEvent(MedicationAddDatesEvent.AddStartDateClicked)
-                        }.padding(horizontal = 16.dp),
-                        text = AppRes.string.medication_add_start_date,
-                        color = JetHabitTheme.colors.tintColor,
-                        fontSize = 16.sp
-                    )
+                        Text(
+                            modifier = Modifier.clickable {
+                                viewModel.obtainEvent(MedicationAddDatesEvent.AddStartDateClicked)
+                            }.padding(horizontal = 16.dp),
+                            text = AppRes.string.medication_add_start_date,
+                            color = JetHabitTheme.colors.tintColor,
+                            fontSize = 16.sp
+                        )
+                    } else {
+                        Text(
+                            modifier = Modifier.padding(start = 16.dp),
+                            text = ">",
+                            color = JetHabitTheme.colors.primaryText,
+                            fontSize = 16.sp
+                        )
+
+                        Text(
+                            modifier = Modifier.clickable {
+                                viewModel.obtainEvent(MedicationAddDatesEvent.AddStartDateClicked)
+                            }.padding(horizontal = 16.dp),
+                            text = viewState.startDate!!,
+                            color = JetHabitTheme.colors.tintColor,
+                            fontSize = 16.sp
+                        )
+                    }
                 }
 
                 Divider(
@@ -204,19 +225,58 @@ fun MedicationAddDates() {
             MedicationAddDatesAction.PresentStartDate -> {
                 val modalConfiguration = ModalSheetConfiguration()
                 modalController.present(modalConfiguration) { key ->
-                    CCalendar(
-                        selectedDate = Clock.System.now(),
-                        textColor = JetHabitTheme.colors.primaryText,
-                        dayOfWeekColor = JetHabitTheme.colors.controlColor,
-                        selectedColor = JetHabitTheme.colors.tintColor
+                    Box(
+                        modifier = Modifier
+                            .background(JetHabitTheme.colors.primaryBackground)
+                            .padding(bottom = 20.dp)
                     ) {
-                        viewModel.obtainEvent(MedicationAddDatesEvent.StarDateSelected(it))
-                        modalController.popBackStack(key)
+                        CCalendar(
+                            selectedDate = Clock.System.now(),
+                            textColor = JetHabitTheme.colors.primaryText,
+                            dayOfWeekColor = JetHabitTheme.colors.controlColor,
+                            selectedColor = JetHabitTheme.colors.tintColor
+                        ) {
+                            viewModel.obtainEvent(MedicationAddDatesEvent.StarDateSelected(it))
+                            modalController.popBackStack(key)
+                        }
                     }
                 }
 
                 viewModel.obtainEvent(MedicationAddDatesEvent.ActionInvoked)
             }
+
+            is MedicationAddDatesAction.PresentCountSelection -> {
+                val modalConfiguration = ModalSheetConfiguration()
+                val type = (viewAction as MedicationAddDatesAction.PresentCountSelection).medicationAddDateCountType
+                modalController.present(modalConfiguration) { key ->
+                    CounterModalSheet(
+                        title = when (type) {
+                            MedicationAddDateCountType.Frequency -> AppRes.string.medication_frequency
+                            MedicationAddDateCountType.WeekCount -> AppRes.string.medication_week_count
+                        },
+                        count = when (type) {
+                            MedicationAddDateCountType.Frequency -> viewState.frequency
+                            MedicationAddDateCountType.WeekCount -> viewState.weekCount
+                        },
+                        onCountClicked = {
+                            viewModel.obtainEvent(
+                                MedicationAddDatesEvent.CountSelected(
+                                    type = type,
+                                    value = it
+                                )
+                            )
+
+                            modalController.popBackStack(key)
+                        },
+                        onCloseClick = {
+                            modalController.popBackStack(key)
+                        }
+                    )
+                }
+
+                viewModel.obtainEvent(MedicationAddDatesEvent.ActionInvoked)
+            }
+
             null -> {}
         }
     }
