@@ -6,6 +6,8 @@ enum class MedicationAddDateCountType {
 
 sealed class MedicationAddDatesAction {
     object PresentStartDate : MedicationAddDatesAction()
+    object PresentPeriodicity : MedicationAddDatesAction()
+    object CloseScreen : MedicationAddDatesAction()
     data class PresentCountSelection(val medicationAddDateCountType: MedicationAddDateCountType) :
         MedicationAddDatesAction()
 }

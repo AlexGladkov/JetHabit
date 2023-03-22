@@ -2,7 +2,9 @@ package screens.add_name
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -103,9 +105,10 @@ fun MedicationAddName() {
         val rootController = LocalRootController.current
         when (viewAction) {
             MedicationAddNameAction.NextClicked -> {
-                rootController.push("medication_add_dates")
+                rootController.push("medication_add_dates", viewState.name)
                 viewModel.obtainEvent(viewEvent = MedicationAddNameEvent.ActionInvoked)
             }
+
             null -> {}
         }
     }

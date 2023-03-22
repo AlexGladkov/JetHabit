@@ -86,7 +86,7 @@ internal fun RootComposeBuilder.medicationAddFlow() {
         }
 
         screen("medication_add_dates") {
-            MedicationAddDates()
+            MedicationAddDates(title = it as String)
         }
     }
 }
