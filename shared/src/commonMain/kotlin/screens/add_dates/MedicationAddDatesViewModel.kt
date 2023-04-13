@@ -1,13 +1,10 @@
 package screens.add_dates
 
-import androidx.compose.ui.text.capitalize
 import com.adeo.kviewmodel.BaseSharedViewModel
 import com.soywiz.klock.DateTime
-import data.features.habit.HabitRepository
 import data.features.medication.MedicationRepository
 import di.Inject
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Instant
 import screens.add_dates.models.MedicationAddDateCountType
 import screens.add_dates.models.MedicationAddDatesAction
 import screens.add_dates.models.MedicationAddDatesEvent
@@ -53,8 +50,8 @@ class MedicationAddDatesViewModel(name: String): BaseSharedViewModel<MedicationA
         }
     }
 
-    private fun performSetupStartDate(value: Instant) {
-        viewState = viewState.copy(startDate = value.toString())
+    private fun performSetupStartDate(value: DateTime) {
+        viewState = viewState.copy(startDate = value.format("dd MMM yyyy"), calendarDate = value)
     }
 
     private fun performSelectPeriodicity(values: List<Int>) {
@@ -89,7 +86,7 @@ class MedicationAddDatesViewModel(name: String): BaseSharedViewModel<MedicationA
         viewModelScope.launch {
             medicationRepository.createNewMedication(
                 title = viewState.name,
-                startDate = viewState.startDate,
+                startDate = if (viewState.startDate == null) null else viewState.calendarDate,
                 weekCount = viewState.weekCount.toInt(),
                 frequency = viewState.frequency.toInt(),
                 periodicity = viewState.periodicityValues

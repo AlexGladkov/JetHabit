@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,17 +28,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.adeo.kviewmodel.odyssey.StoredViewModel
+import com.soywiz.klock.DateTime
 import io.github.skeptick.libres.compose.painterResource
-import kotlinx.datetime.Clock
 import ru.alexgladkov.odyssey.compose.extensions.present
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
-import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.ModalConfiguration
 import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.ModalSheetConfiguration
 import screens.add_dates.models.MedicationAddDateCountType
 import screens.add_dates.models.MedicationAddDatesAction
 import screens.add_dates.models.MedicationAddDatesEvent
-import screens.add_name.models.MedicationAddNameEvent
-import screens.detail.models.DetailEvent
 import tech.mobiledeveloper.shared.AppRes
 import ui.themes.JetHabitTheme
 import ui.themes.components.CCalendar
@@ -46,7 +44,7 @@ import ui.themes.components.JetHabitButton
 import ui.themes.components.WeekSelectionSheet
 
 @Composable
-fun MedicationAddDates(title: String) {
+internal fun MedicationAddDates(title: String) {
 
     StoredViewModel(factory = { MedicationAddDatesViewModel(title) }) { viewModel ->
         val viewState by viewModel.viewStates().collectAsState()
@@ -254,10 +252,11 @@ fun MedicationAddDates(title: String) {
                             .padding(bottom = 20.dp)
                     ) {
                         CCalendar(
-                            selectedDate = Clock.System.now(),
+                            selectedDate = viewState.calendarDate,
                             textColor = JetHabitTheme.colors.primaryText,
                             dayOfWeekColor = JetHabitTheme.colors.controlColor,
-                            selectedColor = JetHabitTheme.colors.tintColor
+                            selectedColor = JetHabitTheme.colors.tintColor,
+                            allowSameDate = true
                         ) {
                             viewModel.obtainEvent(MedicationAddDatesEvent.StarDateSelected(it))
                             modalController.popBackStack(key)

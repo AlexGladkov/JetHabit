@@ -38,7 +38,7 @@ import tech.mobiledeveloper.shared.AppRes
 import ui.themes.JetHabitTheme
 
 @Composable
-fun CounterModalSheet(
+internal fun CounterModalSheet(
     title: String, count: String,
     onCountClicked: (String) -> Unit,
     onCloseClick: () -> Unit
@@ -78,6 +78,8 @@ fun CounterModalSheet(
             modifier = Modifier.fillMaxWidth().height(0.5.dp),
             color = JetHabitTheme.colors.controlColor.copy(0.3f)
         )
+
+        Spacer(modifier = Modifier.height(24.dp))
 
         Text(
             modifier = Modifier.fillMaxWidth(),

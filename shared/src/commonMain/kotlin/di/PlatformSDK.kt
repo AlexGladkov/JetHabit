@@ -1,7 +1,6 @@
 package di
 
 import data.features.daily.dailyModule
-import data.features.habit.habitModule
 import data.features.medication.medicationModule
 import org.kodein.di.DI
 import org.kodein.di.bind
@@ -23,7 +22,6 @@ object PlatformSDK {
                     umbrellaModule,
                     coreModule,
                     dailyModule,
-                    habitModule,
                     medicationModule
                 )
             }.direct

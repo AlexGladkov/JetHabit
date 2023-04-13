@@ -2,6 +2,7 @@ package screens.add_name
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,7 +20,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -34,26 +37,35 @@ import tech.mobiledeveloper.shared.AppRes
 import ui.themes.JetHabitTheme
 import ui.themes.components.JetHabitButton
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun MedicationAddName() {
+internal fun MedicationAddName() {
+    val rootController = LocalRootController.current
+    val keyboard = LocalSoftwareKeyboardController.current
+
     StoredViewModel(factory = { MedicationAddNameViewModel() }) { viewModel ->
         val viewState by viewModel.viewStates().collectAsState()
         val viewAction by viewModel.viewActions().collectAsState(null)
 
         Column(
-            modifier = Modifier.fillMaxSize().background(JetHabitTheme.colors.secondaryBackground),
+            modifier = Modifier.clickable { keyboard?.hide() }.fillMaxSize().background(JetHabitTheme.colors.secondaryBackground),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                modifier = Modifier.fillMaxWidth().padding(
-                    start = 16.dp, end = 16.dp,
-                    top = 20.dp
-                ),
-                text = AppRes.string.action_close,
-                textAlign = TextAlign.End,
-                color = JetHabitTheme.colors.tintColor,
-                fontSize = 16.sp
-            )
+            Box(Modifier.fillMaxWidth()) {
+                Text(
+                    modifier = Modifier.padding(
+                        start = 16.dp, end = 16.dp,
+                        top = 20.dp
+                    )
+                        .align(Alignment.CenterEnd)
+                        .clickable {
+                            rootController.popBackStack()
+                        },
+                    text = AppRes.string.action_close,
+                    color = JetHabitTheme.colors.tintColor,
+                    fontSize = 16.sp
+                )
+            }
 
             Image(
                 modifier = Modifier.padding(top = 56.dp).size(56.dp),

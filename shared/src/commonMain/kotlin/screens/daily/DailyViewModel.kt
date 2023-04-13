@@ -1,38 +1,27 @@
 package screens.daily
 
 import com.adeo.kviewmodel.BaseSharedViewModel
+import com.soywiz.klock.DateTime
+import com.soywiz.klock.days
 import data.features.daily.DailyRepository
-import data.features.habit.HabitRepository
-import data.features.habit.models.Habit
+import data.features.medication.MedicationRepository
 import di.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlinx.datetime.Clock
-import kotlinx.datetime.DateTimeUnit
-import kotlinx.datetime.Instant
-import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.minus
-import kotlinx.datetime.plus
-import kotlinx.datetime.toInstant
-import kotlinx.datetime.toLocalDateTime
 import screens.daily.models.DailyAction
 import screens.daily.models.DailyEvent
 import screens.daily.models.DailyViewState
 import screens.daily.views.HabitCardItemModel
-import utils.convertDateToString
-import utils.isInDates
 
 class DailyViewModel : BaseSharedViewModel<DailyViewState, DailyAction, DailyEvent>(
     initialState = DailyViewState.Loading
 ) {
 
-    private val habitRepository: HabitRepository = Inject.instance()
     private val dailyRepository: DailyRepository = Inject.instance()
+    private val medicationRepository: MedicationRepository = Inject.instance()
 
-    private var currentDate: LocalDateTime =
-        Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+    private var currentDate: DateTime = DateTime.now()
 
     override fun obtainEvent(event: DailyEvent) {
         if (event is DailyEvent.CloseAction) {
@@ -87,7 +76,7 @@ class DailyViewModel : BaseSharedViewModel<DailyViewState, DailyAction, DailyEve
     private fun performHabbitClick(hasNextDay: Boolean, habbitId: Long, newValue: Boolean) {
         viewModelScope.launch {
             dailyRepository.addOrUpdate(
-                date = currentDate.convertDateToString(),
+                date = currentDate.format("yyyy-MM-dd"),
                 habitId = habbitId,
                 value = newValue
             )
@@ -99,34 +88,23 @@ class DailyViewModel : BaseSharedViewModel<DailyViewState, DailyAction, DailyEve
     }
 
     private fun performNextClick(hasNextDay: Boolean) {
-        val systemTimeZone = TimeZone.currentSystemDefault()
-        val instantCurrentDate = currentDate.toInstant(systemTimeZone)
-        val tomorrow = instantCurrentDate.plus(1, DateTimeUnit.DAY, systemTimeZone)
-        currentDate = tomorrow.toLocalDateTime(systemTimeZone)
-        val duration = Clock.System.now() - instantCurrentDate
-
+        currentDate = currentDate.plus(1.0f.days)
         fetchHabitForDate()
     }
 
     private fun performPreviousClick() {
-        val systemTimeZone = TimeZone.currentSystemDefault()
-        val now = currentDate.toInstant(systemTimeZone)
-        val yesterday = now.minus(1, DateTimeUnit.DAY, systemTimeZone)
-        currentDate = yesterday.toLocalDateTime(systemTimeZone)
-
+        currentDate = currentDate.minus(1.0f.days)
         fetchHabitForDate()
     }
 
     private fun getTitleForADay(): String {
-        val systemTimeZone = TimeZone.currentSystemDefault()
-        val instantCurrentDate = currentDate.toInstant(systemTimeZone)
-        val now = Clock.System.now()
+        val now = DateTime.now()
 
-        val difference = now - instantCurrentDate
+        val difference = now.minus(currentDate)
 
-        return when (difference.inWholeDays) {
-            0L -> "Today"
-            1L -> "Yesterday"
+        return when (difference.days) {
+            0.0 -> "Today"
+            1.0 -> "Yesterday"
             else -> "${currentDate.dayOfMonth} ${
                 currentDate.month.name.take(3).toLowerCase().capitalize()
             }"
@@ -140,26 +118,25 @@ class DailyViewModel : BaseSharedViewModel<DailyViewState, DailyAction, DailyEve
 
         viewModelScope.launch {
             try {
-                val habits = habitRepository.fetchHabitsList()
-                    .filter { it.isInDates(currentDate) }
+                val currentMedications = medicationRepository.fetchCurrentMedications()
 
-                if (habits.isEmpty()) {
+                if (currentMedications.isEmpty()) {
                     viewState = DailyViewState.NoItems
                 } else {
                     val diaryResponse = dailyRepository.fetchDiary()
 
                     val dailyActivities = diaryResponse.firstOrNull {
                         val currentDate = currentDate
-                        it.date == currentDate.convertDateToString()
+                        it.date == currentDate.format("yyyy-MM-dd")
                     }
 
-                    val cardItems: List<HabitCardItemModel> = habits.map { habit ->
+                    val medicationCardItems: List<HabitCardItemModel> = currentMedications.map { medication ->
                         HabitCardItemModel(
-                            habitId = habit.itemId,
-                            title = habit.title,
+                            habitId = medication.itemId,
+                            title = medication.title,
                             isChecked = if (dailyActivities != null) {
                                 val dailyItem =
-                                    dailyActivities.habits.firstOrNull { it.habbitId == habit.itemId }
+                                    dailyActivities.habits.firstOrNull { it.habbitId == medication.itemId }
                                 dailyItem?.value ?: false
                             } else {
                                 false
@@ -167,6 +144,7 @@ class DailyViewModel : BaseSharedViewModel<DailyViewState, DailyAction, DailyEve
                         )
                     }
 
+                    val cardItems = medicationCardItems
 
                     viewState = DailyViewState.Display(
                         items = cardItems,
@@ -182,8 +160,6 @@ class DailyViewModel : BaseSharedViewModel<DailyViewState, DailyAction, DailyEve
     }
 
     private fun calculateHasNextDay(): Boolean {
-        return Clock.System.now().toLocalDateTime(
-            TimeZone.currentSystemDefault()
-        ).convertDateToString() != currentDate.convertDateToString()
+        return DateTime.now().minus(currentDate).days > 1.0
     }
 }

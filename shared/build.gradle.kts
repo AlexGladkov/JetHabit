@@ -69,7 +69,6 @@ kotlin {
                 implementation(libs.kodein)
                 implementation(libs.libres.compose)
                 implementation(libs.kotlin.serialization)
-                implementation(libs.kotlin.datetime)
             }
         }
         val commonTest by getting {

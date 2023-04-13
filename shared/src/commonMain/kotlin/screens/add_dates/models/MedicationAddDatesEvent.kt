@@ -1,6 +1,7 @@
 package screens.add_dates.models
 
-import kotlinx.datetime.Instant
+import com.soywiz.klock.DateTime
+
 
 sealed class MedicationAddDatesEvent {
     object AddStartDateClicked : MedicationAddDatesEvent()
@@ -10,7 +11,7 @@ sealed class MedicationAddDatesEvent {
     object ActionInvoked : MedicationAddDatesEvent()
     object AddNewMedicine : MedicationAddDatesEvent()
     data class PeriodicitySelected(val value: List<Int>) : MedicationAddDatesEvent()
-    data class StarDateSelected(val value: Instant) : MedicationAddDatesEvent()
+    data class StarDateSelected(val value: DateTime) : MedicationAddDatesEvent()
     data class CountSelected(val type: MedicationAddDateCountType, val value: String) :
         MedicationAddDatesEvent()
 }

@@ -42,12 +42,8 @@
     <string name="medication_dates_duration">Duration</string>
     <string name="medication_add_start_date">Add a start date</string>
     <string name="medication_week_count">Week count</string>
-    <string name="medication_dates_hint">Once you setup frequency, you can change it anytime you
-        want
-    </string>
-    <string name="medication_periodicity_error">You should select at least one day to add
-        medication
-    </string>
+    <string name="medication_dates_hint">Once you setup frequency, you can change it anytime you want</string>
+    <string name="medication_periodicity_error">You should select at least one day to add medication</string>
 
     <string name="compose_new_record">New habit</string>
     <string name="compose_title">Title</string>
@@ -68,11 +64,12 @@
 
     <string name="error_new_habit">Can\'t create new habit. Sorry</string>
 
-    <string name="daily_no_items">You haven't any habits to track. Please add new habit to use
-        application
-    </string>
+    <string name="daily_no_items">You haven't any habits to track. Please add new habit to use application</string>
     <string name="daily_error_loading">Error while loading data. Try to refresh</string>
     <string name="daily_previous_day">Show previous day</string>
+
+    <string name="settings_body_metrics">Body Metrics</string>
+    <string name="settings_theme">Theme</string>
 
     <string name="card_example">Card Example</string>
 

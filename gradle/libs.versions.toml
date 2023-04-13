@@ -5,7 +5,6 @@ libres = "1.1.5"
 kodein = "7.17.0"
 sqldelight = "2.0.0-alpha05"
 serialization = "1.4.1"
-datetime = "0.4.0"
 klock = "3.4.0"
 
 [libraries]
@@ -26,7 +25,6 @@ kviewmodel-odyssey = { module = "com.adeo:kviewmodel-odyssey", version.ref = "kv
 libres-compose = { module = "io.github.skeptick.libres:libres-compose", version.ref = "libres" }
 
 kotlin-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
-kotlin-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "datetime"}
 
 klock-common = { module = "com.soywiz.korlibs.klock:klock", version.ref = "klock"}
 klock-jvm = { module = "com.soywiz.korlibs.klock:klock-jvm", version.ref = "klock"}

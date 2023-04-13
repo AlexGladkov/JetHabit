@@ -32,7 +32,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.text.style.TextAlign
 
 @Composable
-fun WeekSelectionSheet(
+internal fun WeekSelectionSheet(
     currentState: List<Int>,
     onSaveClicked: (List<Int>) -> Unit,
     onCloseClick: () -> Unit

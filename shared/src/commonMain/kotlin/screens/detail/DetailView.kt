@@ -15,24 +15,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.soywiz.klock.DateTime
 import di.LocalPlatform
 import di.Platform
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 import ru.alexgladkov.odyssey.compose.extensions.present
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
 import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.ModalSheetConfiguration
 import screens.detail.models.DetailEvent
 import screens.detail.models.DetailViewState
-import screens.settings.views.MenuItem
-import screens.settings.views.MenuItemModel
 import tech.mobiledeveloper.shared.AppRes
-import ui.themes.JetHabitSize
 import ui.themes.JetHabitTheme
 import ui.themes.components.CCalendar
 import ui.themes.components.JetMenu
@@ -110,7 +102,7 @@ internal fun DetailView(
                         .padding(16.dp)
                 ) {
                     CCalendar(
-                        selectedDate = Clock.System.now(),
+                        selectedDate = viewState.start ?: DateTime.now(),
                         textColor = JetHabitTheme.colors.primaryText,
                         dayOfWeekColor = JetHabitTheme.colors.controlColor,
                         selectedColor = JetHabitTheme.colors.tintColor
@@ -137,7 +129,7 @@ internal fun DetailView(
                         .padding(16.dp)
                 ) {
                     CCalendar(
-                        selectedDate = Clock.System.now(),
+                        selectedDate = viewState.end ?: DateTime.now(),
                         textColor = JetHabitTheme.colors.primaryText,
                         dayOfWeekColor = JetHabitTheme.colors.controlColor,
                         selectedColor = JetHabitTheme.colors.tintColor

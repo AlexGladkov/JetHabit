@@ -11,6 +11,12 @@ selectAll:
 SELECT *
 FROM MedicationEntity;
 
+updateDate:
+UPDATE MedicationEntity
+SET startDate = ?,
+    endDate = ?
+WHERE itemId = ?;
+
 insert:
 INSERT INTO MedicationEntity(itemId, title, startDate, endDate, frequency, periodicity)
 VALUES (?, ?, ?, ?, ?, ?);

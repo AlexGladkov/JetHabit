@@ -7,12 +7,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.adeo.kviewmodel.odyssey.StoredViewModel
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
+import screens.stats.models.StatsEvent
 import screens.stats.models.StatsViewState
 import screens.stats.views.StatisticCell
 import tech.mobiledeveloper.shared.AppRes
@@ -27,6 +29,10 @@ internal fun StatisticsScreen() {
         val viewAction by viewModel.viewActions().collectAsState(null)
 
         StatisticsView(viewState)
+
+        LaunchedEffect(Unit) {
+            viewModel.obtainEvent(StatsEvent.ReloadScreen)
+        }
     }
 }
 
