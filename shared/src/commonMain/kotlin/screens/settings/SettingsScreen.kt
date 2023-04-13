@@ -1,26 +1,42 @@
 package screens.settings
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.adeo.kviewmodel.odyssey.StoredViewModel
 import data.features.settings.LocalSettingsEventBus
 import screens.daily.views.HabitCardItem
 import screens.daily.views.HabitCardItemModel
+import screens.settings.models.SettingsViewState
 import screens.settings.views.MenuItem
 import screens.settings.views.MenuItemModel
 import tech.mobiledeveloper.shared.AppRes
 import ui.themes.*
+import ui.themes.components.JHDivider
 
 @ExperimentalMaterialApi
 @ExperimentalFoundationApi
 @Composable
 internal fun SettingsScreen() {
+//    StoredViewModel(factory = { SettingsViewModel() }) { viewModel ->
+//        val viewState by viewModel.viewStates().collectAsState()
+//        val viewAction by viewModel.viewActions().collectAsState(null)
+//
+////        SettingsView(viewState)
+//    }
+
     val settingsEventBus = LocalSettingsEventBus.current
     val currentSettings = settingsEventBus.currentSettings.value
 
@@ -191,6 +207,74 @@ internal fun SettingsScreen() {
                     isChecked = true,
                 )
             )
+        }
+    }
+}
+
+@Composable
+private fun SettingsView(viewState: SettingsViewState) {
+    Column(modifier = Modifier.fillMaxSize().background(JetHabitTheme.colors.secondaryBackground)) {
+        Spacer(modifier = Modifier.height(12.dp))
+
+        Row(modifier = Modifier.padding(20.dp)) {
+            Card(
+                modifier = Modifier.weight(1f).height(80.dp),
+                backgroundColor = JetHabitTheme.colors.primaryBackground,
+                elevation = 4.dp,
+                shape = RoundedCornerShape(10.dp)
+            ) {
+
+            }
+
+            Spacer(modifier = Modifier.width(20.dp))
+
+            Card(
+                modifier = Modifier.size(80.dp),
+                backgroundColor = JetHabitTheme.colors.primaryBackground,
+                elevation = 4.dp,
+                shape = RoundedCornerShape(10.dp)
+            ) {
+                Box(modifier = Modifier.fillMaxSize()) {
+                    Text(
+                        modifier = Modifier.align(Alignment.Center),
+                        text = "${viewState.healthPercentage}",
+                        fontSize = 20.sp,
+                        color = JetHabitTheme.colors.tintColor,
+                        fontWeight = FontWeight.Medium
+                    )
+                }
+            }
+        }
+
+        Card(
+            modifier = Modifier.padding(horizontal = 20.dp).fillMaxWidth(),
+            backgroundColor = JetHabitTheme.colors.primaryBackground,
+            elevation = 4.dp,
+            shape = RoundedCornerShape(10.dp)
+        ) {
+            Column(modifier = Modifier.fillMaxWidth()) {
+                Row(modifier = Modifier.padding(vertical = 16.dp, horizontal = 16.dp)) {
+                    Text(
+                        text = AppRes.string.settings_body_metrics,
+                        fontWeight = FontWeight.Medium,
+                        fontSize = 16.sp,
+                        color = JetHabitTheme.colors.primaryText
+                    )
+                }
+
+                JHDivider()
+
+                Row(modifier = Modifier.padding(vertical = 16.dp, horizontal = 16.dp)) {
+                    Text(
+                        text = AppRes.string.settings_theme,
+                        fontWeight = FontWeight.Medium,
+                        fontSize = 16.sp,
+                        color = JetHabitTheme.colors.primaryText
+                    )
+                }
+
+                JHDivider()
+            }
         }
     }
 }

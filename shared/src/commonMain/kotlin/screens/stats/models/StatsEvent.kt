@@ -1,3 +1,5 @@
 package screens.stats.models
 
-sealed class StatsEvent
+sealed class StatsEvent {
+    object ReloadScreen : StatsEvent()
+}

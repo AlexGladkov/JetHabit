@@ -20,30 +20,31 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import kotlinx.datetime.*
+import com.soywiz.klock.DateTime
+import com.soywiz.klock.TimeSpan
+import com.soywiz.klock.TimezoneOffset
+import com.soywiz.klock.days
+import com.soywiz.klock.months
 import tech.mobiledeveloper.shared.AppRes
 import ui.themes.JetHabitTheme
-import utils.daysInAMonth
-import kotlin.time.Duration.Companion.days
+import utils.wrap
 
 @Composable
 internal fun CCalendar(
-    selectedDate: Instant,
+    selectedDate: DateTime,
     textColor: Color,
     dayOfWeekColor: Color,
     selectedColor: Color,
     cellSize: Dp = 40.dp,
-    onDateSelected: (Instant) -> Unit
+    allowSameDate: Boolean = false,
+    onDateSelected: (DateTime) -> Unit,
 ) {
     var dateState by remember { mutableStateOf(selectedDate) }
-    val localDateTime by derivedStateOf { dateState.toLocalDateTime(TimeZone.currentSystemDefault()) }
-    val monthOfSelectedDate = localDateTime.month.name.toLowerCase().capitalize()
-    val yearOfSelectedDate = localDateTime.year
 
     Column {
-        Row {
+        Row(modifier = Modifier.padding(16.dp)) {
             Text(
-                text = "$monthOfSelectedDate $yearOfSelectedDate",
+                text = "${dateState.month.localShortName} ${dateState.year.year}",
                 color = textColor,
                 style = JetHabitTheme.typography.body,
                 fontWeight = FontWeight.Medium
@@ -51,7 +52,7 @@ internal fun CCalendar(
             Spacer(modifier = Modifier.weight(1f))
             Icon(
                 modifier = Modifier.clickable {
-                    dateState = dateState.minus(1, DateTimeUnit.MONTH, TimeZone.currentSystemDefault())
+                    dateState = dateState.minus(1.months)
                 },
                 imageVector = Icons.Filled.KeyboardArrowLeft,
                 tint = JetHabitTheme.colors.tintColor,
@@ -60,7 +61,7 @@ internal fun CCalendar(
             Spacer(modifier = Modifier.width(8.dp))
             Icon(
                 modifier = Modifier.clickable {
-                    dateState = dateState.plus(1, DateTimeUnit.MONTH, TimeZone.currentSystemDefault())
+                    dateState = dateState.plus(1.months)
                 },
                 imageVector = Icons.Filled.KeyboardArrowRight,
                 tint = JetHabitTheme.colors.tintColor,
@@ -118,41 +119,40 @@ internal fun CCalendar(
             )
         }
 
-        DatesForMonth(textColor, dateState, localDateTime, selectedDate, cellSize, selectedColor) {
-            val chosenDate = if (localDateTime.dayOfMonth < it)
-                dateState.plus(it - localDateTime.dayOfMonth, DateTimeUnit.DAY, TimeZone.currentSystemDefault())
-            else
-                dateState.minus(localDateTime.dayOfMonth - it, DateTimeUnit.DAY, TimeZone.currentSystemDefault())
-
-            onDateSelected.invoke(chosenDate)
+        DatesForMonth(textColor, dateState, cellSize, selectedColor) {
+            dateState =
+                DateTime.fromString("${dateState.yearInt}-${dateState.month1.wrap()}-${it.wrap()}").local
         }
+
+        val isSame by derivedStateOf {
+            selectedDate.yearInt == dateState.yearInt &&
+                    selectedDate.month0 == dateState.month0 &&
+                    selectedDate.dayOfMonth == dateState.dayOfMonth
+        }
+
+        JetHabitButton(
+            modifier = Modifier.padding(16.dp).fillMaxWidth(),
+            text = AppRes.string.action_save,
+            enabled = if (allowSameDate) true else !isSame,
+            onClick = {
+                onDateSelected.invoke(dateState)
+            })
     }
 }
 
 @Composable
 internal fun DatesForMonth(
     textColor: Color,
-    date: Instant,
-    localDate: LocalDateTime,
-    selectedDate: Instant,
+    date: DateTime,
     cellSize: Dp,
     selectedColor: Color,
     onDateClicked: (Int) -> Unit
 ) {
-    val firstDayOfMonth by derivedStateOf {
-        val shiftedDay = date.minus((localDate.dayOfMonth - 1).days)
-        val firstWeekDay = shiftedDay.toLocalDateTime(TimeZone.currentSystemDefault()).dayOfWeek
-        firstWeekDay.isoDayNumber
-    }
 
-    val daysInAMonth by derivedStateOf { localDate.date.daysInAMonth() }
-    val isContainsSelectedDate by derivedStateOf {
-        selectedDate.monthsUntil(
-            date,
-            TimeZone.currentSystemDefault()
-        ) == 0
+    val firstDayOfMonth by derivedStateOf {
+        val dayOfWeek = date.minus((date.dayOfMonth - 1).days)
+        dayOfWeek.dayOfWeekInt
     }
-    val localSelectedDate by derivedStateOf { selectedDate.toLocalDateTime(TimeZone.currentSystemDefault()) }
 
     LazyVerticalGrid(
         columns = GridCells.Fixed(7),
@@ -160,10 +160,10 @@ internal fun DatesForMonth(
         verticalArrangement = Arrangement.Center,
         userScrollEnabled = false
     ) {
-        for (i in 1 until (daysInAMonth + firstDayOfMonth)) {
+        for (i in 1 until (date.month.days(date.year.year) + firstDayOfMonth)) {
             val dateValue = if (i < firstDayOfMonth) "" else "${i - firstDayOfMonth + 1}"
             val isSelectedDate =
-                dateValue.isNotBlank() && isContainsSelectedDate && localSelectedDate.dayOfMonth == dateValue.toInt()
+                dateValue.isNotBlank() && dateValue == date.dayOfMonth.toString()
 
             item {
                 var modifier = Modifier.size(cellSize)

@@ -12,7 +12,6 @@ version = "1.0-SNAPSHOT"
 
 kotlin {
     android()
-
     jvm("desktop")
 
     ios()
@@ -61,6 +60,8 @@ kotlin {
                 implementation(libs.odyssey.core)
                 implementation(libs.odyssey.compose)
 
+                implementation(libs.klock.common)
+
                 implementation(libs.kviewmodel.core)
                 implementation(libs.kviewmodel.compose)
                 implementation(libs.kviewmodel.odyssey)
@@ -68,7 +69,6 @@ kotlin {
                 implementation(libs.kodein)
                 implementation(libs.libres.compose)
                 implementation(libs.kotlin.serialization)
-                implementation(libs.kotlin.datetime)
             }
         }
         val commonTest by getting {
@@ -104,6 +104,7 @@ kotlin {
             dependencies {
                 implementation(compose.desktop.common)
                 implementation(libs.sqldelight.desktop)
+                implementation(libs.klock.jvm)
             }
         }
 

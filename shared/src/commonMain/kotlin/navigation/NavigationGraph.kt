@@ -9,11 +9,14 @@ import androidx.compose.material.icons.filled.Star
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import ru.alexgladkov.odyssey.compose.extensions.bottomNavigation
+import ru.alexgladkov.odyssey.compose.extensions.flow
 import ru.alexgladkov.odyssey.compose.extensions.screen
 import ru.alexgladkov.odyssey.compose.extensions.tab
 import ru.alexgladkov.odyssey.compose.navigation.RootComposeBuilder
 import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.BottomBarDefaults
 import ru.alexgladkov.odyssey.compose.navigation.tabs.TabDefaults
+import screens.add_dates.MedicationAddDates
+import screens.add_name.MedicationAddName
 import screens.compose.ComposeScreen
 import screens.daily.DailyScreen
 import screens.daily.views.HabitCardItemModel
@@ -71,5 +74,19 @@ internal fun RootComposeBuilder.navigationGraph() {
 
     screen("compose") {
         ComposeScreen()
+    }
+
+    medicationAddFlow()
+}
+
+internal fun RootComposeBuilder.medicationAddFlow() {
+    flow("medication_add_flow") {
+        screen("medication_name") {
+            MedicationAddName()
+        }
+
+        screen("medication_add_dates") {
+            MedicationAddDates(title = it as String)
+        }
     }
 }

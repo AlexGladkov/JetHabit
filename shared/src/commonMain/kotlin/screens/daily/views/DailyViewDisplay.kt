@@ -115,7 +115,7 @@ internal fun DailyViewDisplay(
                     .padding(JetHabitTheme.shapes.padding),
                 backgroundColor = JetHabitTheme.colors.tintColor,
                 onClick = {
-                    rootController.findRootController().present("compose")
+                    rootController.findRootController().present("medication_add_flow")
                 }) {
                 Icon(
                     imageVector = Icons.Filled.Create,

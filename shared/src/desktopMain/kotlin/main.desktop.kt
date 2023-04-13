@@ -43,26 +43,12 @@ fun MainView() {
             backgroundColor = JetHabitTheme.colors.primaryBackground
         )
 
-        val backgroundColor = JetHabitTheme.colors.primaryBackground
-        val selectedColor = JetHabitTheme.colors.primaryText
-        val unselectedColor = JetHabitTheme.colors.controlColor
-        val dailyIcon = rememberVectorPainter(Icons.Filled.DateRange)
-        val statisticsIcon = rememberVectorPainter(Icons.Filled.Star)
-        val settingsIcon = rememberVectorPainter(Icons.Filled.Settings)
-
         CompositionLocalProvider(
             LocalPlatform provides Platform.Desktop,
             LocalSettingsEventBus provides settingsEventBus
         ) {
             setNavigationContent(odysseyConfiguration) {
-                navigationGraph(
-                    backgroundColor = backgroundColor,
-                    selectedColor = selectedColor,
-                    unselectedColor = unselectedColor,
-                    dailyIcon = dailyIcon,
-                    statisticsIcon = statisticsIcon,
-                    settingsIcon = settingsIcon
-                )
+                navigationGraph()
             }
 
         }

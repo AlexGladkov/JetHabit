@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import di.LocalPlatform
 import ru.alexgladkov.odyssey.compose.extensions.present
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
+import ru.alexgladkov.odyssey.core.LaunchFlag
 import ui.themes.JetHabitTheme
 
 @Composable
@@ -49,6 +50,6 @@ internal fun SplashScreen() {
     }
 
     LaunchedEffect(key1 = Unit, block = {
-        rootController.present("main")
+        rootController.present("main", launchFlag = LaunchFlag.SingleNewTask)
     })
 }

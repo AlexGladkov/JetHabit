@@ -1,7 +1,6 @@
 package screens.compose
 
 import com.adeo.kviewmodel.BaseSharedViewModel
-import data.features.habit.HabitRepository
 import di.Inject
 import kotlinx.coroutines.launch
 import screens.compose.models.ComposeAction
@@ -12,7 +11,7 @@ class ComposeViewModel: BaseSharedViewModel<ComposeViewState, ComposeAction, Com
     initialState = ComposeViewState.ViewStateInitial()
 ) {
 
-    private val habitRepository: HabitRepository = Inject.instance()
+//    private val habitRepository: HabitRepository = Inject.instance()
 
     override fun obtainEvent(event: ComposeEvent) {
         when (viewState) {
@@ -32,20 +31,20 @@ class ComposeViewModel: BaseSharedViewModel<ComposeViewState, ComposeAction, Com
     }
 
     private fun saveHabitToDatabase(state: ComposeViewState.ViewStateInitial) {
-        viewModelScope.launch {
-            viewState = state.copy(isSending = true)
-
-            viewState = try {
-                habitRepository.addNewHabit(
-                    title = applyiOSLowering(state.habitTitle),
-                    isGood = state.isGoodHabit
-                )
-
-                ComposeViewState.ViewStateSuccess
-            } catch (e: Exception) {
-                state.copy(isSending = false)
-            }
-        }
+//        viewModelScope.launch {
+//            viewState = state.copy(isSending = true)
+//
+//            viewState = try {
+//                habitRepository.addNewHabit(
+//                    title = applyiOSLowering(state.habitTitle),
+//                    isGood = state.isGoodHabit
+//                )
+//
+//                ComposeViewState.ViewStateSuccess
+//            } catch (e: Exception) {
+//                state.copy(isSending = false)
+//            }
+//        }
     }
 
     private fun applyiOSLowering(value: String): String {

@@ -58,13 +58,7 @@ fun main() {
                 Column {
                     Box(modifier = Modifier.fillMaxWidth().height(30.dp).background(backgroundColor))
                     setNavigationContent(odysseyConfiguration) {
-                        navigationGraph(
-                            backgroundColor = backgroundColor,
-                            selectedColor = selectedColor,
-                            unselectedColor = unselectedColor,
-                            dailyIcon = dailyIcon,
-                            settingsIcon = settingsIcon
-                        )
+                        navigationGraph()
                     }
                     Box(modifier = Modifier.fillMaxWidth().height(30.dp).background(backgroundColor))
                 }

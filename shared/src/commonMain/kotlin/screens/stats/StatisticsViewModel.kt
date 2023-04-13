@@ -1,25 +1,22 @@
 package screens.stats
 
 import com.adeo.kviewmodel.BaseSharedViewModel
+import com.soywiz.klock.DateTime
 import data.features.daily.DailyRepository
-import data.features.habit.HabitRepository
+import data.features.medication.MedicationRepository
 import di.Inject
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
-import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 import screens.stats.models.StatsAction
 import screens.stats.models.StatsEvent
 import screens.stats.models.StatsViewState
 import screens.stats.views.StatisticCellModel
-import utils.parseToDate
+import utils.getValueOrNull
 
 class StatisticsViewModel : BaseSharedViewModel<StatsViewState, StatsAction, StatsEvent>(
     initialState = StatsViewState()
 ) {
 
-    private val habitRepository: HabitRepository = Inject.instance()
+    private val medicationRepository: MedicationRepository = Inject.instance()
     private val dailyRepository: DailyRepository = Inject.instance()
 
     init {
@@ -27,48 +24,47 @@ class StatisticsViewModel : BaseSharedViewModel<StatsViewState, StatsAction, Sta
     }
 
     override fun obtainEvent(viewEvent: StatsEvent) {
-
+        when (viewEvent) {
+            StatsEvent.ReloadScreen -> loadActivities()
+        }
     }
 
     private fun loadActivities() {
         viewModelScope.launch {
-            val habitsList = habitRepository.fetchHabitsList()
-            val diary = dailyRepository.fetchDiary()
+            val medicationStatistics = fetchActiveMedication()
 
-            val activeProgress = habitsList.map { habit ->
-                val filtered = diary.filter { entry ->
-                    val startDuration = habit.startDate?.minus(entry.date.parseToDate())?.inWholeDays ?: 0
-                    val endDuration = habit.endDate?.minus(entry.date.parseToDate())?.inWholeDays ?: 0
+            viewState = viewState.copy(activeProgress = medicationStatistics)
+        }
+    }
 
-                    if (startDuration > 0) return@filter false
-                    if (endDuration < 0) return@filter false
+    private suspend fun fetchActiveMedication(): List<StatisticCellModel> {
+        val medicationList = medicationRepository.fetchCurrentMedications()
+        val diary = dailyRepository.fetchDiary()
 
-                    entry.habits.firstOrNull { it.habbitId == habit.itemId } != null
-                }
+        return medicationList.map { medication ->
+            val filtered = diary.filter { entry ->
+                val startDate = getValueOrNull(medication.startDate) ?: return@filter false
+                val endDate = getValueOrNull(medication.endDate) ?: return@filter false
+                val entryDate = DateTime.fromString(entry.date)
 
-                val startDate = habit.startDate
-                val endDate = habit.endDate
+                val startComparable = startDate.compareTo(entryDate)
+                val endComparable = endDate.compareTo(entryDate)
 
-                val duration =
-                    if (startDate != null && endDate != null)
-                        endDate.minus(startDate).inWholeDays.toString()
-                    else ""
-
-                val fact = filtered.size
-                val percentage = if (duration.isNotBlank()) fact.toFloat() / duration.toFloat() else
-                    0.0f
-
-                StatisticCellModel(
-                    title = habit.title,
-                    activeDayList = listOf(true, true, true, false, false),
-                    duration = duration,
-                    fact = fact.toString(),
-                    percentage = percentage,
-                    isPeriodic = !(habit.startDate == null || habit.endDate == null)
-                )
+                startComparable == 0 && endComparable == 1
             }
 
-            viewState = viewState.copy(activeProgress = activeProgress)
+            val startDate = getValueOrNull(medication.startDate)
+            val endDate = getValueOrNull(medication.endDate)
+            val diff = startDate?.let { endDate?.minus(it)?.days } ?: 0.0
+
+            StatisticCellModel(
+                title = medication.title,
+                activeDayList = listOf(true, true, true, false, false),
+                duration = diff.toInt().toString(),
+                fact = filtered.size.toString(),
+                percentage = filtered.size.toFloat() / diff.toFloat(),
+                isPeriodic = false
+            )
         }
     }
 }

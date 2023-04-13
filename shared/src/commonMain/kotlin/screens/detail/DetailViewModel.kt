@@ -1,25 +1,24 @@
 package screens.detail
 
 import com.adeo.kviewmodel.BaseSharedViewModel
-import data.features.habit.HabitRepository
+import com.soywiz.klock.DateTime
+import data.features.medication.MedicationRepository
 import di.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlinx.datetime.*
 import screens.daily.views.HabitCardItemModel
 import screens.detail.models.DetailAction
 import screens.detail.models.DetailEvent
 import screens.detail.models.DetailViewState
 import tech.mobiledeveloper.shared.AppRes
-import utils.printDate
-import utils.shrinkMonthName
+import utils.getValueOrNull
 
 class DetailViewModel(private val cardModel: HabitCardItemModel): BaseSharedViewModel<DetailViewState, DetailAction, DetailEvent>(
     initialState = DetailViewState(itemTitle = cardModel.title)
 ) {
 
-    private val habitRepository: HabitRepository = Inject.instance()
+    private val medicationRepository = Inject.instance<MedicationRepository>()
 
     init {
         fetchDetailedInformation()
@@ -38,16 +37,18 @@ class DetailViewModel(private val cardModel: HabitCardItemModel): BaseSharedView
 
     private fun fetchDetailedInformation() {
         viewModelScope.launch(Dispatchers.Default) {
-            val habit = habitRepository.fetchHabitsList().first { it.itemId == cardModel.habitId }
-            val localStartDate = habit.startDate?.toLocalDateTime(TimeZone.currentSystemDefault())
-            val localEndDate = habit.endDate?.toLocalDateTime(TimeZone.currentSystemDefault())
+            val medication = medicationRepository.fetchCurrentMedications().first { it.itemId == cardModel.habitId }
+            val startDate = getValueOrNull(medication.startDate)
+            val endDate = getValueOrNull(medication.endDate)
+
             withContext(Dispatchers.Main) {
+
                 viewState = viewState.copy(
-                    itemTitle = habit.title,
-                    startDate = localStartDate?.printDate() ?: AppRes.string.not_selected,
-                    endDate = localEndDate?.printDate() ?: AppRes.string.not_selected,
-                    start = localStartDate,
-                    end = localEndDate
+                    itemTitle = medication.title,
+                    startDate = startDate?.toString("dd MMM yyyy") ?: AppRes.string.not_selected,
+                    endDate = endDate?.toString("dd MMM yyyy") ?: AppRes.string.not_selected,
+                    start = startDate?.local,
+                    end = endDate?.local
                 )
             }
         }
@@ -56,24 +57,22 @@ class DetailViewModel(private val cardModel: HabitCardItemModel): BaseSharedView
     private fun deleteItem() {
         viewModelScope.launch {
             viewState = viewState.copy(isDeleting = true)
-            habitRepository.deleteItem(cardModel.habitId)
+            medicationRepository.deleteItem(cardModel.habitId)
             viewAction = DetailAction.CloseScreen
         }
     }
 
-    private fun setStartDate(value: Instant) {
-        val localDateTime = value.toLocalDateTime(TimeZone.currentSystemDefault())
+    private fun setStartDate(value: DateTime) {
         viewState = viewState.copy(
-            startDate = "${localDateTime.shrinkMonthName()} ${localDateTime.dayOfMonth}, ${localDateTime.year}",
-            start = localDateTime
+            startDate = value.format("dd MMM yyyy"),
+            start = value
         )
     }
 
-    private fun setEndDate(value: Instant) {
-        val localDateTime = value.toLocalDateTime(TimeZone.currentSystemDefault())
+    private fun setEndDate(value: DateTime) {
         viewState = viewState.copy(
-            endDate = "${localDateTime.shrinkMonthName()} ${localDateTime.dayOfMonth}, ${localDateTime.year}",
-            end = localDateTime
+            endDate = value.toString("dd MMM yyyy"),
+            end = value
         )
     }
 
@@ -84,21 +83,17 @@ class DetailViewModel(private val cardModel: HabitCardItemModel): BaseSharedView
         if (startDate == null || endDate == null) {
             viewAction = DetailAction.CloseScreen
         } else {
-            if (startDate.year > endDate.year) {
-                viewAction = DetailAction.DateError
-            } else if (startDate.monthNumber > endDate.monthNumber) {
-                viewAction = DetailAction.DateError
-            } else if (startDate.dayOfMonth > endDate.dayOfMonth) {
-                viewAction = DetailAction.DateError
+            if (startDate.compareTo(endDate) == -1) {
+                updateData(startDate, endDate)
             } else {
-                updateData(startDate.toInstant(TimeZone.currentSystemDefault()), endDate.toInstant(TimeZone.currentSystemDefault()))
+                viewAction = DetailAction.DateError
             }
         }
     }
 
-    private fun updateData(startDate: Instant, endDate: Instant) {
+    private fun updateData(startDate: DateTime, endDate: DateTime) {
         viewModelScope.launch(Dispatchers.Default) {
-            habitRepository.updateDates(startDate = startDate, endDate = endDate, id = cardModel.habitId)
+            medicationRepository.updateMedication(cardModel.habitId, startDate, endDate)
             viewAction = DetailAction.CloseScreen
         }
     }

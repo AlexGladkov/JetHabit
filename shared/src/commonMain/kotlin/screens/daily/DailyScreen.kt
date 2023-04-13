@@ -30,7 +30,7 @@ internal fun DailyScreen() {
             DailyViewState.Loading -> DailyViewLoading()
             DailyViewState.NoItems -> DailyViewNoItems(
                 onComposeClick = {
-                    rootController.findRootController().present("compose")
+                    rootController.findRootController().present("medication_add_flow")
                 }
             )
             DailyViewState.Error -> DailyViewError {
