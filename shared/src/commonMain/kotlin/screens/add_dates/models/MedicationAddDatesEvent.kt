@@ -11,6 +11,7 @@ sealed class MedicationAddDatesEvent {
     object ActionInvoked : MedicationAddDatesEvent()
     object AddNewMedicine : MedicationAddDatesEvent()
     data class PeriodicitySelected(val value: List<Int>) : MedicationAddDatesEvent()
+    data class FrequencySelected(val value: List<Int>) : MedicationAddDatesEvent()
     data class StarDateSelected(val value: DateTime) : MedicationAddDatesEvent()
     data class CountSelected(val type: MedicationAddDateCountType, val value: String) :
         MedicationAddDatesEvent()
