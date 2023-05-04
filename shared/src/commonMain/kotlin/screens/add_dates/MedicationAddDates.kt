@@ -95,26 +95,24 @@ internal fun MedicationAddDates(title: String) {
                     .fillMaxWidth().clip(RoundedCornerShape(8.dp))
                     .background(JetHabitTheme.colors.primaryBackground)
             ) {
-                MaterialTheme {
-                    Row(
-                        modifier = Modifier.clickable {
-                            viewModel.obtainEvent(MedicationAddDatesEvent.PeriodicityClicked)
-                        }.padding(all = 16.dp)
-                    ) {
-                        Text(
-                            text = AppRes.string.medication_periodicity,
-                            color = JetHabitTheme.colors.primaryText,
-                            fontSize = 16.sp
-                        )
+                Row(
+                    modifier = Modifier.clickable {
+                        viewModel.obtainEvent(MedicationAddDatesEvent.PeriodicityClicked)
+                    }.padding(all = 16.dp)
+                ) {
+                    Text(
+                        text = AppRes.string.medication_periodicity,
+                        color = JetHabitTheme.colors.primaryText,
+                        fontSize = 16.sp
+                    )
 
-                        Spacer(modifier = Modifier.weight(1f))
+                    Spacer(modifier = Modifier.weight(1f))
 
-                        Text(
-                            text = viewState.periodicity,
-                            color = JetHabitTheme.colors.tintColor,
-                            fontSize = 16.sp
-                        )
-                    }
+                    Text(
+                        text = viewState.periodicity,
+                        color = JetHabitTheme.colors.tintColor,
+                        fontSize = 16.sp
+                    )
                 }
 
 

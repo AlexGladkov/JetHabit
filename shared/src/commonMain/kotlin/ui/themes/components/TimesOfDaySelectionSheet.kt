@@ -33,8 +33,8 @@ import androidx.compose.ui.text.style.TextAlign
 
 @Composable
 internal fun TimesOfDaySelectionSheet(
-    currentState: List<Int>,
-    onSaveClicked: (List<Int>) -> Unit,
+    currentState: List<Boolean>,
+    onSaveClicked: (List<Boolean>) -> Unit,
     onCloseClick: () -> Unit
 ) {
     var selectedTimes by remember { mutableStateOf(currentState) }
@@ -82,10 +82,10 @@ internal fun TimesOfDaySelectionSheet(
                         2 -> AppRes.string.times_of_day_evening
                         else -> throw IllegalStateException()
                     },
-                    isSelected = selectedTimes[i] == 1,
+                    isSelected = selectedTimes[i],
                     onDateClicked = {
                         val mutableList = selectedTimes.toMutableList()
-                        mutableList[i] = it
+                        mutableList[i] = !it
                         selectedTimes = mutableList
                     }
                 )
@@ -100,7 +100,7 @@ internal fun TimesOfDaySelectionSheet(
             .fillMaxWidth(),
             text = AppRes.string.action_save,
             onClick = {
-                val containsSelected = selectedTimes.count { it == 1 } > 0
+                val containsSelected = selectedTimes.count { it } > 0
                 if (containsSelected)
                     onSaveClicked.invoke(selectedTimes)
                 else
@@ -122,10 +122,10 @@ internal fun TimesOfDaySelectionSheet(
 }
 
 @Composable
-internal fun TimesOfDayCard(title: String, isSelected: Boolean, onDateClicked: (Int) -> Unit) {
+internal fun TimesOfDayCard(title: String, isSelected: Boolean, onDateClicked: (Boolean) -> Unit) {
     Box(
         modifier = Modifier
-            .clickable { onDateClicked.invoke(if (isSelected) 0 else 1) }
+            .clickable { onDateClicked.invoke(isSelected) }
             .size(height = 40.dp, width = 80.dp)
             .clip(RoundedCornerShape(20.dp))
             .background(

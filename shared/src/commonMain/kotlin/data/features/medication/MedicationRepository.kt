@@ -10,12 +10,12 @@ import tech.mobiledeveloper.shared.strings.AppResStrings
 class MedicationRepository(private val database: Database) {
 
     suspend fun createNewMedication(
-        title: String, weekCount: Int, frequency: List<Int>,
-        periodicity: List<Int>, startDate: DateTime?
+        title: String, weekCount: Int, frequency: List<Boolean>,
+        periodicity: List<Boolean>, startDate: DateTime?
     ) {
         val periodicityStringBuilder = StringBuilder()
         periodicity.forEachIndexed { index, i ->
-            if (i == 1) {
+            if (i) {
                 periodicityStringBuilder.append(
                     when (index) {
                         0 -> AppRes.string.days_monday_short
@@ -33,7 +33,7 @@ class MedicationRepository(private val database: Database) {
         val frequencyStringBuilder = StringBuilder()
 
         frequency.forEachIndexed { index, i ->
-            if (i == 1) {
+            if (i) {
                 frequencyStringBuilder.append(
                     when (index) {
                         0 -> AppRes.string.times_of_day_morning

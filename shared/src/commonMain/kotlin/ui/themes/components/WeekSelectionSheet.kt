@@ -33,8 +33,8 @@ import androidx.compose.ui.text.style.TextAlign
 
 @Composable
 internal fun WeekSelectionSheet(
-    currentState: List<Int>,
-    onSaveClicked: (List<Int>) -> Unit,
+    currentState: List<Boolean>,
+    onSaveClicked: (List<Boolean>) -> Unit,
     onCloseClick: () -> Unit
 ) {
     var selectedDays by remember { mutableStateOf(currentState) }
@@ -86,10 +86,10 @@ internal fun WeekSelectionSheet(
                         6 -> AppRes.string.days_sunday_short
                         else -> throw IllegalStateException()
                     },
-                    isSelected = selectedDays[i] == 1,
+                    isSelected = selectedDays[i],
                     onDateClicked = {
                         val mutableList = selectedDays.toMutableList()
-                        mutableList[i] = it
+                        mutableList[i] = !it
                         selectedDays = mutableList
                     }
                 )
@@ -104,7 +104,7 @@ internal fun WeekSelectionSheet(
             .fillMaxWidth(),
             text = AppRes.string.action_save,
             onClick = {
-                val containsSelected = selectedDays.count { it == 1 } > 0
+                val containsSelected = selectedDays.count { it } > 0
                 if (containsSelected)
                     onSaveClicked.invoke(selectedDays)
                 else
@@ -126,10 +126,10 @@ internal fun WeekSelectionSheet(
 }
 
 @Composable
-internal fun DayOfWeekCard(title: String, isSelected: Boolean, onDateClicked: (Int) -> Unit) {
+internal fun DayOfWeekCard(title: String, isSelected: Boolean, onDateClicked: (Boolean) -> Unit) {
     Box(
         modifier = Modifier
-            .clickable { onDateClicked.invoke(if (isSelected) 0 else 1) }
+            .clickable { onDateClicked.invoke(isSelected) }
             .size(40.dp)
             .clip(RoundedCornerShape(20.dp))
             .background(

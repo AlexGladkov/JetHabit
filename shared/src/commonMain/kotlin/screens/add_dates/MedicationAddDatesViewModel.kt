@@ -56,9 +56,9 @@ class MedicationAddDatesViewModel(name: String) :
         viewState = viewState.copy(startDate = value.format("dd MMM yyyy"), calendarDate = value)
     }
 
-    private fun performSelectPeriodicity(values: List<Int>) {
+    private fun performSelectPeriodicity(values: List<Boolean>) {
         viewModelScope.launch {
-            val containsZeroes = values.firstOrNull { it == 0 } != null
+            val containsZeroes = values.firstOrNull { !it } != null
             viewState = if (!containsZeroes) {
                 viewState.copy(
                     periodicity = AppRes.string.medication_add_dates_every_day,
@@ -67,28 +67,35 @@ class MedicationAddDatesViewModel(name: String) :
             } else {
                 val builder = StringBuilder()
                 values.forEachIndexed { index, i ->
-                    if (i == 1) {
+                    if (i) {
                         when (index) {
-                            0 -> builder.append(AppRes.string.days_monday_short.lowercase()
-                                .replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() })
+                            0 -> builder.append(
+                                AppRes.string.days_monday_short.lowercase().capitalize()
+                            )
 
-                            1 -> builder.append(AppRes.string.days_tuesday_short.lowercase()
-                                .replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() })
+                            1 -> builder.append(
+                                AppRes.string.days_tuesday_short.lowercase().capitalize()
+                            )
 
-                            2 -> builder.append(AppRes.string.days_wednesday_short.lowercase()
-                                .replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() })
+                            2 -> builder.append(
+                                AppRes.string.days_wednesday_short.lowercase().capitalize()
+                            )
 
-                            3 -> builder.append(AppRes.string.days_thursday_short.lowercase()
-                                .replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() })
+                            3 -> builder.append(
+                                AppRes.string.days_thursday_short.lowercase().capitalize()
+                            )
 
-                            4 -> builder.append(AppRes.string.days_friday_short.lowercase()
-                                .replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() })
+                            4 -> builder.append(
+                                AppRes.string.days_friday_short.lowercase().capitalize()
+                            )
 
-                            5 -> builder.append(AppRes.string.days_saturday_short.lowercase()
-                                .replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() })
+                            5 -> builder.append(
+                                AppRes.string.days_saturday_short.lowercase().capitalize()
+                            )
 
-                            6 -> builder.append(AppRes.string.days_sunday_short.lowercase()
-                                .replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() })
+                            6 -> builder.append(
+                                AppRes.string.days_sunday_short.lowercase().capitalize()
+                            )
                         }
                         builder.append(", ")
                     }
@@ -100,9 +107,9 @@ class MedicationAddDatesViewModel(name: String) :
         }
     }
 
-    private fun performSelectFrequency(values: List<Int>) {
+    private fun performSelectFrequency(values: List<Boolean>) {
         viewModelScope.launch {
-            val containsZeroes = values.firstOrNull { it == 0 } != null
+            val containsZeroes = values.firstOrNull { !it } != null
             viewState = if (!containsZeroes) {
                 viewState.copy(
                     frequency = AppRes.string.medication_add_dates_all_day,
@@ -111,16 +118,19 @@ class MedicationAddDatesViewModel(name: String) :
             } else {
                 val builder = StringBuilder()
                 values.forEachIndexed { index, i ->
-                    if (i == 1) {
+                    if (i) {
                         when (index) {
-                            0 -> builder.append(AppRes.string.times_of_day_morning.lowercase()
-                                .replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() })
+                            0 -> builder.append(
+                                AppRes.string.times_of_day_morning.lowercase().capitalize()
+                            )
 
-                            1 -> builder.append(AppRes.string.times_of_day_afternoon.lowercase()
-                                .replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() })
+                            1 -> builder.append(
+                                AppRes.string.times_of_day_afternoon.lowercase().capitalize()
+                            )
 
-                            2 -> builder.append(AppRes.string.times_of_day_evening.lowercase()
-                                .replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() })
+                            2 -> builder.append(
+                                AppRes.string.times_of_day_evening.lowercase().capitalize()
+                            )
                         }
                         builder.append(", ")
                     }

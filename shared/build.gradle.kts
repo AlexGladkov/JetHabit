@@ -78,7 +78,7 @@ kotlin {
         }
         val androidMain by getting {
             dependencies {
-                implementation("com.google.android.material:material:1.8.0")
+                implementation(libs.android.material)
                 implementation(libs.sqldelight.android)
             }
         }
