@@ -23,7 +23,7 @@ compose.desktop {
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "Jet Habt"
+            packageName = "Jet Habit"
             packageVersion = "1.0.0"
 
             windows {

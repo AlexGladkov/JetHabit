@@ -33,9 +33,14 @@
     <string name="days_saturday_short">SAT</string>
     <string name="days_sunday_short">SUN</string>
 
+    <string name="times_of_day_morning">Morning</string>
+    <string name="times_of_day_afternoon">Afternoon</string>
+    <string name="times_of_day_evening">Evening</string>
+
     <string name="medication_add_name">Medication Name</string>
     <string name="medication_add_dates">How long will you\n take this?</string>
     <string name="medication_add_dates_every_day">Every Day</string>
+    <string name="medication_add_dates_all_day">All Day</string>
     <string name="medication_add_name_placeholder">Add Medication Name</string>
     <string name="medication_periodicity">Periodicity</string>
     <string name="medication_frequency">Frequency</string>
@@ -44,6 +49,7 @@
     <string name="medication_week_count">Week count</string>
     <string name="medication_dates_hint">Once you setup frequency, you can change it anytime you want</string>
     <string name="medication_periodicity_error">You should select at least one day to add medication</string>
+    <string name="medication_frequency_error">You should select at least one time of day to add medication</string>
 
     <string name="compose_new_record">New habit</string>
     <string name="compose_title">Title</string>

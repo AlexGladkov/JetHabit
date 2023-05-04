@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,7 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
-import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -28,12 +27,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.adeo.kviewmodel.odyssey.StoredViewModel
-import com.soywiz.klock.DateTime
 import io.github.skeptick.libres.compose.painterResource
 import ru.alexgladkov.odyssey.compose.extensions.present
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
 import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.ModalSheetConfiguration
-import screens.add_dates.models.MedicationAddDateCountType
 import screens.add_dates.models.MedicationAddDatesAction
 import screens.add_dates.models.MedicationAddDatesEvent
 import tech.mobiledeveloper.shared.AppRes
@@ -41,6 +38,7 @@ import ui.themes.JetHabitTheme
 import ui.themes.components.CCalendar
 import ui.themes.components.CounterModalSheet
 import ui.themes.components.JetHabitButton
+import ui.themes.components.TimesOfDaySelectionSheet
 import ui.themes.components.WeekSelectionSheet
 
 @Composable
@@ -96,11 +94,13 @@ internal fun MedicationAddDates(title: String) {
                 modifier = Modifier.padding(top = 20.dp, start = 16.dp, end = 16.dp)
                     .fillMaxWidth().clip(RoundedCornerShape(8.dp))
                     .background(JetHabitTheme.colors.primaryBackground)
-                    .padding(vertical = 16.dp)
             ) {
-                Row {
+                Row(
+                    modifier = Modifier.clickable {
+                        viewModel.obtainEvent(MedicationAddDatesEvent.PeriodicityClicked)
+                    }.padding(all = 16.dp)
+                ) {
                     Text(
-                        modifier = Modifier.padding(horizontal = 16.dp),
                         text = AppRes.string.medication_periodicity,
                         color = JetHabitTheme.colors.primaryText,
                         fontSize = 16.sp
@@ -109,25 +109,26 @@ internal fun MedicationAddDates(title: String) {
                     Spacer(modifier = Modifier.weight(1f))
 
                     Text(
-                        modifier = Modifier.clickable {
-                            viewModel.obtainEvent(MedicationAddDatesEvent.PeriodicityClicked)
-                        }.padding(horizontal = 16.dp),
                         text = viewState.periodicity,
                         color = JetHabitTheme.colors.tintColor,
                         fontSize = 16.sp
                     )
                 }
 
+
                 Divider(
-                    modifier = Modifier.padding(bottom = 12.dp, top = 12.dp, start = 16.dp)
+                    modifier = Modifier
                         .fillMaxWidth()
                         .background(JetHabitTheme.colors.controlColor.copy(alpha = 0.4f)),
                     thickness = 0.5.dp,
                 )
 
-                Row {
+                Row(
+                    modifier = Modifier.clickable {
+                        viewModel.obtainEvent(MedicationAddDatesEvent.FrequencyClicked)
+                    }.padding(all = 16.dp)
+                ) {
                     Text(
-                        modifier = Modifier.padding(horizontal = 16.dp),
                         text = AppRes.string.medication_frequency,
                         color = JetHabitTheme.colors.primaryText,
                         fontSize = 16.sp
@@ -136,14 +137,12 @@ internal fun MedicationAddDates(title: String) {
                     Spacer(modifier = Modifier.weight(1f))
 
                     Text(
-                        modifier = Modifier.clickable {
-                            viewModel.obtainEvent(MedicationAddDatesEvent.FrequencyClicked)
-                        }.padding(horizontal = 16.dp),
                         text = viewState.frequency,
                         color = JetHabitTheme.colors.tintColor,
                         fontSize = 16.sp
                     )
                 }
+
             }
 
             Text(
@@ -165,36 +164,35 @@ internal fun MedicationAddDates(title: String) {
                 modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp)
                     .fillMaxWidth().clip(RoundedCornerShape(8.dp))
                     .background(JetHabitTheme.colors.primaryBackground)
-                    .padding(vertical = 16.dp)
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    modifier = Modifier.clickable {
+                        viewModel.obtainEvent(MedicationAddDatesEvent.AddStartDateClicked)
+                    }.padding(all = 16.dp).fillMaxWidth(),
+
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     if (viewState.startDate == null) {
                         Image(
-                            modifier = Modifier.padding(start = 16.dp).size(16.dp),
+                            modifier = Modifier.padding(end = 16.dp).size(16.dp),
                             painter = painterResource(AppRes.image.ic_add),
                             contentDescription = "Add Start Date"
                         )
 
                         Text(
-                            modifier = Modifier.clickable {
-                                viewModel.obtainEvent(MedicationAddDatesEvent.AddStartDateClicked)
-                            }.padding(horizontal = 16.dp),
                             text = AppRes.string.medication_add_start_date,
                             color = JetHabitTheme.colors.tintColor,
                             fontSize = 16.sp
                         )
                     } else {
                         Text(
-                            modifier = Modifier.padding(start = 16.dp),
+                            modifier = Modifier.padding(end = 16.dp),
                             text = ">",
                             color = JetHabitTheme.colors.primaryText,
                             fontSize = 16.sp
                         )
 
                         Text(
-                            modifier = Modifier.clickable {
-                                viewModel.obtainEvent(MedicationAddDatesEvent.AddStartDateClicked)
-                            }.padding(horizontal = 16.dp),
                             text = viewState.startDate!!,
                             color = JetHabitTheme.colors.tintColor,
                             fontSize = 16.sp
@@ -203,15 +201,18 @@ internal fun MedicationAddDates(title: String) {
                 }
 
                 Divider(
-                    modifier = Modifier.padding(bottom = 12.dp, top = 12.dp, start = 16.dp)
+                    modifier = Modifier
                         .fillMaxWidth()
                         .background(JetHabitTheme.colors.controlColor.copy(alpha = 0.4f)),
                     thickness = 0.5.dp,
                 )
 
-                Row {
+                Row(
+                    Modifier.clickable {
+                        viewModel.obtainEvent(MedicationAddDatesEvent.WeekCountClicked)
+                    }.padding(all = 16.dp)
+                ) {
                     Text(
-                        modifier = Modifier.padding(horizontal = 16.dp),
                         text = AppRes.string.medication_week_count,
                         color = JetHabitTheme.colors.primaryText,
                         fontSize = 16.sp
@@ -220,9 +221,6 @@ internal fun MedicationAddDates(title: String) {
                     Spacer(modifier = Modifier.weight(1f))
 
                     Text(
-                        modifier = Modifier.clickable {
-                            viewModel.obtainEvent(MedicationAddDatesEvent.WeekCountClicked)
-                        }.padding(horizontal = 16.dp),
                         text = viewState.weekCount,
                         color = JetHabitTheme.colors.tintColor,
                         fontSize = 16.sp
@@ -267,20 +265,15 @@ internal fun MedicationAddDates(title: String) {
                 viewModel.obtainEvent(MedicationAddDatesEvent.ActionInvoked)
             }
 
+
             is MedicationAddDatesAction.PresentCountSelection -> {
                 val modalConfiguration = ModalSheetConfiguration()
                 val type =
                     (viewAction as MedicationAddDatesAction.PresentCountSelection).medicationAddDateCountType
                 modalController.present(modalConfiguration) { key ->
                     CounterModalSheet(
-                        title = when (type) {
-                            MedicationAddDateCountType.Frequency -> AppRes.string.medication_frequency
-                            MedicationAddDateCountType.WeekCount -> AppRes.string.medication_week_count
-                        },
-                        count = when (type) {
-                            MedicationAddDateCountType.Frequency -> viewState.frequency
-                            MedicationAddDateCountType.WeekCount -> viewState.weekCount
-                        },
+                        title = AppRes.string.medication_week_count,
+                        count = viewState.weekCount,
                         onCountClicked = {
                             viewModel.obtainEvent(
                                 MedicationAddDatesEvent.CountSelected(
@@ -314,7 +307,24 @@ internal fun MedicationAddDates(title: String) {
                 viewModel.obtainEvent(MedicationAddDatesEvent.ActionInvoked)
             }
 
-            MedicationAddDatesAction.CloseScreen -> rootController.findRootController().backToScreen("main")
+            is MedicationAddDatesAction.PresentFrequency -> {
+                val modalConfiguration = ModalSheetConfiguration()
+
+                modalController.present(modalConfiguration) { key ->
+                    TimesOfDaySelectionSheet(onSaveClicked = {
+                        viewModel.obtainEvent(MedicationAddDatesEvent.FrequencySelected(it))
+                        modalController.popBackStack(key)
+                    }, onCloseClick = {
+                        modalController.popBackStack(key)
+                    }, currentState = viewState.frequencyValues)
+                }
+
+                viewModel.obtainEvent(MedicationAddDatesEvent.ActionInvoked)
+            }
+
+            MedicationAddDatesAction.CloseScreen -> rootController.findRootController()
+                .backToScreen("main")
+
             null -> {}
         }
     }

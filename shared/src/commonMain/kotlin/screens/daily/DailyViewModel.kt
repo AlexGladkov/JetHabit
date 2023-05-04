@@ -56,9 +56,9 @@ class DailyViewModel : BaseSharedViewModel<DailyViewState, DailyAction, DailyEve
             DailyEvent.EnterScreen -> fetchHabitForDate()
             DailyEvent.NextDayClicked -> performNextClick(currentState.hasNextDay)
             DailyEvent.PreviousDayClicked -> performPreviousClick()
-            is DailyEvent.OnHabitClick -> performHabbitClick(
+            is DailyEvent.OnHabitClick -> performHabitClick(
                 hasNextDay = currentState.hasNextDay,
-                habbitId = event.habitId,
+                habitId = event.habitId,
                 newValue = event.newValue
             )
 
@@ -73,11 +73,11 @@ class DailyViewModel : BaseSharedViewModel<DailyViewState, DailyAction, DailyEve
         }
     }
 
-    private fun performHabbitClick(hasNextDay: Boolean, habbitId: Long, newValue: Boolean) {
+    private fun performHabitClick(hasNextDay: Boolean, habitId: Long, newValue: Boolean) {
         viewModelScope.launch {
             dailyRepository.addOrUpdate(
                 date = currentDate.format("yyyy-MM-dd"),
-                habitId = habbitId,
+                habitId = habitId,
                 value = newValue
             )
 

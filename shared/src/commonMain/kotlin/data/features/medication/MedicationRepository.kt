@@ -4,25 +4,41 @@ import Database
 import com.soywiz.klock.DateTime
 import com.soywiz.klock.weeks
 import data.MedicationEntity
+import tech.mobiledeveloper.shared.AppRes
+import tech.mobiledeveloper.shared.strings.AppResStrings
 
 class MedicationRepository(private val database: Database) {
 
     suspend fun createNewMedication(
-        title: String, weekCount: Int, frequency: Int,
-        periodicity: List<Int>, startDate: DateTime?
+        title: String, weekCount: Int, frequency: List<Boolean>,
+        periodicity: List<Boolean>, startDate: DateTime?
     ) {
-        val stringBuilder = StringBuilder()
+        val periodicityStringBuilder = StringBuilder()
         periodicity.forEachIndexed { index, i ->
-            if (i == 1) {
-                stringBuilder.append(
+            if (i) {
+                periodicityStringBuilder.append(
                     when (index) {
-                        0 -> "Mon"
-                        1 -> "Tue"
-                        2 -> "Wed"
-                        3 -> "Thu"
-                        4 -> "Fri"
-                        5 -> "Sat"
-                        6 -> "Sun"
+                        0 -> AppRes.string.days_monday_short
+                        1 -> AppRes.string.days_tuesday_short
+                        2 -> AppRes.string.days_wednesday_short
+                        3 -> AppRes.string.days_thursday_short
+                        4 -> AppRes.string.days_friday_short
+                        5 -> AppRes.string.days_sunday_short
+                        6 -> AppRes.string.days_saturday_short
+                        else -> throw IllegalStateException()
+                    }
+                )
+            }
+        }
+        val frequencyStringBuilder = StringBuilder()
+
+        frequency.forEachIndexed { index, i ->
+            if (i) {
+                frequencyStringBuilder.append(
+                    when (index) {
+                        0 -> AppRes.string.times_of_day_morning
+                        1 -> AppRes.string.times_of_day_afternoon
+                        2 -> AppRes.string.times_of_day_evening
                         else -> throw IllegalStateException()
                     }
                 )
@@ -34,8 +50,8 @@ class MedicationRepository(private val database: Database) {
                 title = title,
                 startDate = null,
                 endDate = null,
-                frequency = frequency.toLong(),
-                periodicity = stringBuilder.toString(),
+                frequency = frequencyStringBuilder.toString(),
+                periodicity = periodicityStringBuilder.toString(),
                 itemId = null
             )
         } else {
@@ -45,14 +61,15 @@ class MedicationRepository(private val database: Database) {
                 title = title,
                 startDate = startDate.toString("yyyy-MM-dd"),
                 endDate = endDateTime.toString("yyyy-MM-dd"),
-                frequency = frequency.toLong(),
-                periodicity = stringBuilder.toString(),
+                frequency = frequencyStringBuilder.toString(),
+                periodicity = periodicityStringBuilder.toString(),
                 itemId = null
             )
         }
     }
 
     suspend fun fetchCurrentMedications(): List<MedicationEntity> {
+        val values = database.medicineQueries.selectAll().executeAsList()
         return database.medicineQueries
             .selectAll()
             .executeAsList()
@@ -74,7 +91,11 @@ class MedicationRepository(private val database: Database) {
 
     suspend fun updateMedication(itemId: Long, startDate: DateTime, endDate: DateTime) {
         database.medicineQueries.transaction {
-            database.medicineQueries.updateDate(startDate.format("yyyy-MM-dd"), endDate.format("yyyy-MM-dd"), itemId)
+            database.medicineQueries.updateDate(
+                startDate.format("yyyy-MM-dd"),
+                endDate.format("yyyy-MM-dd"),
+                itemId
+            )
         }
     }
 }

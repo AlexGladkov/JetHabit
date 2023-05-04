@@ -3,7 +3,7 @@ CREATE TABLE MedicationEntity (
   title TEXT NOT NULL,
   startDate TEXT DEFAULT "",
   endDate TEXT DEFAULT "",
-  frequency INTEGER NOT NULL,
+  frequency TEXT NOT NULL DEFAULT "MorningAfternoonEvening",
   periodicity TEXT NOT NULL DEFAULT "MonTueWedThuFriSatSun"
 );
 

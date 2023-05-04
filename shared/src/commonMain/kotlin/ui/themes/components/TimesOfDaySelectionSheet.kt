@@ -32,12 +32,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.text.style.TextAlign
 
 @Composable
-internal fun WeekSelectionSheet(
+internal fun TimesOfDaySelectionSheet(
     currentState: List<Boolean>,
     onSaveClicked: (List<Boolean>) -> Unit,
     onCloseClick: () -> Unit
 ) {
-    var selectedDays by remember { mutableStateOf(currentState) }
+    var selectedTimes by remember { mutableStateOf(currentState) }
     var isErrorDisplay by remember { mutableStateOf(false) }
 
     Column(
@@ -50,7 +50,7 @@ internal fun WeekSelectionSheet(
         ) {
             Text(
                 modifier = Modifier.padding(horizontal = 20.dp),
-                text = AppRes.string.medication_periodicity,
+                text = AppRes.string.medication_frequency,
                 color = JetHabitTheme.colors.primaryText,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
@@ -74,27 +74,23 @@ internal fun WeekSelectionSheet(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
-            for (i in 0 until 7) {
-                DayOfWeekCard(
+            for (i in 0 until 3) {
+                TimesOfDayCard(
                     title = when (i) {
-                        0 -> AppRes.string.days_monday_short
-                        1 -> AppRes.string.days_tuesday_short
-                        2 -> AppRes.string.days_wednesday_short
-                        3 -> AppRes.string.days_thursday_short
-                        4 -> AppRes.string.days_friday_short
-                        5 -> AppRes.string.days_saturday_short
-                        6 -> AppRes.string.days_sunday_short
+                        0 -> AppRes.string.times_of_day_morning
+                        1 -> AppRes.string.times_of_day_afternoon
+                        2 -> AppRes.string.times_of_day_evening
                         else -> throw IllegalStateException()
                     },
-                    isSelected = selectedDays[i],
+                    isSelected = selectedTimes[i],
                     onDateClicked = {
-                        val mutableList = selectedDays.toMutableList()
+                        val mutableList = selectedTimes.toMutableList()
                         mutableList[i] = !it
-                        selectedDays = mutableList
+                        selectedTimes = mutableList
                     }
                 )
 
-                if (i < 6)
+                if (i < 2)
                     Spacer(modifier = Modifier.width(8.dp))
             }
         }
@@ -104,9 +100,9 @@ internal fun WeekSelectionSheet(
             .fillMaxWidth(),
             text = AppRes.string.action_save,
             onClick = {
-                val containsSelected = selectedDays.count { it } > 0
+                val containsSelected = selectedTimes.count { it } > 0
                 if (containsSelected)
-                    onSaveClicked.invoke(selectedDays)
+                    onSaveClicked.invoke(selectedTimes)
                 else
                     isErrorDisplay = true
             }
@@ -115,7 +111,7 @@ internal fun WeekSelectionSheet(
         if (isErrorDisplay) {
             Text(
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
-                text = AppRes.string.medication_periodicity_error,
+                text = AppRes.string.medication_frequency_error,
                 color = JetHabitTheme.colors.errorColor,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Light,
@@ -126,11 +122,11 @@ internal fun WeekSelectionSheet(
 }
 
 @Composable
-internal fun DayOfWeekCard(title: String, isSelected: Boolean, onDateClicked: (Boolean) -> Unit) {
+internal fun TimesOfDayCard(title: String, isSelected: Boolean, onDateClicked: (Boolean) -> Unit) {
     Box(
         modifier = Modifier
             .clickable { onDateClicked.invoke(isSelected) }
-            .size(40.dp)
+            .size(height = 40.dp, width = 80.dp)
             .clip(RoundedCornerShape(20.dp))
             .background(
                 if (isSelected) JetHabitTheme.colors.tintColor else JetHabitTheme.colors.primaryBackground
