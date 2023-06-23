@@ -7,8 +7,8 @@ sqldelight = "2.0.0-alpha05"
 serialization = "1.5.0"
 klock = "3.4.0"
 appcompat = "1.6.1"
-activity-compose = "1.7.1"
-material = "1.8.0"
+activity-compose = "1.7.2"
+material = "1.9.0"
 
 [libraries]
 kodein = { module = "org.kodein.di:kodein-di", version.ref = "kodein" }

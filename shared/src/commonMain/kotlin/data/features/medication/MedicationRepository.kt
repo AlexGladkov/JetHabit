@@ -23,8 +23,8 @@ class MedicationRepository(private val database: Database) {
                         2 -> AppRes.string.days_wednesday_short
                         3 -> AppRes.string.days_thursday_short
                         4 -> AppRes.string.days_friday_short
-                        5 -> AppRes.string.days_sunday_short
-                        6 -> AppRes.string.days_saturday_short
+                        5 -> AppRes.string.days_saturday_short
+                        6 -> AppRes.string.days_sunday_short
                         else -> throw IllegalStateException()
                     }
                 )
