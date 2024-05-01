@@ -15,7 +15,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import di.LocalPlatform
-import navigation.NavigationScreens
 import ui.themes.JetHabitTheme
 
 @Composable

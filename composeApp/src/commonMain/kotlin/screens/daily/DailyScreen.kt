@@ -7,7 +7,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import navigation.LocalNavHost
-import navigation.NavigationScreens
 import screens.daily.models.DailyEvent
 import screens.daily.models.DailyViewState
 import screens.daily.views.DailyViewDisplay

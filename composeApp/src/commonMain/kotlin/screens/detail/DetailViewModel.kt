@@ -1,6 +1,7 @@
 package screens.detail
 
-import com.adeo.kviewmodel.BaseSharedViewModel
+import androidx.lifecycle.viewModelScope
+import base.BaseViewModel
 import com.soywiz.klock.DateTime
 import data.features.medication.MedicationRepository
 import di.Inject
@@ -14,7 +15,7 @@ import screens.detail.models.DetailViewState
 import tech.mobiledeveloper.jethabit.app.AppRes
 import utils.getValueOrNull
 
-class DetailViewModel(private val cardModel: HabitCardItemModel): BaseSharedViewModel<DetailViewState, DetailAction, DetailEvent>(
+class DetailViewModel(private val cardModel: HabitCardItemModel): BaseViewModel<DetailViewState, DetailAction, DetailEvent>(
     initialState = DetailViewState(itemTitle = cardModel.title)
 ) {
 

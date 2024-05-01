@@ -1,6 +1,7 @@
 package screens.add_dates
 
-import com.adeo.kviewmodel.BaseSharedViewModel
+import androidx.lifecycle.viewModelScope
+import base.BaseViewModel
 import com.soywiz.klock.DateTime
 import data.features.medication.MedicationRepository
 import di.Inject
@@ -12,7 +13,7 @@ import screens.add_dates.models.MedicationAddDatesViewState
 import tech.mobiledeveloper.jethabit.app.AppRes
 
 class MedicationAddDatesViewModel(name: String) :
-    BaseSharedViewModel<MedicationAddDatesViewState, MedicationAddDatesAction, MedicationAddDatesEvent>(
+    BaseViewModel<MedicationAddDatesViewState, MedicationAddDatesAction, MedicationAddDatesEvent>(
         initialState = MedicationAddDatesViewState(name = name)
     ) {
 

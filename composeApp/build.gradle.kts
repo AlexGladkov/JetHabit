@@ -85,13 +85,6 @@ kotlin {
 
             implementation(libs.kotlinx.serialization.core)
             implementation(libs.kotlinx.coroutines)
-
-            implementation(libs.odyssey.compose)
-            implementation(libs.odyssey.core)
-
-            implementation(libs.kviewmodel.core)
-            implementation(libs.kviewmodel.compose)
-            implementation(libs.kviewmodel.odyssey)
             
             implementation(libs.klock.common)
             implementation(libs.libres.compose)

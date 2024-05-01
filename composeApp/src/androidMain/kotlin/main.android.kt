@@ -7,10 +7,6 @@ import data.features.settings.LocalSettingsEventBus
 import data.features.settings.SettingsEventBus
 import di.LocalPlatform
 import di.Platform
-import navigation.navigationGraph
-import ru.alexgladkov.odyssey.compose.setup.OdysseyConfiguration
-import ru.alexgladkov.odyssey.compose.setup.setNavigationContent
-import ui.themes.JetHabitTheme
 import ui.themes.MainTheme
 
 @Composable
@@ -25,20 +21,11 @@ fun MainView(activity: ComponentActivity) {
         textSize = currentSettings.textSize,
         paddingSize = currentSettings.paddingSize
     ) {
-        val odysseyConfiguration = OdysseyConfiguration(
-            canvas = activity,
-            backgroundColor = JetHabitTheme.colors.primaryBackground
-        )
-
         CompositionLocalProvider(
             LocalPlatform provides Platform.Android,
             LocalSettingsEventBus provides settingsEventBus
         ) {
-            setNavigationContent(odysseyConfiguration, onApplicationFinish = {
-                activity.finishAffinity()
-            }) {
-                navigationGraph()
-            }
+
         }
     }
 }

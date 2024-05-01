@@ -25,8 +25,6 @@ import androidx.compose.ui.unit.dp
 import di.LocalPlatform
 import di.Platform
 import screens.daily.models.DailyViewState
-import ru.alexgladkov.odyssey.compose.extensions.present
-import ru.alexgladkov.odyssey.compose.local.LocalRootController
 import tech.mobiledeveloper.jethabit.app.AppRes
 import ui.themes.JetHabitTheme
 
@@ -40,7 +38,6 @@ internal fun DailyViewDisplay(
     onCheckedChange: (Long, Boolean) -> Unit,
     onItemClicked: (HabitCardItemModel) -> Unit
 ) {
-    val rootController = LocalRootController.current
     val platform = LocalPlatform.current
 
     Surface(
@@ -115,7 +112,7 @@ internal fun DailyViewDisplay(
                     .padding(JetHabitTheme.shapes.padding),
                 backgroundColor = JetHabitTheme.colors.tintColor,
                 onClick = {
-                    rootController.findRootController().present("medication_add_flow")
+                    
                 }) {
                 Icon(
                     imageVector = Icons.Filled.Create,

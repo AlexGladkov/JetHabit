@@ -1,6 +1,7 @@
 package screens.stats
 
-import com.adeo.kviewmodel.BaseSharedViewModel
+import androidx.lifecycle.viewModelScope
+import base.BaseViewModel
 import com.soywiz.klock.DateTime
 import data.features.daily.DailyRepository
 import data.features.medication.MedicationRepository
@@ -12,7 +13,7 @@ import screens.stats.models.StatsViewState
 import screens.stats.views.StatisticCellModel
 import utils.getValueOrNull
 
-class StatisticsViewModel : BaseSharedViewModel<StatsViewState, StatsAction, StatsEvent>(
+class StatisticsViewModel : BaseViewModel<StatsViewState, StatsAction, StatsEvent>(
     initialState = StatsViewState()
 ) {
 

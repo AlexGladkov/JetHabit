@@ -43,14 +43,14 @@ fun MainScreen() {
             composable(MainScreens.Settings.route) { SettingsScreen() }
         }
         
-        BottomNavigation(modifier = Modifier.align(Alignment.BottomStart), backgroundColor = JetHabitTheme.colors.primaryBackground) {
+        BottomNavigation(modifier = Modifier.align(Alignment.BottomStart), backgroundColor = JetHabitTheme.colors.secondaryBackground) {
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
                 val currentDestination = navBackStackEntry?.destination
         
                 items.forEach { screen ->
                     BottomNavigationItem(
-                        icon = { Icon(screen.image, contentDescription = screen.title) },
-                        label = { Text(screen.title) },
+                        icon = { Icon(screen.image, tint = JetHabitTheme.colors.primaryText, contentDescription = screen.title) },
+                        label = { Text(screen.title, color = JetHabitTheme.colors.primaryText) },
                         selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
                         onClick = {
                             navController.navigate(screen.route) {

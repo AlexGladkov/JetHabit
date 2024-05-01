@@ -24,15 +24,10 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.adeo.kviewmodel.compose.ViewModel
-import com.adeo.kviewmodel.odyssey.StoredViewModel
 import io.github.skeptick.libres.compose.painterResource
-import ru.alexgladkov.odyssey.compose.extensions.push
-import ru.alexgladkov.odyssey.compose.local.LocalRootController
 import screens.add_name.models.MedicationAddNameAction
 import screens.add_name.models.MedicationAddNameEvent
 import tech.mobiledeveloper.jethabit.app.AppRes
@@ -88,7 +83,7 @@ internal fun MedicationAddName(
                 .fillMaxWidth().height(48.dp),
             value = viewState.name,
             onValueChange = {
-                viewModel.obtainEvent(MedicationAddNameEvent.ChangeName(it))
+//                viewModel.obtainEvent(MedicationAddNameEvent.ChangeName(it))
             },
             shape = RoundedCornerShape(8.dp),
             singleLine = true,

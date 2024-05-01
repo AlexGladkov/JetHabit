@@ -1,11 +1,11 @@
 package screens.settings
 
-import com.adeo.kviewmodel.BaseSharedViewModel
+import base.BaseViewModel
 import screens.settings.models.SettingsAction
 import screens.settings.models.SettingsEvent
 import screens.settings.models.SettingsViewState
 
-class SettingsViewModel: BaseSharedViewModel<SettingsViewState, SettingsAction, SettingsEvent>(
+class SettingsViewModel: BaseViewModel<SettingsViewState, SettingsAction, SettingsEvent>(
     initialState = SettingsViewState()
 ) {
 
