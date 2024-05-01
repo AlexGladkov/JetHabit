@@ -36,6 +36,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4FB1B521A219BEF9126CF966 /* Target Support Files */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "Target Support Files";
+			sourceTree = "<group>";
+		};
+		4FB1B9F97F20C3BE54C7A338 /* Headers */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Headers;
+			sourceTree = "<group>";
+		};
 		7555FF72242A565900829871 = {
 			isa = PBXGroup;
 			children = (
@@ -78,6 +92,8 @@
 			children = (
 				E3820D5A5448932A88ED7B69 /* Pods-JetHabit.debug.xcconfig */,
 				12372A7B7FF813EC8E4E4824 /* Pods-JetHabit.release.xcconfig */,
+				4FB1B9F97F20C3BE54C7A338 /* Headers */,
+				4FB1B521A219BEF9126CF966 /* Target Support Files */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
