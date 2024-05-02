@@ -6,18 +6,20 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import data.features.settings.LocalSettingsEventBus
 import data.features.settings.SettingsEventBus
 import navigation.LocalNavHost
 import screens.create.CreateHabitFlow
 import screens.main.MainScreen
 import screens.splash.SplashScreen
-import ui.themes.MainTheme
+import themes.MainTheme
 
 @Composable
 fun App() {
     val settingsEventBus = remember { SettingsEventBus() }
-    val currentSettings = settingsEventBus.currentSettings.collectAsState().value
+    val currentSettings by settingsEventBus.currentSettings.collectAsState()
 
+    println("App cur settings ${currentSettings.isDarkMode}")
     MainTheme(
         style = currentSettings.style,
         darkTheme = currentSettings.isDarkMode,
@@ -25,7 +27,11 @@ fun App() {
         textSize = currentSettings.textSize,
         paddingSize = currentSettings.paddingSize
     ) {
-        JetHabitApp()
+        CompositionLocalProvider(
+            LocalSettingsEventBus provides settingsEventBus
+        ) {
+            JetHabitApp()
+        }
     }
 }
 

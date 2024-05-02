@@ -22,6 +22,7 @@ class SettingsEventBus {
     val currentSettings: StateFlow<SettingsBundle> = _currentSettings
 
     fun updateDarkMode(isDarkMode: Boolean) {
+        println("New value $isDarkMode")
         _currentSettings.value = _currentSettings.value.copy(isDarkMode = isDarkMode)
     }
 

@@ -14,6 +14,7 @@ import screens.daily.views.DailyViewError
 import screens.daily.views.DailyViewLoading
 import screens.daily.views.DailyViewNoItems
 import screens.daily.models.DailyAction
+import screens.detail.DailyViewModel
 
 @ExperimentalFoundationApi
 @Composable

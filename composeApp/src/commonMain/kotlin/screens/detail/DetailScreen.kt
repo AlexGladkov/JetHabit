@@ -13,7 +13,6 @@ internal fun DetailScreen(
     cardModel: HabitCardItemModel,
     viewModel: DetailViewModel = viewModel { DetailViewModel(cardModel) }
 ) {
-
     val viewState by viewModel.viewStates().collectAsState()
     val viewAction by viewModel.viewActions().collectAsState(null)
 

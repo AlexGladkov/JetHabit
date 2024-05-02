@@ -1,4 +1,4 @@
-package ui.themes
+package themes
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -8,6 +8,11 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ui.themes.*
+import ui.themes.LocalJetHabitColors
+import ui.themes.LocalJetHabitImage
+import ui.themes.LocalJetHabitShape
+import ui.themes.LocalJetHabitTypography
 
 @Composable
 internal fun MainTheme(

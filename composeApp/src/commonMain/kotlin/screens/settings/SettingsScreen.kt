@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,7 +30,7 @@ import ui.themes.components.JHDivider
 @Composable
 internal fun SettingsScreen() {
     val settingsEventBus = LocalSettingsEventBus.current
-    val currentSettings = settingsEventBus.currentSettings.value
+    val currentSettings by settingsEventBus.currentSettings.collectAsState()
 
     Surface(
         color = JetHabitTheme.colors.primaryBackground,
@@ -60,6 +62,8 @@ internal fun SettingsScreen() {
                     color = JetHabitTheme.colors.primaryText,
                     style = JetHabitTheme.typography.body
                 )
+
+                println("Cur value ${currentSettings.isDarkMode}")
                 Checkbox(
                     checked = currentSettings.isDarkMode, onCheckedChange = {
                         settingsEventBus.updateDarkMode(!currentSettings.isDarkMode)

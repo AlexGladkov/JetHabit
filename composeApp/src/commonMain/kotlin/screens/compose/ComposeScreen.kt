@@ -6,6 +6,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import navigation.LocalNavHost
 import screens.compose.models.ComposeAction
 import screens.compose.models.ComposeEvent

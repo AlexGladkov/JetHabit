@@ -1,4 +1,4 @@
-package screens.daily
+package screens.detail
 
 import androidx.lifecycle.viewModelScope
 import base.BaseViewModel

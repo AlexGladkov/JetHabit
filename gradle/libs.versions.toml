@@ -12,6 +12,8 @@ ktor = "2.3.5"
 klock = "3.4.0"
 
 # Libraries
+room = "2.7.0-alpha01"
+sqlite = "2.5.0-alpha01"
 sqldelight = "2.0.1"
 settings = "1.0.0"
 coil = "2.3.0"
@@ -46,6 +48,11 @@ libres-compose = { module = "io.github.skeptick.libres:libres-compose", version.
 
 kotlinx-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 
+room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
+room-sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
+room-sqlite = { module = "androidx.sqlite:sqlite", version.ref = "sqlite" }
+
 sqldelight-android-driver = { module = "app.cash.sqldelight:android-driver", version.ref = "sqldelight" }
 sqldelight-native-driver = { module = "app.cash.sqldelight:native-driver", version.ref = "sqldelight" }
 sqldelight-sqlite-driver = { module = "app.cash.sqldelight:sqlite-driver", version.ref = "sqldelight" }
@@ -58,6 +65,7 @@ coil-core = { module = "io.coil-kt:coil", version.ref = "coil" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
 
 kodein-di = "org.kodein.di:kodein-di:7.20.2"
+
 compose-viewmodel = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose:2.8.0-beta01"
 compose-navigation = "org.jetbrains.androidx.navigation:navigation-compose:2.7.0-alpha03"
 
@@ -81,3 +89,5 @@ compose = { id = "org.jetbrains.compose", version.ref = "plugin-compose" }
 sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }
 libres = { id = "io.github.skeptick.libres", version.ref = "libres" }
 cocoapods = { id = "org.jetbrains.kotlin.native.cocoapods" }
+room = { id = "androidx.room", version.ref = "room" }
+ksp = { id ="com.google.devtools.ksp", version = "1.9.22-1.0.17" }

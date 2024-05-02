@@ -1,4 +1,3 @@
-import androidx.activity.ComponentActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
@@ -7,10 +6,13 @@ import data.features.settings.LocalSettingsEventBus
 import data.features.settings.SettingsEventBus
 import di.LocalPlatform
 import di.Platform
+import di.PlatformConfiguration
+import di.PlatformSDK
 import themes.MainTheme
 
 @Composable
-fun MainView(activity: ComponentActivity) {
+fun MainView() {
+    PlatformSDK.init(PlatformConfiguration())
     val settingsEventBus = remember { SettingsEventBus() }
     val currentSettings = settingsEventBus.currentSettings.collectAsState().value
 
@@ -22,10 +24,10 @@ fun MainView(activity: ComponentActivity) {
         paddingSize = currentSettings.paddingSize
     ) {
         CompositionLocalProvider(
-            LocalPlatform provides Platform.Android,
+            LocalPlatform provides Platform.Desktop,
             LocalSettingsEventBus provides settingsEventBus
         ) {
-
+            App()
         }
     }
 }

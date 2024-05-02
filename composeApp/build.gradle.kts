@@ -9,9 +9,15 @@ plugins {
     id(libs.plugins.cocoapods.get().pluginId)
     id(libs.plugins.libres.get().pluginId)
     id(libs.plugins.sqldelight.get().pluginId).version(libs.plugins.sqldelight.get().version.requiredVersion)
+    alias(libs.plugins.room)
+    alias(libs.plugins.ksp)
 }
 
 version = "1.0"
+
+room {
+    schemaDirectory("$projectDir/schemas")
+}
 
 sqldelight {
     databases {
@@ -34,15 +40,16 @@ kotlin {
     androidTarget()
     jvm()
 
-    js {
-        moduleName = "composeApp"
-        browser {
-            commonWebpackConfig {
-                outputFileName = "composeApp.js"
-            }
-        }
-        binaries.executable()
-    }
+//    For now Room doesn't work with JS
+//    js {
+//        moduleName = "composeApp"
+//        browser {
+//            commonWebpackConfig {
+//                outputFileName = "composeApp.js"
+//            }
+//        }
+//        binaries.executable()
+//    }
 
     listOf(
         iosArm64(),
@@ -85,16 +92,21 @@ kotlin {
 
             implementation(libs.kotlinx.serialization.core)
             implementation(libs.kotlinx.coroutines)
-            
+
             implementation(libs.klock.common)
             implementation(libs.libres.compose)
             implementation(libs.kodein.di)
-            
+
             implementation(libs.kotlinx.serialization.core)
             implementation(libs.kotlinx.serialization.json)
-            
+
             implementation(libs.compose.navigation)
             implementation(libs.compose.viewmodel)
+
+            implementation(libs.room.runtime)
+            implementation(libs.room.sqlite)
+            implementation(libs.room.sqlite.bundled)
+
         }
 
         iosMain.dependencies {
@@ -121,6 +133,15 @@ kotlin {
             implementation(devNpm("copy-webpack-plugin", "9.1.0"))
         }
     }
+}
+
+dependencies {
+    add("kspCommonMainMetadata", libs.room.compiler)
+    add("kspAndroid", libs.room.compiler)
+    add("kspIosX64", libs.room.compiler)
+    add("kspIosArm64", libs.room.compiler)
+    add("kspIosSimulatorArm64", libs.room.compiler)
+    add("kspJvm", libs.room.compiler)
 }
 
 android {
