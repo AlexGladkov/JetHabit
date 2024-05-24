@@ -5,5 +5,7 @@ sealed class DailyEvent {
     data object PreviousDayClicked : DailyEvent()
     data object NextDayClicked : DailyEvent()
     data object CloseAction : DailyEvent()
+    data object ComposeAction : DailyEvent()
     class OnHabitClick(val habitId: Long, val newValue: Boolean) : DailyEvent()
+    class HabitCheckClicked(val habitId: Long, val newValue: Boolean) : DailyEvent()
 }

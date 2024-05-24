@@ -1,8 +1,7 @@
 package screens.main
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
@@ -13,6 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
@@ -37,7 +37,7 @@ fun MainScreen() {
     val items = listOf(MainScreens.Daily, MainScreens.Statistics, MainScreens.Settings)
 
     Box(modifier = Modifier.fillMaxSize()) {
-        NavHost(navController, startDestination = MainScreens.Daily.route) {
+        NavHost(navController, modifier = Modifier.padding(bottom = 56.dp).fillMaxSize(), startDestination = MainScreens.Daily.route) {
             composable(MainScreens.Daily.route) { DailyScreen() }
             composable(MainScreens.Statistics.route) { StatisticsScreen() }
             composable(MainScreens.Settings.route) { SettingsScreen() }

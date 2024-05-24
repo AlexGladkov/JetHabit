@@ -2,18 +2,17 @@ package feature.daily.presentation
 
 import androidx.lifecycle.viewModelScope
 import base.BaseViewModel
-import com.soywiz.klock.DateTime
-import com.soywiz.klock.days
 import di.Inject
 import feature.daily.domain.GetHabitsForTodayUseCase
 import feature.daily.domain.SwitchHabitUseCase
 import feature.daily.ui.models.DailyViewState
 import kotlinx.coroutines.launch
-import screens.daily.models.DailyAction
+import feature.daily.ui.models.DailyAction
 import feature.daily.ui.models.DailyEvent
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlinx.datetime.*
 import screens.daily.views.mapToHabitCardItemModel
-import tech.mobiledeveloper.jethabit.app.AppRes
 import utils.getTitle
 
 class DailyViewModel : BaseViewModel<DailyViewState, DailyAction, DailyEvent>(
@@ -27,7 +26,7 @@ class DailyViewModel : BaseViewModel<DailyViewState, DailyAction, DailyEvent>(
     private var currentDate = Clock.System.now()
 
     init {
-        fetchHabitFor(date = currentDate.toLocalDateTime(timeZone = timeZone).date)
+        fetchHabitFor(date = currentDate.current())
     }
 
     override fun obtainEvent(viewEvent: DailyEvent) {
@@ -36,7 +35,9 @@ class DailyViewModel : BaseViewModel<DailyViewState, DailyAction, DailyEvent>(
             DailyEvent.NextDayClicked -> performNextClick()
             is DailyEvent.OnHabitClick -> TODO()
             DailyEvent.PreviousDayClicked -> performPreviousClick()
-            DailyEvent.ReloadScreen -> TODO()
+            DailyEvent.ReloadScreen -> fetchHabitFor(currentDate.current())
+            DailyEvent.ComposeAction -> viewAction = DailyAction.OpenCompose
+            is DailyEvent.HabitCheckClicked -> switchCheckForHabit(viewEvent.habitId, viewEvent.newValue)
         }
     }
 
@@ -50,22 +51,36 @@ class DailyViewModel : BaseViewModel<DailyViewState, DailyAction, DailyEvent>(
             hasNextDay = !isToday
         )
 
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.Default) {
             val habits = getHabitsForTodayUseCase.execute(date)
                 .map { it.mapToHabitCardItemModel() }
-            viewState = viewState.copy(habits = habits)
+
+            withContext(Dispatchers.Main) {
+                viewState = viewState.copy(habits = habits)
+            }
         }
     }
 
     private fun performNextClick() {
         currentDate = currentDate.plus(1, DateTimeUnit.DAY, timeZone)
-        val localDate = currentDate.toLocalDateTime(timeZone).date
+        val localDate = currentDate.current()
         fetchHabitFor(localDate)
     }
 
     private fun performPreviousClick() {
         currentDate = currentDate.minus(1, DateTimeUnit.DAY, timeZone)
-        val localDate = currentDate.toLocalDateTime(timeZone).date
+        val localDate = currentDate.current()
         fetchHabitFor(localDate)
     }
+
+    private fun switchCheckForHabit(habitId: Long, newValue: Boolean) {
+        viewModelScope.launch(Dispatchers.Default) {
+            switchHabitUseCase.execute(newValue, habitId, currentDate.current())
+            withContext(Dispatchers.Main) {
+                fetchHabitFor(currentDate.current())
+            }
+        }
+    }
 }
+
+private fun Instant.current(): LocalDate = this.toLocalDateTime(TimeZone.currentSystemDefault()).date

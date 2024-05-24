@@ -1,5 +1,6 @@
 package feature.daily.ui
 
+import NavigationScreens
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -7,9 +8,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import navigation.LocalNavHost
-import feature.daily.ui.models.DailyEvent
-import screens.daily.models.DailyAction
+import feature.daily.ui.models.DailyAction
 import feature.daily.presentation.DailyViewModel
+import feature.daily.ui.models.DailyEvent
 
 @ExperimentalFoundationApi
 @Composable
@@ -29,7 +30,16 @@ internal fun DailyScreen(
             viewModel.clearAction()
         }
 
+        DailyAction.OpenCompose -> {
+            outerNavController.navigate(NavigationScreens.Create.title)
+            viewModel.clearAction()
+        }
+
         null -> {}
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.obtainEvent(DailyEvent.ReloadScreen)
     }
 }
 

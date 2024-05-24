@@ -1,14 +1,24 @@
 package feature.daily.domain
 
 import feature.daily.data.DailyDao
-import feature.habits.data.HabitDao
+import feature.daily.data.DailyEntity
+import kotlinx.datetime.LocalDate
 
 class SwitchHabitUseCase(
-    private val habitDao: HabitDao,
     private val dailyDao: DailyDao
 ) {
-    
-    suspend fun execute(habitId: Long) {
-        
+
+    suspend fun execute(checked: Boolean, habitId: Long, date: LocalDate) {
+        if (checked) {
+            dailyDao.insert(
+                DailyEntity(
+                    habitId = habitId,
+                    timestamp = date.toString(),
+                    isChecked = checked
+                )
+            )
+        } else {
+            dailyDao.deleteAllHabitsForToday(habitId, date.toString())
+        }
     }
 }

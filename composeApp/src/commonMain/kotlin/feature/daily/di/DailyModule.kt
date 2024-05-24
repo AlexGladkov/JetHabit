@@ -21,6 +21,6 @@ val dailyModule = DI.Module("DailyModule") {
     }
     
     bind<SwitchHabitUseCase>() with provider {
-        SwitchHabitUseCase(instance(), instance())
+        SwitchHabitUseCase(instance())
     }
 }

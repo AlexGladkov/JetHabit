@@ -3,7 +3,7 @@ package feature.daily.domain
 import feature.daily.data.DailyDao
 import feature.daily.presentation.models.DailyHabit
 import feature.habits.data.HabitDao
-import kotlinx.datetime.LocalDate
+import kotlinx.datetime.*
 import kotlinx.serialization.json.Json
 
 class GetHabitsForTodayUseCase(
@@ -14,7 +14,13 @@ class GetHabitsForTodayUseCase(
 
     suspend fun execute(date: LocalDate): List<DailyHabit> {
         val currentDay = date.dayOfWeek.ordinal
-        
+
+        val dailyEntries = dailyDao.getAll()
+            .filter {
+                val timestamp = LocalDate.parse(it.timestamp)
+                date.compareTo(timestamp) == 0 && it.isChecked
+            }
+            .map { it.habitId }
         val habits = habitDao.getAll()
             .filter {
                 val habitDays = json.decodeFromString<List<Int>>(it.daysToCheck)
@@ -24,7 +30,7 @@ class GetHabitsForTodayUseCase(
                 DailyHabit(
                     id = it.id,
                     title = it.title,
-                    isChecked = true
+                    isChecked = dailyEntries.contains(it.id)
                 )
             }
         
