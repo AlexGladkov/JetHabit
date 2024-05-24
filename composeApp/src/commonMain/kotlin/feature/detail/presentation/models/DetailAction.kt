@@ -1,6 +1,7 @@
-package screens.detail.models
+package feature.detail.presentation.models
 
 sealed class DetailAction {
-    object CloseScreen : DetailAction()
-    object DateError : DetailAction()
+    data object CloseScreen : DetailAction()
+    data object DateError : DetailAction()
+    class ShowCalendar(val isStart: Boolean) : DetailAction()
 }

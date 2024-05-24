@@ -1,12 +1,13 @@
 package feature.daily.ui
 
-import NavigationScreens
+import AppScreens
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import navigation.LocalNavHost
 import feature.daily.ui.models.DailyAction
 import feature.daily.presentation.DailyViewModel
@@ -15,6 +16,7 @@ import feature.daily.ui.models.DailyEvent
 @ExperimentalFoundationApi
 @Composable
 internal fun DailyScreen(
+    navController: NavController,
     viewModel: DailyViewModel = viewModel { DailyViewModel() }
 ) {
     val outerNavController = LocalNavHost.current
@@ -27,11 +29,12 @@ internal fun DailyScreen(
 
     when (viewAction) {
         is DailyAction.OpenDetail -> {
+            outerNavController.navigate(AppScreens.Detail.title)
             viewModel.clearAction()
         }
 
         DailyAction.OpenCompose -> {
-            outerNavController.navigate(NavigationScreens.Create.title)
+            outerNavController.navigate(AppScreens.Create.title)
             viewModel.clearAction()
         }
 

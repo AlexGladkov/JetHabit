@@ -8,6 +8,8 @@ import data.features.settings.LocalSettingsEventBus
 import data.features.settings.SettingsEventBus
 import navigation.LocalNavHost
 import screens.create.CreateHabitFlow
+import screens.daily.views.HabitCardItemModel
+import screens.detail.DetailScreen
 import screens.main.MainScreen
 import screens.splash.SplashScreen
 import themes.MainTheme
@@ -51,8 +53,8 @@ fun PreviewApp(content: @Composable () -> Unit) {
     }
 }
 
-enum class NavigationScreens(val title: String) {
-    Splash("splash"), Main("main"), Create("create")
+enum class AppScreens(val title: String) {
+    Splash("splash"), Main("main"), Create("create"), Detail("detail")
 }
 
 @Composable
@@ -60,25 +62,35 @@ private fun JetHabitApp(
     navController: NavHostController = rememberNavController()
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
-    val currentScreen = backStackEntry?.destination?.route ?: NavigationScreens.Splash.title
+    val currentScreen = backStackEntry?.destination?.route ?: AppScreens.Splash.title
 
     CompositionLocalProvider(
         LocalNavHost provides navController
     ) {
         NavHost(
             navController = navController,
-            startDestination = NavigationScreens.Splash.title
+            startDestination = AppScreens.Splash.title
         ) {
-            composable(route = NavigationScreens.Splash.title) {
+            composable(route = AppScreens.Splash.title) {
                 SplashScreen(navController)
             }
 
-            composable(route = NavigationScreens.Main.title) {
+            composable(route = AppScreens.Main.title) {
                 MainScreen()
             }
 
-            composable(route = NavigationScreens.Create.title) {
+            composable(route = AppScreens.Create.title) {
                 CreateHabitFlow()
+            }
+
+            composable(route = AppScreens.Detail.title) {
+                DetailScreen(
+                    HabitCardItemModel(
+                        habitId = 0,
+                        title = "Blabla",
+                        isChecked = true
+                    )
+                )
             }
         }
     }

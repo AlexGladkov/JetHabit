@@ -33,7 +33,7 @@ class DailyViewModel : BaseViewModel<DailyViewState, DailyAction, DailyEvent>(
         when (viewEvent) {
             DailyEvent.CloseAction -> TODO()
             DailyEvent.NextDayClicked -> performNextClick()
-            is DailyEvent.OnHabitClick -> TODO()
+            is DailyEvent.HabitClicked -> viewAction = DailyAction.OpenDetail(viewEvent.habitId)
             DailyEvent.PreviousDayClicked -> performPreviousClick()
             DailyEvent.ReloadScreen -> fetchHabitFor(currentDate.current())
             DailyEvent.ComposeAction -> viewAction = DailyAction.OpenCompose

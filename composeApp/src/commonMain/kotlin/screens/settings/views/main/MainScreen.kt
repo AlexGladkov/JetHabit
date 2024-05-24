@@ -1,6 +1,7 @@
 package screens.main
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -20,6 +21,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import feature.daily.ui.DailyScreen
+import screens.daily.views.HabitCardItemModel
 import screens.detail.DetailScreen
 import screens.settings.SettingsScreen
 import screens.stats.StatisticsScreen
@@ -29,8 +31,6 @@ sealed class MainScreens(val route: String, val title: String, val image: ImageV
     data object Daily : MainScreens("daily", "Daily", Icons.AutoMirrored.Filled.List)
     data object Statistics : MainScreens("statistics", "Statistics", Icons.Outlined.Check)
     data object Settings : MainScreens("settings", "Settings", Icons.Outlined.Settings)
-
-    data object Detail : MainScreens
 }
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
@@ -40,39 +40,51 @@ fun MainScreen() {
     val items = listOf(MainScreens.Daily, MainScreens.Statistics, MainScreens.Settings)
 
     Box(modifier = Modifier.fillMaxSize()) {
-        NavHost(navController, modifier = Modifier.padding(bottom = 56.dp).fillMaxSize(), startDestination = MainScreens.Daily.route) {
-            composable(MainScreens.Daily.route) { DailyScreen() }
+        NavHost(
+            navController,
+            modifier = Modifier.padding(bottom = 56.dp).fillMaxSize(),
+            startDestination = MainScreens.Daily.route
+        ) {
+            composable(MainScreens.Daily.route) { DailyScreen(navController) }
             composable(MainScreens.Statistics.route) { StatisticsScreen() }
             composable(MainScreens.Settings.route) { SettingsScreen() }
-            composable(MainScreens.Detail.route) { DetailScreen() }
         }
-        
-        BottomNavigation(modifier = Modifier.align(Alignment.BottomStart), backgroundColor = JetHabitTheme.colors.secondaryBackground) {
-                val navBackStackEntry by navController.currentBackStackEntryAsState()
-                val currentDestination = navBackStackEntry?.destination
-        
-                items.forEach { screen ->
-                    BottomNavigationItem(
-                        icon = { Icon(screen.image, tint = JetHabitTheme.colors.primaryText, contentDescription = screen.title) },
-                        label = { Text(screen.title, color = JetHabitTheme.colors.primaryText) },
-                        selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
-                        onClick = {
-                            navController.navigate(screen.route) {
-                                // Pop up to  the start destination of the graph to
-                                // avoid building up a large stack of destinations
-                                // on the back stack as users select items
-                                popUpTo(navController.graph.findStartDestination().displayName) {
-                                    saveState = true
-                                }
-                                // Avoid multiple copies of the same destination when
-                                // reselecting the same item
-                                launchSingleTop = true
-                                // Restore state when reselecting a previously selected item
-                                restoreState = true
+
+        BottomNavigation(
+            modifier = Modifier.align(Alignment.BottomStart),
+            backgroundColor = JetHabitTheme.colors.secondaryBackground
+        ) {
+            val navBackStackEntry by navController.currentBackStackEntryAsState()
+            val currentDestination = navBackStackEntry?.destination
+
+            items.forEach { screen ->
+                BottomNavigationItem(
+                    icon = {
+                        Icon(
+                            screen.image,
+                            tint = JetHabitTheme.colors.primaryText,
+                            contentDescription = screen.title
+                        )
+                    },
+                    label = { Text(screen.title, color = JetHabitTheme.colors.primaryText) },
+                    selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
+                    onClick = {
+                        navController.navigate(screen.route) {
+                            // Pop up to  the start destination of the graph to
+                            // avoid building up a large stack of destinations
+                            // on the back stack as users select items
+                            popUpTo(navController.graph.findStartDestination().displayName) {
+                                saveState = true
                             }
+                            // Avoid multiple copies of the same destination when
+                            // reselecting the same item
+                            launchSingleTop = true
+                            // Restore state when reselecting a previously selected item
+                            restoreState = true
                         }
-                    )
-                }
-            }   
+                    }
+                )
+            }
+        }
     }
 }

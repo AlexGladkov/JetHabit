@@ -25,7 +25,6 @@ import screens.daily.views.HabitCardItem
 import tech.mobiledeveloper.jethabit.app.AppRes
 import ui.themes.JetHabitTheme
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DailyView(
     viewState: DailyViewState,
@@ -96,7 +95,7 @@ fun DailyView(
                                             eventHandler.invoke(DailyEvent.HabitCheckClicked(cardItem.habitId, it))
                                         },
                                         onCardClicked = {
-
+                                            eventHandler.invoke(DailyEvent.HabitClicked(cardItem.habitId))
                                         }
                                     )
                                 }

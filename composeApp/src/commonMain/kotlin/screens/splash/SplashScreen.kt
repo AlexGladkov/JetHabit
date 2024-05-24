@@ -1,5 +1,6 @@
 package screens.splash
 
+import AppScreens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -49,6 +50,6 @@ internal fun SplashScreen(
     }
 
     LaunchedEffect(key1 = Unit, block = {
-        navigationController.navigate(NavigationScreens.Main.title)
+        navigationController.navigate(AppScreens.Main.title)
     })
 }

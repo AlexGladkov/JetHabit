@@ -1,19 +1,13 @@
 package screens.detail
 
-import androidx.lifecycle.viewModelScope
 import base.BaseViewModel
 import com.soywiz.klock.DateTime
 import data.features.medication.MedicationRepository
 import di.Inject
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import screens.daily.views.HabitCardItemModel
-import screens.detail.models.DetailAction
-import screens.detail.models.DetailEvent
+import feature.detail.presentation.models.DetailAction
+import feature.detail.presentation.models.DetailEvent
 import screens.detail.models.DetailViewState
-import tech.mobiledeveloper.jethabit.app.AppRes
-import utils.getValueOrNull
 
 class DetailViewModel(private val cardModel: HabitCardItemModel): BaseViewModel<DetailViewState, DetailAction, DetailEvent>(
     initialState = DetailViewState(itemTitle = cardModel.title)
@@ -33,69 +27,71 @@ class DetailViewModel(private val cardModel: HabitCardItemModel): BaseViewModel<
             DetailEvent.ActionInvoked -> viewAction = null
             is DetailEvent.EndDateSelected -> setEndDate(viewEvent.value)
             is DetailEvent.StartDateSelected -> setStartDate(viewEvent.value)
+            DetailEvent.StartDateClicked -> viewAction = DetailAction.ShowCalendar(isStart = true)
+            DetailEvent.EndDateClicked -> viewAction = DetailAction.ShowCalendar(isStart = false)
         }
     }
 
     private fun fetchDetailedInformation() {
-        viewModelScope.launch(Dispatchers.Default) {
-            val medication = medicationRepository.fetchCurrentMedications().first { it.itemId == cardModel.habitId }
-            val startDate = getValueOrNull(medication.startDate)
-            val endDate = getValueOrNull(medication.endDate)
-
-            withContext(Dispatchers.Main) {
-
-                viewState = viewState.copy(
-                    itemTitle = medication.title,
-                    startDate = startDate?.toString("dd MMM yyyy") ?: AppRes.string.not_selected,
-                    endDate = endDate?.toString("dd MMM yyyy") ?: AppRes.string.not_selected,
-                    start = startDate?.local,
-                    end = endDate?.local
-                )
-            }
-        }
+//        viewModelScope.launch(Dispatchers.Default) {
+//            val medication = medicationRepository.fetchCurrentMedications().first { it.itemId == cardModel.habitId }
+//            val startDate = getValueOrNull(medication.startDate)
+//            val endDate = getValueOrNull(medication.endDate)
+//
+//            withContext(Dispatchers.Main) {
+//
+//                viewState = viewState.copy(
+//                    itemTitle = medication.title,
+//                    startDate = startDate?.toString("dd MMM yyyy") ?: AppRes.string.not_selected,
+//                    endDate = endDate?.toString("dd MMM yyyy") ?: AppRes.string.not_selected,
+//                    start = startDate?.local,
+//                    end = endDate?.local
+//                )
+//            }
+//        }
     }
 
     private fun deleteItem() {
-        viewModelScope.launch {
-            viewState = viewState.copy(isDeleting = true)
-            medicationRepository.deleteItem(cardModel.habitId)
-            viewAction = DetailAction.CloseScreen
-        }
+//        viewModelScope.launch {
+//            viewState = viewState.copy(isDeleting = true)
+//            medicationRepository.deleteItem(cardModel.habitId)
+//            viewAction = DetailAction.CloseScreen
+//        }
     }
 
     private fun setStartDate(value: DateTime) {
-        viewState = viewState.copy(
-            startDate = value.format("dd MMM yyyy"),
-            start = value
-        )
+//        viewState = viewState.copy(
+//            startDate = value.format("dd MMM yyyy"),
+//            start = value
+//        )
     }
 
     private fun setEndDate(value: DateTime) {
-        viewState = viewState.copy(
-            endDate = value.toString("dd MMM yyyy"),
-            end = value
-        )
+//        viewState = viewState.copy(
+//            endDate = value.toString("dd MMM yyyy"),
+//            end = value
+//        )
     }
 
     private fun applyChanges() {
-        val startDate = viewState.start
-        val endDate = viewState.end
-
-        if (startDate == null || endDate == null) {
-            viewAction = DetailAction.CloseScreen
-        } else {
-            if (startDate.compareTo(endDate) == -1) {
-                updateData(startDate, endDate)
-            } else {
-                viewAction = DetailAction.DateError
-            }
-        }
+//        val startDate = viewState.start
+//        val endDate = viewState.end
+//
+//        if (startDate == null || endDate == null) {
+//            viewAction = DetailAction.CloseScreen
+//        } else {
+//            if (startDate.compareTo(endDate) == -1) {
+//                updateData(startDate, endDate)
+//            } else {
+//                viewAction = DetailAction.DateError
+//            }
+//        }
     }
 
     private fun updateData(startDate: DateTime, endDate: DateTime) {
-        viewModelScope.launch(Dispatchers.Default) {
-            medicationRepository.updateMedication(cardModel.habitId, startDate, endDate)
-            viewAction = DetailAction.CloseScreen
-        }
+//        viewModelScope.launch(Dispatchers.Default) {
+//            medicationRepository.updateMedication(cardModel.habitId, startDate, endDate)
+//            viewAction = DetailAction.CloseScreen
+//        }
     }
 }
