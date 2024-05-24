@@ -19,7 +19,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import screens.daily.DailyScreen
+import feature.daily.ui.DailyScreen
 import screens.settings.SettingsScreen
 import screens.stats.StatisticsScreen
 import ui.themes.JetHabitTheme

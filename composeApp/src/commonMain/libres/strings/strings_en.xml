@@ -2,6 +2,7 @@
 <resources>
     <string name="app_name">JetpackComposeDemo</string>
     <string name="days_today">Today</string>
+    <string name="days_yesterday">Yesterday</string>
     <string name="title_font_size">Font size</string>
     <string name="title_font_size_small">Small</string>
     <string name="title_font_size_medium">Medium</string>

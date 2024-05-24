@@ -89,9 +89,11 @@ kotlin {
             implementation(compose.ui)
             implementation(compose.foundation)
             implementation(compose.material)
+            implementation(compose.components.uiToolingPreview)
 
             implementation(libs.kotlinx.serialization.core)
             implementation(libs.kotlinx.coroutines)
+            implementation(libs.kotlinx.datetime)
 
             implementation(libs.klock.common)
             implementation(libs.libres.compose)

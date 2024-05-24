@@ -30,6 +30,10 @@ public abstract class BaseViewModel<State : Any, Action, Event>(initialState: St
 
     public abstract fun obtainEvent(viewEvent: Event)
 
+    fun clearAction() {
+        viewAction = null
+    }
+
     /**
      * Convenient method to perform work in [viewModelScope] scope.
      */

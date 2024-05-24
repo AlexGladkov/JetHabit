@@ -1,6 +1,7 @@
 package di
 
 import androidx.compose.runtime.staticCompositionLocalOf
+import core.database.AppDatabase
 
 enum class Platform {
     Android, MacOS, Desktop, iOS, Js

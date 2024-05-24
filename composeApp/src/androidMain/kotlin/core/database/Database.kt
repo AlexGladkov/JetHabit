@@ -1,4 +1,4 @@
-package core.databa se
+package core.database
 
 import android.content.Context
 import androidx.room.Room

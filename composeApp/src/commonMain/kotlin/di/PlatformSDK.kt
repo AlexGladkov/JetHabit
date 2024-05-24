@@ -1,5 +1,6 @@
 package di
 
+import core.database.AppDatabase
 import data.features.daily.dailyModule
 import data.features.medication.medicationModule
 import org.kodein.di.DI
@@ -10,10 +11,12 @@ import org.kodein.di.singleton
 object PlatformSDK {
 
     fun init(
-        configuration: PlatformConfiguration
+        configuration: PlatformConfiguration,
+        appDatabase: AppDatabase
     ) {
         val umbrellaModule = DI.Module("umbrella") {
             bind<PlatformConfiguration>() with singleton { configuration }
+            bind<AppDatabase>() with singleton { appDatabase }
         }
 
         Inject.createDependencies(
@@ -22,7 +25,8 @@ object PlatformSDK {
                     umbrellaModule,
                     coreModule,
                     dailyModule,
-                    medicationModule
+                    medicationModule,
+                    featureModule
                 )
             }.direct
         )

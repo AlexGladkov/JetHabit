@@ -1,20 +1,16 @@
-package screens.daily.views
+package feature.daily.ui
 
+import PreviewApp
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.runtime.Composable
@@ -22,26 +18,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import di.LocalPlatform
-import di.Platform
-import screens.daily.models.DailyViewState
+import feature.daily.ui.models.DailyViewState
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import feature.daily.ui.models.DailyEvent
+import screens.daily.views.HabitCardItem
 import tech.mobiledeveloper.jethabit.app.AppRes
 import ui.themes.JetHabitTheme
 
-@ExperimentalFoundationApi
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-internal fun DailyViewDisplay(
-    modifier: Modifier = Modifier,
-    viewState: DailyViewState.Display,
-    onPreviousDayClicked: () -> Unit,
-    onNextDayClicked: () -> Unit,
-    onCheckedChange: (Long, Boolean) -> Unit,
-    onItemClicked: (HabitCardItemModel) -> Unit
+fun DailyView(
+    viewState: DailyViewState,
+    eventHandler: (DailyEvent) -> Unit
 ) {
-    val platform = LocalPlatform.current
-
     Surface(
-        modifier = modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize(),
         color = JetHabitTheme.colors.primaryBackground
     ) {
         Box {
@@ -58,7 +49,7 @@ internal fun DailyViewDisplay(
                                     end = JetHabitTheme.shapes.padding,
                                     top = JetHabitTheme.shapes.padding + 8.dp
                                 ),
-                                text = viewState.title,
+                                text = viewState.currentDay,
                                 style = JetHabitTheme.typography.heading,
                                 color = JetHabitTheme.colors.primaryText
                             )
@@ -71,7 +62,7 @@ internal fun DailyViewDisplay(
                                         top = 4.dp,
                                         bottom = JetHabitTheme.shapes.padding + 8.dp
                                     )
-                                    .clickable { onPreviousDayClicked.invoke() },
+                                    .clickable { eventHandler.invoke(DailyEvent.PreviousDayClicked) },
                                 text = AppRes.string.daily_previous_day,
                                 style = JetHabitTheme.typography.body,
                                 color = JetHabitTheme.colors.controlColor
@@ -83,8 +74,8 @@ internal fun DailyViewDisplay(
                                 modifier = Modifier
                                     .size(56.dp)
                                     .padding(16.dp)
-                                    .clickable { onNextDayClicked.invoke() },
-                                imageVector = Icons.Filled.ArrowForward,
+                                    .clickable { eventHandler.invoke(DailyEvent.NextDayClicked) },
+                                imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                                 tint = JetHabitTheme.colors.controlColor,
                                 contentDescription = "Next Day"
                             )
@@ -92,14 +83,16 @@ internal fun DailyViewDisplay(
                     }
                 }
 
-                viewState.items
+                viewState.habits
                     .forEach { cardItem ->
                         item {
                             HabitCardItem(
                                 model = cardItem,
-                                onCheckedChange = { onCheckedChange(cardItem.habitId, !cardItem.isChecked) },
+                                onCheckedChange = {
+
+                                },
                                 onCardClicked = {
-                                    onItemClicked.invoke(cardItem)
+
                                 }
                             )
                         }
@@ -112,7 +105,7 @@ internal fun DailyViewDisplay(
                     .padding(JetHabitTheme.shapes.padding),
                 backgroundColor = JetHabitTheme.colors.tintColor,
                 onClick = {
-                    
+
                 }) {
                 Icon(
                     imageVector = Icons.Filled.Create,
@@ -124,32 +117,18 @@ internal fun DailyViewDisplay(
     }
 }
 
-//@ExperimentalFoundationApi
-//@Preview
-//@Composable
-//fun DailyViewDisplay_Preview() {
-//    MainTheme(darkTheme = true) {
-//        DailyViewDisplay(
-//            navController = rememberNavController(),
-//            viewState = DailyViewState.Display(
-//                items = listOf(
-//                    HabitCardItemModel(
-//                        habitId = 0,
-//                        title = "Test habit",
-//                        isChecked = true
-//                    ),
-//                    HabitCardItemModel(
-//                        habitId = 1,
-//                        title = "Test habit 2",
-//                        isChecked = false
-//                    )
-//                ),
-//                title = "Today",
-//                hasNextDay = true
-//            ),
-//            onPreviousDayClicked = {},
-//            onNextDayClicked = {},
-//            onCheckedChange = { _, _ -> }
-//        )
-//    }
-//}
+@Composable
+@Preview
+fun DailyView_Preview() {
+    PreviewApp {
+        DailyView(
+            viewState = DailyViewState(
+                currentDay = "Today",
+                hasNextDay = true,
+                habits = emptyList()
+            )
+        ) {
+
+        }
+    }
+}

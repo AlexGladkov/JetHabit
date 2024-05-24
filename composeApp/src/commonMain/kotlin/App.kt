@@ -1,6 +1,4 @@
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.runtime.*
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -19,7 +17,6 @@ fun App() {
     val settingsEventBus = remember { SettingsEventBus() }
     val currentSettings by settingsEventBus.currentSettings.collectAsState()
 
-    println("App cur settings ${currentSettings.isDarkMode}")
     MainTheme(
         style = currentSettings.style,
         darkTheme = currentSettings.isDarkMode,
@@ -35,11 +32,29 @@ fun App() {
     }
 }
 
+@Composable
+fun PreviewApp(content: @Composable () -> Unit) {
+    val settingsEventBus = remember { SettingsEventBus() }
+    val currentSettings by settingsEventBus.currentSettings.collectAsState()
+
+    MainTheme(
+        style = currentSettings.style,
+        darkTheme = currentSettings.isDarkMode,
+        corners = currentSettings.cornerStyle,
+        textSize = currentSettings.textSize,
+        paddingSize = currentSettings.paddingSize
+    ) {
+        CompositionLocalProvider(
+            LocalSettingsEventBus provides settingsEventBus,
+            content = content
+        ) 
+    }
+}
+
 enum class NavigationScreens(val title: String) {
     Splash("splash"), Main("main"), Create("create")
 }
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
 @Composable
 private fun JetHabitApp(
     navController: NavHostController = rememberNavController()

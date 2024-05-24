@@ -1,7 +1,7 @@
 [versions]
 # Plugins
-plugin-android = "8.1.4" # https://developer.android.com/studio/releases/gradle-plugin
-plugin-compose = "1.6.10-beta02" # https://github.com/JetBrains/compose-jb
+plugin-android = "8.2.0" # https://developer.android.com/studio/releases/gradle-plugin
+plugin-compose = "1.6.10" # https://github.com/JetBrains/compose-jb
 
 # Multiplatform
 kotlin = "1.9.22"
@@ -47,6 +47,7 @@ kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serializa
 libres-compose = { module = "io.github.skeptick.libres:libres-compose", version.ref = "libres" }
 
 kotlinx-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+kotlinx-datetime = "org.jetbrains.kotlinx:kotlinx-datetime:0.6.0"
 
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }

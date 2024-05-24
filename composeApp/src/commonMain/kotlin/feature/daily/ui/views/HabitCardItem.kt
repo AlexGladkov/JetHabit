@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import feature.daily.presentation.models.DailyHabit
 import ui.themes.JetHabitTheme
 
 data class HabitCardItemModel(
@@ -17,6 +18,13 @@ data class HabitCardItemModel(
     val title: String,
     val isChecked: Boolean
 )
+
+fun DailyHabit.mapToHabitCardItemModel(): HabitCardItemModel =
+    HabitCardItemModel(
+        habitId = id,
+        title = title,
+        isChecked = isChecked
+    )
 
 @Composable
 internal fun HabitCardItem(
