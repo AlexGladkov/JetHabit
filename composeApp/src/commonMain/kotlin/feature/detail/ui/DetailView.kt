@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import di.LocalPlatform
 import di.Platform
 import feature.detail.presentation.models.DetailEvent
-import screens.detail.models.DetailViewState
+import feature.detail.presentation.models.DetailViewState
 import tech.mobiledeveloper.jethabit.app.AppRes
 import ui.themes.JetHabitTheme
 import ui.themes.components.JetMenu

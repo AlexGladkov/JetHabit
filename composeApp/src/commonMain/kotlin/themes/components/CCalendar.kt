@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
@@ -25,7 +26,10 @@ import androidx.compose.ui.unit.sp
 import com.soywiz.klock.DateTime
 import com.soywiz.klock.days
 import com.soywiz.klock.months
+import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.minus
+import kotlinx.datetime.plus
 import tech.mobiledeveloper.jethabit.app.AppRes
 import ui.themes.JetHabitTheme
 import ui.themes.components.JetHabitButton
@@ -43,102 +47,106 @@ internal fun CCalendar(
 ) {
     var dateState by remember { mutableStateOf(selectedDate) }
 
-    Column {
-        Row(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = "${dateState.month.name} ${dateState.year}",
-                color = textColor,
-                style = JetHabitTheme.typography.body,
-                fontWeight = FontWeight.Medium
-            )
-            Spacer(modifier = Modifier.weight(1f))
-            Icon(
-                modifier = Modifier.clickable {
-//                    dateState = dateState.minus(1.months)
-                },
-                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
-                tint = JetHabitTheme.colors.tintColor,
-                contentDescription = "Month Back"
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Icon(
-                modifier = Modifier.clickable {
-//                    dateState = dateState.plus(1.months)
-                },
-                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                tint = JetHabitTheme.colors.tintColor,
-                contentDescription = "Month Forward"
-            )
+    Surface(
+        color = JetHabitTheme.colors.primaryBackground
+    ) {
+        Column {
+            Row(modifier = Modifier.padding(16.dp)) {
+                Text(
+                    text = "${dateState.month.name} ${dateState.year}",
+                    color = textColor,
+                    style = JetHabitTheme.typography.body,
+                    fontWeight = FontWeight.Medium
+                )
+                Spacer(modifier = Modifier.weight(1f))
+                Icon(
+                    modifier = Modifier.clickable {
+                        dateState = dateState.minus(1, DateTimeUnit.MONTH)
+                    },
+                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
+                    tint = JetHabitTheme.colors.tintColor,
+                    contentDescription = "Month Back"
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Icon(
+                    modifier = Modifier.clickable {
+                        dateState = dateState.plus(1, DateTimeUnit.MONTH)
+                    },
+                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                    tint = JetHabitTheme.colors.tintColor,
+                    contentDescription = "Month Forward"
+                )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Start
+            ) {
+                Text(
+                    modifier = Modifier.weight(1f).height(cellSize),
+                    textAlign = TextAlign.Center,
+                    text = AppRes.string.days_monday_short, color = dayOfWeekColor,
+                    style = JetHabitTheme.typography.caption
+                )
+                Text(
+                    modifier = Modifier.weight(1f).height(cellSize),
+                    textAlign = TextAlign.Center,
+                    text = AppRes.string.days_tuesday_short, color = dayOfWeekColor,
+                    style = JetHabitTheme.typography.caption
+                )
+                Text(
+                    modifier = Modifier.weight(1f).height(cellSize),
+                    textAlign = TextAlign.Center,
+                    text = AppRes.string.days_wednesday_short, color = dayOfWeekColor,
+                    style = JetHabitTheme.typography.caption
+                )
+                Text(
+                    modifier = Modifier.weight(1f).height(cellSize),
+                    textAlign = TextAlign.Center,
+                    text = AppRes.string.days_thursday_short, color = dayOfWeekColor,
+                    style = JetHabitTheme.typography.caption
+                )
+                Text(
+                    modifier = Modifier.weight(1f).height(cellSize),
+                    textAlign = TextAlign.Center,
+                    text = AppRes.string.days_friday_short, color = dayOfWeekColor,
+                    style = JetHabitTheme.typography.caption
+                )
+                Text(
+                    modifier = Modifier.weight(1f).height(cellSize),
+                    textAlign = TextAlign.Center,
+                    text = AppRes.string.days_saturday_short, color = dayOfWeekColor,
+                    style = JetHabitTheme.typography.caption
+                )
+                Text(
+                    modifier = Modifier.weight(1f).height(cellSize),
+                    textAlign = TextAlign.Center,
+                    text = AppRes.string.days_sunday_short, color = dayOfWeekColor,
+                    style = JetHabitTheme.typography.caption
+                )
+            }
+
+    //        DatesForMonth(textColor, dateState, cellSize, selectedColor) {
+    //            dateState =
+    //                DateTime.fromString("${dateState.yearInt}-${dateState.month1.wrap()}-${it.wrap()}").local
+    //        }
+
+    //        val isSame by derivedStateOf {
+    //            selectedDate.yearInt == dateState.yearInt &&
+    //                    selectedDate.month0 == dateState.month0 &&
+    //                    selectedDate.dayOfMonth == dateState.dayOfMonth
+    //        }
+
+            JetHabitButton(
+                modifier = Modifier.padding(16.dp).fillMaxWidth(),
+                text = AppRes.string.action_save,
+    //            enabled = if (allowSameDate) true else !isSame,
+                onClick = {
+    //                onDateSelected.invoke(dateState)
+                })
         }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Start
-        ) {
-            Text(
-                modifier = Modifier.weight(1f).height(cellSize),
-                textAlign = TextAlign.Center,
-                text = AppRes.string.days_monday_short, color = dayOfWeekColor,
-                style = JetHabitTheme.typography.caption
-            )
-            Text(
-                modifier = Modifier.weight(1f).height(cellSize),
-                textAlign = TextAlign.Center,
-                text = AppRes.string.days_tuesday_short, color = dayOfWeekColor,
-                style = JetHabitTheme.typography.caption
-            )
-            Text(
-                modifier = Modifier.weight(1f).height(cellSize),
-                textAlign = TextAlign.Center,
-                text = AppRes.string.days_wednesday_short, color = dayOfWeekColor,
-                style = JetHabitTheme.typography.caption
-            )
-            Text(
-                modifier = Modifier.weight(1f).height(cellSize),
-                textAlign = TextAlign.Center,
-                text = AppRes.string.days_thursday_short, color = dayOfWeekColor,
-                style = JetHabitTheme.typography.caption
-            )
-            Text(
-                modifier = Modifier.weight(1f).height(cellSize),
-                textAlign = TextAlign.Center,
-                text = AppRes.string.days_friday_short, color = dayOfWeekColor,
-                style = JetHabitTheme.typography.caption
-            )
-            Text(
-                modifier = Modifier.weight(1f).height(cellSize),
-                textAlign = TextAlign.Center,
-                text = AppRes.string.days_saturday_short, color = dayOfWeekColor,
-                style = JetHabitTheme.typography.caption
-            )
-            Text(
-                modifier = Modifier.weight(1f).height(cellSize),
-                textAlign = TextAlign.Center,
-                text = AppRes.string.days_sunday_short, color = dayOfWeekColor,
-                style = JetHabitTheme.typography.caption
-            )
-        }
-
-//        DatesForMonth(textColor, dateState, cellSize, selectedColor) {
-//            dateState =
-//                DateTime.fromString("${dateState.yearInt}-${dateState.month1.wrap()}-${it.wrap()}").local
-//        }
-
-//        val isSame by derivedStateOf {
-//            selectedDate.yearInt == dateState.yearInt &&
-//                    selectedDate.month0 == dateState.month0 &&
-//                    selectedDate.dayOfMonth == dateState.dayOfMonth
-//        }
-
-        JetHabitButton(
-            modifier = Modifier.padding(16.dp).fillMaxWidth(),
-            text = AppRes.string.action_save,
-//            enabled = if (allowSameDate) true else !isSame,
-            onClick = {
-//                onDateSelected.invoke(dateState)
-            })
     }
 }
 

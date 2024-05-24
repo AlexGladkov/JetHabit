@@ -4,10 +4,11 @@ import base.BaseViewModel
 import com.soywiz.klock.DateTime
 import data.features.medication.MedicationRepository
 import di.Inject
+import feature.detail.presentation.models.DateSelectionState
 import screens.daily.views.HabitCardItemModel
 import feature.detail.presentation.models.DetailAction
 import feature.detail.presentation.models.DetailEvent
-import screens.detail.models.DetailViewState
+import feature.detail.presentation.models.DetailViewState
 
 class DetailViewModel(private val cardModel: HabitCardItemModel): BaseViewModel<DetailViewState, DetailAction, DetailEvent>(
     initialState = DetailViewState(itemTitle = cardModel.title)
@@ -24,11 +25,10 @@ class DetailViewModel(private val cardModel: HabitCardItemModel): BaseViewModel<
             DetailEvent.CloseScreen -> viewAction = DetailAction.CloseScreen
             DetailEvent.DeleteItem -> deleteItem()
             DetailEvent.SaveChanges -> applyChanges()
-            DetailEvent.ActionInvoked -> viewAction = null
             is DetailEvent.EndDateSelected -> setEndDate(viewEvent.value)
             is DetailEvent.StartDateSelected -> setStartDate(viewEvent.value)
-            DetailEvent.StartDateClicked -> viewAction = DetailAction.ShowCalendar(isStart = true)
-            DetailEvent.EndDateClicked -> viewAction = DetailAction.ShowCalendar(isStart = false)
+            DetailEvent.StartDateClicked -> viewState = viewState.copy(dateSelectionState = DateSelectionState.Start)
+            DetailEvent.EndDateClicked -> viewState = viewState.copy(dateSelectionState = DateSelectionState.End)
         }
     }
 

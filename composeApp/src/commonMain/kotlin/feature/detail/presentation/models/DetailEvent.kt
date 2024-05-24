@@ -6,7 +6,6 @@ sealed class DetailEvent {
     data object DeleteItem : DetailEvent()
     data object CloseScreen : DetailEvent()
     data object SaveChanges : DetailEvent()
-    data object ActionInvoked : DetailEvent()
     data object StartDateClicked: DetailEvent()
     data object EndDateClicked : DetailEvent()
     data class StartDateSelected(val value: DateTime) : DetailEvent()
