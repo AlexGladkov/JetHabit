@@ -22,4 +22,7 @@ interface DailyDao {
 
     @Update
     suspend fun update(item: DailyEntity)
+
+    @Query("DELETE FROM DailyEntity")
+    fun clear()
 }

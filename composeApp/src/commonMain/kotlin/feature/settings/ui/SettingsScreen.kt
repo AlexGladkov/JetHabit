@@ -15,10 +15,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import data.features.settings.LocalSettingsEventBus
+import feature.settings.presentation.SettingsViewModel
+import feature.settings.presentation.models.SettingsEvent
 import screens.daily.views.HabitCardItem
 import screens.daily.views.HabitCardItemModel
-import screens.settings.models.SettingsViewState
+import feature.settings.presentation.models.SettingsViewState
 import screens.settings.views.MenuItem
 import screens.settings.views.MenuItemModel
 import tech.mobiledeveloper.jethabit.app.AppRes
@@ -28,7 +31,12 @@ import ui.themes.components.JHDivider
 @ExperimentalMaterialApi
 @ExperimentalFoundationApi
 @Composable
-internal fun SettingsScreen() {
+internal fun SettingsScreen(
+    viewModel: SettingsViewModel = viewModel { SettingsViewModel() }
+) {
+    val viewState by viewModel.viewStates().collectAsState()
+    val viewAction by viewModel.viewActions().collectAsState(null)
+    
     val settingsEventBus = LocalSettingsEventBus.current
     val currentSettings by settingsEventBus.currentSettings.collectAsState()
 
@@ -201,6 +209,10 @@ internal fun SettingsScreen() {
                     isChecked = true,
                 )
             )
+            
+            Text(modifier = Modifier.padding(16.dp).clickable {
+                viewModel.obtainEvent(SettingsEvent.ClearAllQueries)
+            }, text = AppRes.string.settings_clear, color = JetHabitTheme.colors.errorColor, style = JetHabitTheme.typography.body)
         }
     }
 }

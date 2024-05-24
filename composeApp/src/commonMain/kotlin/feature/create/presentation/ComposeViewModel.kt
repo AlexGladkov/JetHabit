@@ -34,7 +34,7 @@ class ComposeViewModel: BaseViewModel<ComposeViewState, ComposeAction, ComposeEv
                 createHabitUseCase.execute(
                     title = viewState.habitTitle,
                     isGood = viewState.isGoodHabit,
-                    days = json.encodeToJsonElement(listOf(1, 2, 3, 4, 5, 6, 7)).jsonArray
+                    days = json.encodeToJsonElement(listOf(0, 1, 2, 3, 4, 5, 6)).jsonArray
                 )
                 
                 viewAction = ComposeAction.ShowSuccess

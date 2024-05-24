@@ -1,4 +1,4 @@
-package screens.settings.models
+package feature.settings.presentation.models
 
 data class SettingsViewState(
     val username: String = "",

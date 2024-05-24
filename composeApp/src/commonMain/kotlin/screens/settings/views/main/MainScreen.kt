@@ -20,6 +20,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import feature.daily.ui.DailyScreen
+import screens.detail.DetailScreen
 import screens.settings.SettingsScreen
 import screens.stats.StatisticsScreen
 import ui.themes.JetHabitTheme
@@ -28,6 +29,8 @@ sealed class MainScreens(val route: String, val title: String, val image: ImageV
     data object Daily : MainScreens("daily", "Daily", Icons.AutoMirrored.Filled.List)
     data object Statistics : MainScreens("statistics", "Statistics", Icons.Outlined.Check)
     data object Settings : MainScreens("settings", "Settings", Icons.Outlined.Settings)
+
+    data object Detail : MainScreens
 }
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
@@ -41,6 +44,7 @@ fun MainScreen() {
             composable(MainScreens.Daily.route) { DailyScreen() }
             composable(MainScreens.Statistics.route) { StatisticsScreen() }
             composable(MainScreens.Settings.route) { SettingsScreen() }
+            composable(MainScreens.Detail.route) { DetailScreen() }
         }
         
         BottomNavigation(modifier = Modifier.align(Alignment.BottomStart), backgroundColor = JetHabitTheme.colors.secondaryBackground) {
