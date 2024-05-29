@@ -10,8 +10,8 @@ import feature.detail.presentation.models.DetailAction
 import feature.detail.presentation.models.DetailEvent
 import feature.detail.presentation.models.DetailViewState
 
-class DetailViewModel(private val cardModel: HabitCardItemModel): BaseViewModel<DetailViewState, DetailAction, DetailEvent>(
-    initialState = DetailViewState(itemTitle = cardModel.title)
+class DetailViewModel(private val habitId: Long): BaseViewModel<DetailViewState, DetailAction, DetailEvent>(
+    initialState = DetailViewState(habitId = habitId)
 ) {
 
     private val medicationRepository = Inject.instance<MedicationRepository>()

@@ -1,12 +1,10 @@
 package data.features.medication
 
-import Database
 import com.soywiz.klock.DateTime
 import com.soywiz.klock.weeks
-import data.MedicationEntity
 import tech.mobiledeveloper.jethabit.app.AppRes
 
-class MedicationRepository(private val database: Database) {
+class MedicationRepository() {
 
     suspend fun createNewMedication(
         title: String, weekCount: Int, frequency: List<Boolean>,
@@ -45,43 +43,45 @@ class MedicationRepository(private val database: Database) {
         }
 
         if (startDate == null) {
-            database.medicineQueries.insert(
-                title = title,
-                startDate = null,
-                endDate = null,
-                frequency = frequencyStringBuilder.toString(),
-                periodicity = periodicityStringBuilder.toString(),
-                itemId = null
-            )
+//            database.medicineQueries.insert(
+//                title = title,
+//                startDate = null,
+//                endDate = null,
+//                frequency = frequencyStringBuilder.toString(),
+//                periodicity = periodicityStringBuilder.toString(),
+//                itemId = null
+//            )
         } else {
             val endDateTime = startDate.plus(weekCount.weeks)
 
-            database.medicineQueries.insert(
-                title = title,
-                startDate = startDate.toString("yyyy-MM-dd"),
-                endDate = endDateTime.toString("yyyy-MM-dd"),
-                frequency = frequencyStringBuilder.toString(),
-                periodicity = periodicityStringBuilder.toString(),
-                itemId = null
-            )
+//            database.medicineQueries.insert(
+//                title = title,
+//                startDate = startDate.toString("yyyy-MM-dd"),
+//                endDate = endDateTime.toString("yyyy-MM-dd"),
+//                frequency = frequencyStringBuilder.toString(),
+//                periodicity = periodicityStringBuilder.toString(),
+//                itemId = null
+//            )
         }
     }
 
-    suspend fun fetchCurrentMedications(): List<MedicationEntity> {
-        val values = database.medicineQueries.selectAll().executeAsList()
-        return database.medicineQueries
-            .selectAll()
-            .executeAsList()
-            .filter { it.startDate != null && it.endDate != null }
-            .filter {
-                val today = DateTime.now()
-                val startDateTime = DateTime.fromString(it.startDate!!)
-                val endDateTime = DateTime.fromString(it.endDate!!)
-                val startDateCompare = today.compareTo(startDateTime.local)
-                val endDateCompare = today.compareTo(endDateTime.local)
+    suspend fun fetchCurrentMedications(): List<Any> {
+//        val values = database.medicineQueries.selectAll().executeAsList()
+//        return database.medicineQueries
+//            .selectAll()
+//            .executeAsList()
+//            .filter { it.startDate != null && it.endDate != null }
+//            .filter {
+//                val today = DateTime.now()
+//                val startDateTime = DateTime.fromString(it.startDate!!)
+//                val endDateTime = DateTime.fromString(it.endDate!!)
+//                val startDateCompare = today.compareTo(startDateTime.local)
+//                val endDateCompare = today.compareTo(endDateTime.local)
+//
+//                startDateCompare == 1 && endDateCompare == -1
+//            }
 
-                startDateCompare == 1 && endDateCompare == -1
-            }
+        return emptyList()
     }
 
     suspend fun deleteItem(itemId: Long) {
@@ -89,12 +89,12 @@ class MedicationRepository(private val database: Database) {
     }
 
     suspend fun updateMedication(itemId: Long, startDate: DateTime, endDate: DateTime) {
-        database.medicineQueries.transaction {
-            database.medicineQueries.updateDate(
-                startDate.format("yyyy-MM-dd"),
-                endDate.format("yyyy-MM-dd"),
-                itemId
-            )
-        }
+//        database.medicineQueries.transaction {
+//            database.medicineQueries.updateDate(
+//                startDate.format("yyyy-MM-dd"),
+//                endDate.format("yyyy-MM-dd"),
+//                itemId
+//            )
+//        }
     }
 }

@@ -12,6 +12,7 @@ import navigation.LocalNavHost
 import feature.daily.ui.models.DailyAction
 import feature.daily.presentation.DailyViewModel
 import feature.daily.ui.models.DailyEvent
+import navigation.DailyScreens
 
 @ExperimentalFoundationApi
 @Composable
@@ -29,7 +30,7 @@ internal fun DailyScreen(
 
     when (viewAction) {
         is DailyAction.OpenDetail -> {
-            outerNavController.navigate(AppScreens.Detail.title)
+            navController.navigate("${DailyScreens.Detail.name}/${(viewAction as DailyAction.OpenDetail).itemId}")
             viewModel.clearAction()
         }
 

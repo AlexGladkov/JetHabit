@@ -10,7 +10,7 @@ import navigation.LocalNavHost
 import screens.create.CreateHabitFlow
 import screens.daily.views.HabitCardItemModel
 import screens.detail.DetailScreen
-import screens.main.MainScreen
+import navigation.MainScreen
 import screens.splash.SplashScreen
 import themes.MainTheme
 
@@ -81,16 +81,6 @@ private fun JetHabitApp(
 
             composable(route = AppScreens.Create.title) {
                 CreateHabitFlow()
-            }
-
-            composable(route = AppScreens.Detail.title) {
-                DetailScreen(
-                    HabitCardItemModel(
-                        habitId = 0,
-                        title = "Blabla",
-                        isChecked = true
-                    )
-                )
             }
         }
     }

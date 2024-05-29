@@ -2,6 +2,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
+import core.database.getDatabaseBuilder
+import core.database.getRoomDatabase
 import data.features.settings.LocalSettingsEventBus
 import data.features.settings.SettingsEventBus
 import di.LocalPlatform
@@ -12,7 +14,9 @@ import themes.MainTheme
 
 @Composable
 fun MainView() {
-    PlatformSDK.init(PlatformConfiguration())
+    val appDatabase = remember { getRoomDatabase(getDatabaseBuilder()) }
+    PlatformSDK.init(PlatformConfiguration(), appDatabase = appDatabase)
+
     val settingsEventBus = remember { SettingsEventBus() }
     val currentSettings = settingsEventBus.currentSettings.collectAsState().value
 

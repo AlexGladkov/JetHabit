@@ -9,6 +9,7 @@ enum class DateSelectionState {
 }
 
 data class DetailViewState(
+    val habitId: Long,
     val itemTitle: String = "",
     val startDate: String = AppRes.string.not_selected,
     val endDate: String = AppRes.string.not_selected,

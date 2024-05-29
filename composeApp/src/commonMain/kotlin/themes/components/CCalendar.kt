@@ -33,7 +33,9 @@ import kotlinx.datetime.plus
 import tech.mobiledeveloper.jethabit.app.AppRes
 import ui.themes.JetHabitTheme
 import ui.themes.components.JetHabitButton
+import utils.daysInMonth
 import utils.wrap
+import kotlin.time.Duration.Companion.days
 
 @Composable
 internal fun CCalendar(
@@ -43,7 +45,7 @@ internal fun CCalendar(
     selectedColor: Color,
     cellSize: Dp = 40.dp,
     allowSameDate: Boolean = false,
-    onDateSelected: (DateTime) -> Unit,
+    onDateSelected: (LocalDate) -> Unit,
 ) {
     var dateState by remember { mutableStateOf(selectedDate) }
 
@@ -128,77 +130,75 @@ internal fun CCalendar(
                 )
             }
 
-    //        DatesForMonth(textColor, dateState, cellSize, selectedColor) {
-    //            dateState =
-    //                DateTime.fromString("${dateState.yearInt}-${dateState.month1.wrap()}-${it.wrap()}").local
-    //        }
+            DatesForMonth(textColor, dateState, cellSize, selectedColor) {
+                dateState =
+                    LocalDate.parse("${dateState.year}-${dateState.monthNumber.wrap()}-${it.wrap()}")
+            }
 
-    //        val isSame by derivedStateOf {
-    //            selectedDate.yearInt == dateState.yearInt &&
-    //                    selectedDate.month0 == dateState.month0 &&
-    //                    selectedDate.dayOfMonth == dateState.dayOfMonth
-    //        }
+            val isSame by derivedStateOf {
+                selectedDate.compareTo(dateState) == 0
+            }
 
             JetHabitButton(
                 modifier = Modifier.padding(16.dp).fillMaxWidth(),
                 text = AppRes.string.action_save,
-    //            enabled = if (allowSameDate) true else !isSame,
+                enabled = if (allowSameDate) true else !isSame,
                 onClick = {
-    //                onDateSelected.invoke(dateState)
+                    onDateSelected.invoke(dateState)
                 })
         }
     }
 }
 
-//@Composable
-//internal fun DatesForMonth(
-//    textColor: Color,
-//    date: LocalDate,
-//    cellSize: Dp,
-//    selectedColor: Color,
-//    onDateClicked: (Int) -> Unit
-//) {
-//
-//    val firstDayOfMonth by derivedStateOf {
-//        val dayOfWeek = date.minus((date.dayOfMonth - 1).days)
-//        dayOfWeek.dayOfWeekInt
-//    }
-//
-//    LazyVerticalGrid(
-//        columns = GridCells.Fixed(7),
-//        horizontalArrangement = Arrangement.SpaceBetween,
-//        verticalArrangement = Arrangement.Center,
-//        userScrollEnabled = false
-//    ) {
-//        for (i in 1 until (date.month.days(date.year.year) + firstDayOfMonth)) {
-//            val dateValue = if (i < firstDayOfMonth) "" else "${i - firstDayOfMonth + 1}"
-//            val isSelectedDate =
-//                dateValue.isNotBlank() && dateValue == date.dayOfMonth.toString()
-//
-//            item {
-//                var modifier = Modifier.size(cellSize)
-//                if (isSelectedDate) {
-//                    modifier = modifier.then(
-//                        Modifier.background(
-//                            selectedColor.copy(alpha = 0.2f),
-//                            shape = RoundedCornerShape(cellSize)
-//                        )
-//                    )
-//                }
-//
-//                Box(modifier = modifier) {
-//                    Text(
-//                        modifier = Modifier.align(Alignment.Center).clickable {
-//                            if (dateValue.isNotBlank()) {
-//                                onDateClicked.invoke(dateValue.toInt())
-//                            }
-//                        },
-//                        fontSize = 16.sp,
-//                        text = dateValue,
-//                        color = if (isSelectedDate) selectedColor else textColor
-//                    )
-//                }
-//            }
-//        }
-//    }
-//}
+@Composable
+internal fun DatesForMonth(
+    textColor: Color,
+    date: LocalDate,
+    cellSize: Dp,
+    selectedColor: Color,
+    onDateClicked: (Int) -> Unit
+) {
+
+    val firstDayOfMonth by derivedStateOf {
+        val dayOfWeek = date.minus((date.dayOfMonth - 1), DateTimeUnit.DAY)
+        dayOfWeek.dayOfWeek.ordinal
+    }
+
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(7),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalArrangement = Arrangement.Center,
+        userScrollEnabled = false
+    ) {
+        for (i in 1 until (date.daysInMonth() + firstDayOfMonth)) {
+            val dateValue = if (i < firstDayOfMonth) "" else "${i - firstDayOfMonth + 1}"
+            val isSelectedDate =
+                dateValue.isNotBlank() && dateValue == date.dayOfMonth.toString()
+
+            item {
+                var modifier = Modifier.size(cellSize)
+                if (isSelectedDate) {
+                    modifier = modifier.then(
+                        Modifier.background(
+                            selectedColor.copy(alpha = 0.2f),
+                            shape = RoundedCornerShape(cellSize)
+                        )
+                    )
+                }
+
+                Box(modifier = modifier) {
+                    Text(
+                        modifier = Modifier.align(Alignment.Center).clickable {
+                            if (dateValue.isNotBlank()) {
+                                onDateClicked.invoke(dateValue.toInt())
+                            }
+                        },
+                        fontSize = 16.sp,
+                        text = dateValue,
+                        color = if (isSelectedDate) selectedColor else textColor
+                    )
+                }
+            }
+        }
+    }
+}

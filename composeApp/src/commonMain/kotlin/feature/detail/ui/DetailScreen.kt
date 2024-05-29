@@ -24,8 +24,8 @@ import ui.themes.JetHabitTheme
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 internal fun DetailScreen(
-    cardModel: HabitCardItemModel,
-    viewModel: DetailViewModel = viewModel { DetailViewModel(cardModel) }
+    habitId: Long,
+    viewModel: DetailViewModel = viewModel { DetailViewModel(habitId) }
 ) {
     val viewState by viewModel.viewStates().collectAsState()
     val viewAction by viewModel.viewActions().collectAsState(null)

@@ -8,7 +8,7 @@ Pod::Spec.new do |spec|
     spec.summary                  = 'PlayZone iOS SDK'
     spec.vendored_frameworks      = 'build/cocoapods/framework/SharedSDK.framework'
     spec.libraries                = 'c++'
-    spec.ios.deployment_target = '14.0'
+    spec.ios.deployment_target    = '14.0'
                 
                 
     if !Dir.exist?('build/cocoapods/framework/SharedSDK.framework') || Dir.empty?('build/cocoapods/framework/SharedSDK.framework')
@@ -21,6 +21,10 @@ Pod::Spec.new do |spec|
 
         Alternatively, proper pod installation is performed during Gradle sync in the IDE (if Podfile location is set)"
     end
+                
+    spec.xcconfig = {
+        'ENABLE_USER_SCRIPT_SANDBOXING' => 'NO',
+    }
                 
     spec.pod_target_xcconfig = {
         'KOTLIN_PROJECT_PATH' => ':composeApp',
@@ -39,7 +43,7 @@ Pod::Spec.new do |spec|
                 fi
                 set -ev
                 REPO_ROOT="$PODS_TARGET_SRCROOT"
-                "$REPO_ROOT/../../../../../../private/var/folders/wd/4r6f7n8j4_jgvw3l8z7mfzpw0000gn/T/wrap4loc/gradlew" -p "$REPO_ROOT" $KOTLIN_PROJECT_PATH:syncFramework \
+                "$REPO_ROOT/../../../../../../private/var/folders/wd/4r6f7n8j4_jgvw3l8z7mfzpw0000gn/T/wrap877loc/gradlew" -p "$REPO_ROOT" $KOTLIN_PROJECT_PATH:syncFramework \
                     -Pkotlin.native.cocoapods.platform=$PLATFORM_NAME \
                     -Pkotlin.native.cocoapods.archs="$ARCHS" \
                     -Pkotlin.native.cocoapods.configuration="$CONFIGURATION"

@@ -1,6 +1,5 @@
 package data.features.daily
 
-import Database
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
@@ -12,46 +11,47 @@ data class DailyItem(
     val habits: List<DailyHabitContainer>
 )
 
-class DailyRepository(private val database: Database) {
+class DailyRepository() {
 
     suspend fun fetchDiary(): List<DailyItem> {
-        val result = database.dailyQueries.selectAll()
-            .executeAsList()
-            .filter {
-                !it.date.contains("T")
-            }
-            .map {
-                DailyItem(
-                    date = it.date,
-                    habits = decompressHabitsWithValues(it.habitItemIdsWithStatuses)
-                )
-            }
-
-        return result
+//        val result = database.dailyQueries.selectAll()
+//            .executeAsList()
+//            .filter {
+//                !it.date.contains("T")
+//            }
+//            .map {
+//                DailyItem(
+//                    date = it.date,
+//                    habits = decompressHabitsWithValues(it.habitItemIdsWithStatuses)
+//                )
+//            }
+//
+//        return result
+        return emptyList()
     }
 
     @OptIn(ExperimentalSerializationApi::class)
     suspend fun addOrUpdate(date: String, habitId: Long, value: Boolean) {
-        val records = fetchDiary()
-        val recordForDate = records.firstOrNull { it.date == date }
-
-        if (recordForDate == null) {
-            database.dailyQueries
-                .insert(date, compressHabitsWithValues(
-                    listOf(DailyHabitContainer(habitId, value))
-                ))
-        } else {
-            val dailyRecords = recordForDate.habits.toMutableList()
-            val dailyRecord = dailyRecords.filter { it.habbitId == habitId }
-
-            if (dailyRecord.isNotEmpty()) {
-                dailyRecords.remove(dailyRecord.first())
-            }
-
-            dailyRecords.add(DailyHabitContainer(habitId, value))
-            val compressed = compressHabitsWithValues(dailyRecords)
-            database.dailyQueries.update(date, habitItemIdsWithStatuses = compressed)
-        }
+//        val records = fetchDiary()
+//        val recordForDate = records.firstOrNull { it.date == date }
+//
+//        if (recordForDate == null) {
+//            database.dailyQueries
+//                .insert(date, compressHabitsWithValues(
+//                    listOf(DailyHabitContainer(habitId, value))
+//                ))
+//        } else {
+//            val dailyRecords = recordForDate.habits.toMutableList()
+//            val dailyRecord = dailyRecords.filter { it.habbitId == habitId }
+//
+//            if (dailyRecord.isNotEmpty()) {
+//                dailyRecords.remove(dailyRecord.first())
+//            }
+//
+//            dailyRecords.add(DailyHabitContainer(habitId, value))
+//            val compressed = compressHabitsWithValues(dailyRecords)
+//            database.dailyQueries.update(date, habitItemIdsWithStatuses = compressed)
+//        }
     }
 
     @ExperimentalSerializationApi

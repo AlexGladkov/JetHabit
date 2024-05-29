@@ -15,14 +15,14 @@ interface DailyDao {
     suspend fun getAll(): List<DailyEntity>
 
     @Query("SELECT * FROM DailyEntity WHERE id=:id")
-    fun getDailyRecordWith(id: Long): DailyEntity
+    suspend fun getDailyRecordWith(id: Long): DailyEntity
 
     @Query("DELETE FROM DailyEntity WHERE habitId=:habitId AND timestamp=:timestamp")
-    fun deleteAllHabitsForToday(habitId: Long, timestamp: String)
+    suspend fun deleteAllHabitsForToday(habitId: Long, timestamp: String)
 
     @Update
     suspend fun update(item: DailyEntity)
 
     @Query("DELETE FROM DailyEntity")
-    fun clear()
+    suspend fun clear()
 }

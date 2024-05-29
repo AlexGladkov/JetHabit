@@ -14,8 +14,8 @@ interface HabitDao {
     suspend fun getAll(): List<HabitEntity>
     
     @Query("SELECT * FROM HabitEntity WHERE id=:id")
-    fun getHabitWith(id: Long): HabitEntity
+    suspend fun getHabitWith(id: Long): HabitEntity
 
     @Query("DELETE FROM HabitEntity")
-    fun clear()
+    suspend fun clear()
 }
