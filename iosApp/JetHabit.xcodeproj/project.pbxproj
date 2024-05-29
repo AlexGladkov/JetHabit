@@ -36,6 +36,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4FB1B521A219BEF9126CF966 /* Target Support Files */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "Target Support Files";
+			sourceTree = "<group>";
+		};
+		4FB1B9F97F20C3BE54C7A338 /* Headers */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Headers;
+			sourceTree = "<group>";
+		};
 		7555FF72242A565900829871 = {
 			isa = PBXGroup;
 			children = (
@@ -78,6 +92,8 @@
 			children = (
 				E3820D5A5448932A88ED7B69 /* Pods-JetHabit.debug.xcconfig */,
 				12372A7B7FF813EC8E4E4824 /* Pods-JetHabit.release.xcconfig */,
+				4FB1B9F97F20C3BE54C7A338 /* Headers */,
+				4FB1B521A219BEF9126CF966 /* Target Support Files */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -94,6 +110,7 @@
 				7555FF79242A565900829871 /* Resources */,
 				9964867F0862B4D9FB6ABFC7 /* Frameworks */,
 				221B4450B58DDCB8C699E812 /* [CP] Copy Pods Resources */,
+				66A857DDC26F5914DF656EC2 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -163,6 +180,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-JetHabit/Pods-JetHabit-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		66A857DDC26F5914DF656EC2 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-JetHabit/Pods-JetHabit-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-JetHabit/Pods-JetHabit-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-JetHabit/Pods-JetHabit-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		E8D673591E7196AEA2EA10E2 /* [CP] Check Pods Manifest.lock */ = {
