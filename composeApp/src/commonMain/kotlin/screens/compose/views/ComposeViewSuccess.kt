@@ -20,7 +20,10 @@ import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import tech.mobiledeveloper.jethabit.app.AppRes
+import org.jetbrains.compose.resources.stringResource
+import tech.mobiledeveloper.jethabit.resources.Res
+import tech.mobiledeveloper.jethabit.resources.action_close
+import tech.mobiledeveloper.jethabit.resources.compose_success_add
 import ui.themes.JetHabitTheme
 
 @Composable
@@ -47,7 +50,7 @@ internal fun ComposeViewSuccess(modifier: Modifier = Modifier, onCloseClick: () 
 
                 Text(
                     modifier = Modifier.padding(top = 24.dp),
-                    text = AppRes.string.compose_success_add,
+                    text = stringResource(Res.string.compose_success_add),
                     style = JetHabitTheme.typography.body,
                     color = JetHabitTheme.colors.primaryText
                 )
@@ -66,7 +69,7 @@ internal fun ComposeViewSuccess(modifier: Modifier = Modifier, onCloseClick: () 
                     )
                 ) {
                     Text(
-                        text = AppRes.string.action_close,
+                        text = stringResource(Res.string.action_close),
                         style = JetHabitTheme.typography.body,
                         color = Color.White
                     )

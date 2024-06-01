@@ -1,4 +1,4 @@
-package screens.daily.views
+package feature.daily.ui.views
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,7 +16,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import tech.mobiledeveloper.jethabit.app.AppRes
+import org.jetbrains.compose.resources.stringResource
+import tech.mobiledeveloper.jethabit.resources.Res
+import tech.mobiledeveloper.jethabit.resources.action_add
+import tech.mobiledeveloper.jethabit.resources.daily_no_items
 import ui.themes.JetHabitTheme
 import ui.themes.components.JetHabitButton
 
@@ -42,7 +45,7 @@ internal fun DailyViewNoItems(
 
                 Text(
                     modifier = Modifier.padding(top = 16.dp, bottom = 24.dp),
-                    text = AppRes.string.daily_no_items,
+                    text = stringResource(Res.string.daily_no_items),
                     style = JetHabitTheme.typography.body,
                     color = JetHabitTheme.colors.primaryText,
                     textAlign = TextAlign.Center
@@ -51,7 +54,7 @@ internal fun DailyViewNoItems(
                 JetHabitButton(
                     modifier = Modifier.fillMaxWidth(),
                     backgroundColor = JetHabitTheme.colors.controlColor,
-                    text = AppRes.string.action_add,
+                    text = stringResource(Res.string.action_add),
                     onClick = onComposeClick
                 )
             }

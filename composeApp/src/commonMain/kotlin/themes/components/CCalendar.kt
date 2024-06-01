@@ -30,7 +30,8 @@ import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
-import tech.mobiledeveloper.jethabit.app.AppRes
+import org.jetbrains.compose.resources.stringResource
+import tech.mobiledeveloper.jethabit.resources.*
 import ui.themes.JetHabitTheme
 import ui.themes.components.JetHabitButton
 import utils.daysInMonth
@@ -89,43 +90,50 @@ internal fun CCalendar(
                 Text(
                     modifier = Modifier.weight(1f).height(cellSize),
                     textAlign = TextAlign.Center,
-                    text = AppRes.string.days_monday_short, color = dayOfWeekColor,
+                    text = stringResource(Res.string.days_monday_short),
+                    color = dayOfWeekColor,
                     style = JetHabitTheme.typography.caption
                 )
                 Text(
                     modifier = Modifier.weight(1f).height(cellSize),
                     textAlign = TextAlign.Center,
-                    text = AppRes.string.days_tuesday_short, color = dayOfWeekColor,
+                    text = stringResource(Res.string.days_tuesday_short),
+                    color = dayOfWeekColor,
                     style = JetHabitTheme.typography.caption
                 )
                 Text(
                     modifier = Modifier.weight(1f).height(cellSize),
                     textAlign = TextAlign.Center,
-                    text = AppRes.string.days_wednesday_short, color = dayOfWeekColor,
+                    text = stringResource(Res.string.days_wednesday_short),
+                    color = dayOfWeekColor,
                     style = JetHabitTheme.typography.caption
                 )
                 Text(
                     modifier = Modifier.weight(1f).height(cellSize),
                     textAlign = TextAlign.Center,
-                    text = AppRes.string.days_thursday_short, color = dayOfWeekColor,
+                    text = stringResource(Res.string.days_thursday_short),
+                    color = dayOfWeekColor,
                     style = JetHabitTheme.typography.caption
                 )
                 Text(
                     modifier = Modifier.weight(1f).height(cellSize),
                     textAlign = TextAlign.Center,
-                    text = AppRes.string.days_friday_short, color = dayOfWeekColor,
+                    text = stringResource(Res.string.days_friday_short),
+                    color = dayOfWeekColor,
                     style = JetHabitTheme.typography.caption
                 )
                 Text(
                     modifier = Modifier.weight(1f).height(cellSize),
                     textAlign = TextAlign.Center,
-                    text = AppRes.string.days_saturday_short, color = dayOfWeekColor,
+                    text = stringResource(Res.string.days_saturday_short),
+                    color = dayOfWeekColor,
                     style = JetHabitTheme.typography.caption
                 )
                 Text(
                     modifier = Modifier.weight(1f).height(cellSize),
                     textAlign = TextAlign.Center,
-                    text = AppRes.string.days_sunday_short, color = dayOfWeekColor,
+                    text = stringResource(Res.string.days_sunday_short),
+                    color = dayOfWeekColor,
                     style = JetHabitTheme.typography.caption
                 )
             }
@@ -141,7 +149,7 @@ internal fun CCalendar(
 
             JetHabitButton(
                 modifier = Modifier.padding(16.dp).fillMaxWidth(),
-                text = AppRes.string.action_save,
+                text = stringResource(Res.string.action_save),
                 enabled = if (allowSameDate) true else !isSame,
                 onClick = {
                     onDateSelected.invoke(dateState)

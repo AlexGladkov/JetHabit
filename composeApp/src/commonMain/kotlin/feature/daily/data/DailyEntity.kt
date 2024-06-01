@@ -5,8 +5,8 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class DailyEntity(
-    @PrimaryKey(autoGenerate = true) val id: Long = 0,
-    val habitId: Long,
+    @PrimaryKey val id: String,
+    val habitId: String,
     val timestamp: String,
     val isChecked: Boolean
 )

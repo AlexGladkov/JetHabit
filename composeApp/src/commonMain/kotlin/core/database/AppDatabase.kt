@@ -7,7 +7,7 @@ import feature.daily.data.DailyEntity
 import feature.habits.data.HabitDao
 import feature.habits.data.HabitEntity
 
-@Database(entities = [HabitEntity::class, DailyEntity::class], version = 1)
+@Database(entities = [HabitEntity::class, DailyEntity::class], version = 3)
 abstract class AppDatabase: RoomDatabase() {
     abstract fun getHabitDao(): HabitDao
     abstract fun getDailyDao(): DailyDao

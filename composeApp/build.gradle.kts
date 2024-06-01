@@ -8,7 +8,6 @@ plugins {
     alias(libs.plugins.compose.core)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.cocoapods)
-    alias(libs.plugins.libres)
     alias(libs.plugins.room)
     alias(libs.plugins.ksp)
 }
@@ -17,12 +16,6 @@ version = "1.0"
 
 room {
     schemaDirectory("$projectDir/schemas")
-}
-
-libres {
-    generatedClassName = "AppRes"
-    generateNamedArguments = true
-    baseLocaleLanguageCode = "en"
 }
 
 kotlin {
@@ -78,14 +71,15 @@ kotlin {
             implementation(compose.foundation)
             implementation(compose.material)
             implementation(compose.components.uiToolingPreview)
+            implementation(compose.components.resources)
 
             implementation(libs.kotlinx.serialization.core)
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.datetime)
 
-            implementation(libs.klock.common)
-            implementation(libs.libres.compose)
             implementation(libs.kodein.di)
+
+            implementation(libs.uuid)
 
             implementation(libs.kotlinx.serialization.json)
 
@@ -164,4 +158,10 @@ compose.desktop {
             packageVersion = "1.0.0"
         }
     }
+}
+
+compose.resources {
+    publicResClass = true
+    packageOfResClass = "tech.mobiledeveloper.jethabit.resources"
+    generateResClass = always
 }

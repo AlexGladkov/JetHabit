@@ -1,20 +1,28 @@
-package screens.detail
+package feature.detail.presentation
 
+import androidx.lifecycle.viewModelScope
 import base.BaseViewModel
-import com.soywiz.klock.DateTime
-import data.features.medication.MedicationRepository
 import di.Inject
+import feature.detail.domain.DeleteHabitUseCase
+import feature.detail.domain.GetDetailInfoUseCase
+import feature.detail.domain.UpdateHabitUseCase
 import feature.detail.presentation.models.DateSelectionState
-import screens.daily.views.HabitCardItemModel
 import feature.detail.presentation.models.DetailAction
 import feature.detail.presentation.models.DetailEvent
 import feature.detail.presentation.models.DetailViewState
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlinx.datetime.LocalDate
+import utils.CalendarDays
 
-class DetailViewModel(private val habitId: Long): BaseViewModel<DetailViewState, DetailAction, DetailEvent>(
+class DetailViewModel(private val habitId: String) : BaseViewModel<DetailViewState, DetailAction, DetailEvent>(
     initialState = DetailViewState(habitId = habitId)
 ) {
 
-    private val medicationRepository = Inject.instance<MedicationRepository>()
+    private val getDetailInfoUseCase = Inject.instance<GetDetailInfoUseCase>()
+    private val deleteHabitUseCase = Inject.instance<DeleteHabitUseCase>()
+    private val updateHabitUseCase = Inject.instance<UpdateHabitUseCase>()
 
     init {
         fetchDetailedInformation()
@@ -25,73 +33,86 @@ class DetailViewModel(private val habitId: Long): BaseViewModel<DetailViewState,
             DetailEvent.CloseScreen -> viewAction = DetailAction.CloseScreen
             DetailEvent.DeleteItem -> deleteItem()
             DetailEvent.SaveChanges -> applyChanges()
-            is DetailEvent.EndDateSelected -> setEndDate(viewEvent.value)
-            is DetailEvent.StartDateSelected -> setStartDate(viewEvent.value)
             DetailEvent.StartDateClicked -> viewState = viewState.copy(dateSelectionState = DateSelectionState.Start)
             DetailEvent.EndDateClicked -> viewState = viewState.copy(dateSelectionState = DateSelectionState.End)
+            is DetailEvent.DateSelected -> selectDate(viewEvent.value)
         }
     }
 
     private fun fetchDetailedInformation() {
-//        viewModelScope.launch(Dispatchers.Default) {
-//            val medication = medicationRepository.fetchCurrentMedications().first { it.itemId == cardModel.habitId }
-//            val startDate = getValueOrNull(medication.startDate)
-//            val endDate = getValueOrNull(medication.endDate)
-//
-//            withContext(Dispatchers.Main) {
-//
-//                viewState = viewState.copy(
-//                    itemTitle = medication.title,
-//                    startDate = startDate?.toString("dd MMM yyyy") ?: AppRes.string.not_selected,
-//                    endDate = endDate?.toString("dd MMM yyyy") ?: AppRes.string.not_selected,
-//                    start = startDate?.local,
-//                    end = endDate?.local
-//                )
-//            }
-//        }
+        viewModelScope.launch(Dispatchers.Default) {
+            val details = getDetailInfoUseCase.execute(habitId)
+
+            withContext(Dispatchers.Main) {
+                viewState = viewState.copy(
+                    itemTitle = details.habitTitle,
+                    startDate = details.startDate,
+                    endDate = details.endDeta,
+                    start = details.start,
+                    end = details.end,
+                    daysToCheck = details.daysToCheck,
+                    isGood = details.isHabitGood
+                )
+            }
+        }
     }
 
     private fun deleteItem() {
-//        viewModelScope.launch {
-//            viewState = viewState.copy(isDeleting = true)
-//            medicationRepository.deleteItem(cardModel.habitId)
-//            viewAction = DetailAction.CloseScreen
-//        }
+        viewModelScope.launch(Dispatchers.Default) {
+            withContext(Dispatchers.Main) {
+                viewState = viewState.copy(isDeleting = true)
+            }
+
+            try {
+                deleteHabitUseCase.execute(viewState.habitId)
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    viewState = viewState.copy(isDeleting = true)
+                }
+            }
+
+            withContext(Dispatchers.Main) {
+                viewAction = DetailAction.CloseScreen
+            }
+        }
     }
 
-    private fun setStartDate(value: DateTime) {
-//        viewState = viewState.copy(
-//            startDate = value.format("dd MMM yyyy"),
-//            start = value
-//        )
-    }
+    private fun selectDate(value: LocalDate) {
+        when (viewState.dateSelectionState) {
+            DateSelectionState.None -> {}
+            DateSelectionState.Start -> {
+                viewState = viewState.copy(start = value, startDate = CalendarDays.Custom(value.toString()))
+            }
 
-    private fun setEndDate(value: DateTime) {
-//        viewState = viewState.copy(
-//            endDate = value.toString("dd MMM yyyy"),
-//            end = value
-//        )
+            DateSelectionState.End -> viewState =
+                viewState.copy(end = value, endDate = CalendarDays.Custom(value.toString()))
+        }
+
+        viewState = viewState.copy(dateSelectionState = DateSelectionState.None)
     }
 
     private fun applyChanges() {
-//        val startDate = viewState.start
-//        val endDate = viewState.end
-//
-//        if (startDate == null || endDate == null) {
-//            viewAction = DetailAction.CloseScreen
-//        } else {
-//            if (startDate.compareTo(endDate) == -1) {
-//                updateData(startDate, endDate)
-//            } else {
-//                viewAction = DetailAction.DateError
-//            }
-//        }
-    }
+        viewModelScope.launch(Dispatchers.Default) {
+            try {
+                updateHabitUseCase.execute(
+                    habitId = viewState.habitId,
+                    habitTitle = viewState.itemTitle,
+                    startDate = viewState.start,
+                    endDate = viewState.end,
+                    daysToCheck = viewState.daysToCheck,
+                    isGood = viewState.isGood
+                )
 
-    private fun updateData(startDate: DateTime, endDate: DateTime) {
-//        viewModelScope.launch(Dispatchers.Default) {
-//            medicationRepository.updateMedication(cardModel.habitId, startDate, endDate)
-//            viewAction = DetailAction.CloseScreen
-//        }
+                withContext(Dispatchers.Main) {
+                    viewAction = DetailAction.CloseScreen
+                }
+            } catch (e: IllegalStateException) {
+                println(e.message)
+            } catch (e: NullPointerException) {
+                println(e.message)
+            } catch (e: Exception) {
+                println(e.message)
+            }
+        }
     }
 }

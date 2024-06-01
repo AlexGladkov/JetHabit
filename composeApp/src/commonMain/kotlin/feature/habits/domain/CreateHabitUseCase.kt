@@ -5,6 +5,8 @@ import feature.habits.data.HabitEntity
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
+import kotlinx.uuid.UUID
+import kotlinx.uuid.generateUUID
 
 class CreateHabitUseCase(
     private val json: Json,
@@ -13,9 +15,12 @@ class CreateHabitUseCase(
 
     suspend fun execute(title: String, isGood: Boolean, days: JsonArray) {
         val entity = HabitEntity(
+            id = UUID.generateUUID().toString(),
             title = title,
             isGood = isGood,
-            daysToCheck = json.encodeToString(days)
+            daysToCheck = json.encodeToString(days),
+            startDate = "",
+            endDate = ""
         )
 
         habitDao.insert(entity)

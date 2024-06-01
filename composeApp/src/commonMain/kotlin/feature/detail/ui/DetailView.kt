@@ -1,4 +1,4 @@
-package screens.detail
+package feature.detail.ui
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -15,11 +15,12 @@ import di.LocalPlatform
 import di.Platform
 import feature.detail.presentation.models.DetailEvent
 import feature.detail.presentation.models.DetailViewState
-import tech.mobiledeveloper.jethabit.app.AppRes
+import org.jetbrains.compose.resources.stringResource
+import tech.mobiledeveloper.jethabit.resources.*
 import ui.themes.JetHabitTheme
 import ui.themes.components.JetMenu
+import utils.title
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 internal fun DetailView(
     viewState: DetailViewState,
@@ -36,7 +37,7 @@ internal fun DetailView(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                if (platform == Platform.iOS) {
+                if (platform != Platform.Android) {
                     Icon(
                         modifier = Modifier
                             .clickable { eventHandler.invoke(DetailEvent.CloseScreen) }
@@ -64,7 +65,7 @@ internal fun DetailView(
                             end = JetHabitTheme.shapes.padding,
                             top = 2.dp
                         ),
-                        text = if (viewState.isGood) "Good Habit" else "Bad Habit",
+                        text = if (viewState.isGood) stringResource(Res.string.good_habit) else stringResource(Res.string.bad_habit),
                         style = JetHabitTheme.typography.caption,
                         color = JetHabitTheme.colors.controlColor
                     )
@@ -81,15 +82,15 @@ internal fun DetailView(
             Spacer(modifier = Modifier.height(24.dp))
 
             JetMenu(
-                title = AppRes.string.title_start_date,
-                value = viewState.startDate
+                title = stringResource(Res.string.title_start_date),
+                value = viewState.startDate.title()
             ) {
                 eventHandler.invoke(DetailEvent.StartDateClicked)
             }
 
             JetMenu(
-                title = AppRes.string.title_end_date,
-                value = viewState.endDate
+                title = stringResource(Res.string.title_end_date),
+                value = viewState.endDate.title()
             ) {
                 eventHandler.invoke(DetailEvent.EndDateClicked)
             }
@@ -111,7 +112,7 @@ internal fun DetailView(
                 )
             ) {
                 Text(
-                    text = AppRes.string.action_save,
+                    text = stringResource(Res.string.action_save),
                     style = JetHabitTheme.typography.body,
                     color = Color.White
                 )

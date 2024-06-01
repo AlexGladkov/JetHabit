@@ -43,12 +43,12 @@ Pod::Spec.new do |spec|
                 fi
                 set -ev
                 REPO_ROOT="$PODS_TARGET_SRCROOT"
-                "$REPO_ROOT/../../../../../../private/var/folders/wd/4r6f7n8j4_jgvw3l8z7mfzpw0000gn/T/wrap877loc/gradlew" -p "$REPO_ROOT" $KOTLIN_PROJECT_PATH:syncFramework \
+                "$REPO_ROOT/../../../../../../private/var/folders/wd/4r6f7n8j4_jgvw3l8z7mfzpw0000gn/T/wrap11loc/gradlew" -p "$REPO_ROOT" $KOTLIN_PROJECT_PATH:syncFramework \
                     -Pkotlin.native.cocoapods.platform=$PLATFORM_NAME \
                     -Pkotlin.native.cocoapods.archs="$ARCHS" \
                     -Pkotlin.native.cocoapods.configuration="$CONFIGURATION"
             SCRIPT
         }
     ]
-    spec.resources = ['build/compose/cocoapods/compose-resources', 'build/generated/libres/apple/libres-bundles']
+    spec.resources = ['build/compose/cocoapods/compose-resources']
 end

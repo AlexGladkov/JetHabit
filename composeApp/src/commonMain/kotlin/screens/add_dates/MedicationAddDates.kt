@@ -27,10 +27,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import io.github.skeptick.libres.compose.painterResource
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import screens.add_dates.models.MedicationAddDatesAction
 import screens.add_dates.models.MedicationAddDatesEvent
-import tech.mobiledeveloper.jethabit.app.AppRes
+import tech.mobiledeveloper.jethabit.resources.*
 import ui.themes.JetHabitTheme
 import ui.themes.components.JetHabitButton
 
@@ -53,7 +54,7 @@ internal fun MedicationAddDates(
                     .clickable { }
                     .align(Alignment.CenterStart)
                     .padding(horizontal = 20.dp),
-                text = AppRes.string.action_back,
+                text = stringResource(Res.string.action_back),
                 color = JetHabitTheme.colors.tintColor,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Light
@@ -70,13 +71,13 @@ internal fun MedicationAddDates(
 
         Image(
             modifier = Modifier.padding(top = 32.dp).size(72.dp),
-            painter = painterResource(AppRes.image.medication_calendar),
+            painter = painterResource(Res.drawable.medication_calendar),
             contentDescription = "Medication Add Dates Icon"
         )
 
         Text(
             modifier = Modifier.padding(top = 20.dp),
-            text = AppRes.string.medication_add_dates,
+            text = stringResource(Res.string.medication_add_dates),
             fontSize = 32.sp,
             textAlign = TextAlign.Center,
             color = JetHabitTheme.colors.primaryText,
@@ -95,7 +96,7 @@ internal fun MedicationAddDates(
                 }.padding(all = 16.dp)
             ) {
                 Text(
-                    text = AppRes.string.medication_periodicity,
+                    text = stringResource(Res.string.medication_periodicity),
                     color = JetHabitTheme.colors.primaryText,
                     fontSize = 16.sp
                 )
@@ -103,7 +104,7 @@ internal fun MedicationAddDates(
                 Spacer(modifier = Modifier.weight(1f))
 
                 Text(
-                    text = viewState.periodicity,
+                    text = stringResource(viewState.periodicity),
                     color = JetHabitTheme.colors.tintColor,
                     fontSize = 16.sp
                 )
@@ -123,32 +124,32 @@ internal fun MedicationAddDates(
                 }.padding(all = 16.dp)
             ) {
                 Text(
-                    text = AppRes.string.medication_frequency,
+                    text = stringResource(Res.string.medication_frequency),
                     color = JetHabitTheme.colors.primaryText,
                     fontSize = 16.sp
                 )
 
                 Spacer(modifier = Modifier.weight(1f))
 
-                Text(
-                    text = viewState.frequency,
-                    color = JetHabitTheme.colors.tintColor,
-                    fontSize = 16.sp
-                )
+//                Text(
+//                    text = viewState.frequency,
+//                    color = JetHabitTheme.colors.tintColor,
+//                    fontSize = 16.sp
+//                )
             }
 
         }
 
         Text(
             modifier = Modifier.padding(top = 8.dp, start = 32.dp, end = 20.dp).fillMaxWidth(),
-            text = AppRes.string.medication_dates_hint,
+            text = stringResource(Res.string.medication_dates_hint),
             fontSize = 10.sp,
             color = JetHabitTheme.colors.controlColor
         )
 
         Text(
             modifier = Modifier.padding(top = 32.dp, start = 32.dp).fillMaxWidth(),
-            text = AppRes.string.medication_dates_duration,
+            text = stringResource(Res.string.medication_dates_duration),
             fontSize = 20.sp,
             fontWeight = FontWeight.Medium,
             color = JetHabitTheme.colors.primaryText
@@ -167,14 +168,14 @@ internal fun MedicationAddDates(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 if (viewState.startDate == null) {
-                    Image(
-                        modifier = Modifier.padding(end = 16.dp).size(16.dp),
-                        painter = painterResource(AppRes.image.ic_add),
-                        contentDescription = "Add Start Date"
-                    )
+//                    Image(
+//                        modifier = Modifier.padding(end = 16.dp).size(16.dp),
+//                        painter = painterResource(Res.image.ic_add),
+//                        contentDescription = "Add Start Date"
+//                    )
 
                     Text(
-                        text = AppRes.string.medication_add_start_date,
+                        text = stringResource(Res.string.medication_add_start_date),
                         color = JetHabitTheme.colors.tintColor,
                         fontSize = 16.sp
                     )
@@ -207,7 +208,7 @@ internal fun MedicationAddDates(
                 }.padding(all = 16.dp)
             ) {
                 Text(
-                    text = AppRes.string.medication_week_count,
+                    text = stringResource(Res.string.medication_week_count),
                     color = JetHabitTheme.colors.primaryText,
                     fontSize = 16.sp
                 )
@@ -227,7 +228,7 @@ internal fun MedicationAddDates(
         JetHabitButton(
             modifier = Modifier.padding(bottom = 40.dp, start = 16.dp, end = 16.dp)
                 .fillMaxWidth(),
-            text = AppRes.string.action_add,
+            text = stringResource(Res.string.action_add),
             onClick = {
                 viewModel.obtainEvent(MedicationAddDatesEvent.AddNewMedicine)
             })

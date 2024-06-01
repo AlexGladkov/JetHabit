@@ -11,10 +11,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import org.jetbrains.compose.resources.stringResource
 import screens.stats.models.StatsEvent
 import screens.stats.models.StatsViewState
 import screens.stats.views.StatisticCell
-import tech.mobiledeveloper.jethabit.app.AppRes
+import tech.mobiledeveloper.jethabit.resources.Res
+import tech.mobiledeveloper.jethabit.resources.title_statistics
 import ui.themes.JetHabitTheme
 
 @Composable
@@ -40,7 +42,7 @@ internal fun StatisticsView(viewState: StatsViewState) {
                 end = JetHabitTheme.shapes.padding,
                 top = JetHabitTheme.shapes.padding + 8.dp
             ),
-            text = AppRes.string.title_statistics,
+            text = stringResource(Res.string.title_statistics),
             style = JetHabitTheme.typography.heading,
             color = JetHabitTheme.colors.primaryText
         )

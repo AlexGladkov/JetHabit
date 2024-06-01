@@ -8,8 +8,6 @@ import data.features.settings.LocalSettingsEventBus
 import data.features.settings.SettingsEventBus
 import navigation.LocalNavHost
 import screens.create.CreateHabitFlow
-import screens.daily.views.HabitCardItemModel
-import screens.detail.DetailScreen
 import navigation.MainScreen
 import screens.splash.SplashScreen
 import themes.MainTheme

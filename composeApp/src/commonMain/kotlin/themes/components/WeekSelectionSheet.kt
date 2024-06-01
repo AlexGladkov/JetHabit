@@ -29,7 +29,8 @@ import androidx.compose.ui.unit.sp
 import ui.themes.JetHabitTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.text.style.TextAlign
-import tech.mobiledeveloper.jethabit.app.AppRes
+import org.jetbrains.compose.resources.stringResource
+import tech.mobiledeveloper.jethabit.resources.*
 
 @Composable
 internal fun WeekSelectionSheet(
@@ -50,7 +51,7 @@ internal fun WeekSelectionSheet(
         ) {
             Text(
                 modifier = Modifier.padding(horizontal = 20.dp),
-                text = AppRes.string.medication_periodicity,
+                text = stringResource(Res.string.medication_periodicity),
                 color = JetHabitTheme.colors.primaryText,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
@@ -77,13 +78,13 @@ internal fun WeekSelectionSheet(
             for (i in 0 until 7) {
                 DayOfWeekCard(
                     title = when (i) {
-                        0 -> AppRes.string.days_monday_short
-                        1 -> AppRes.string.days_tuesday_short
-                        2 -> AppRes.string.days_wednesday_short
-                        3 -> AppRes.string.days_thursday_short
-                        4 -> AppRes.string.days_friday_short
-                        5 -> AppRes.string.days_saturday_short
-                        6 -> AppRes.string.days_sunday_short
+                        0 -> stringResource(Res.string.days_monday_short)
+                        1 -> stringResource(Res.string.days_tuesday_short)
+                        2 -> stringResource(Res.string.days_wednesday_short)
+                        3 -> stringResource(Res.string.days_thursday_short)
+                        4 -> stringResource(Res.string.days_friday_short)
+                        5 -> stringResource(Res.string.days_saturday_short)
+                        6 -> stringResource(Res.string.days_sunday_short)
                         else -> throw IllegalStateException()
                     },
                     isSelected = selectedDays[i],
@@ -102,7 +103,7 @@ internal fun WeekSelectionSheet(
         JetHabitButton(modifier = Modifier
             .padding(horizontal = 20.dp, vertical = 20.dp)
             .fillMaxWidth(),
-            text = AppRes.string.action_save,
+            text = stringResource(Res.string.action_save),
             onClick = {
                 val containsSelected = selectedDays.count { it } > 0
                 if (containsSelected)
@@ -115,7 +116,7 @@ internal fun WeekSelectionSheet(
         if (isErrorDisplay) {
             Text(
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
-                text = AppRes.string.medication_periodicity_error,
+                text = stringResource(Res.string.medication_periodicity_error),
                 color = JetHabitTheme.colors.errorColor,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Light,

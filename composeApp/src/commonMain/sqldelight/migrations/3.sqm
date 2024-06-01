@@ -1,2 +1,0 @@
-TABLE MedicationEntity
-ALTER COLUMN frequency TYPE TEXT NOT NULL DEFAULT "MorningAfternoonEvening"

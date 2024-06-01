@@ -27,10 +27,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import io.github.skeptick.libres.compose.painterResource
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import screens.add_name.models.MedicationAddNameAction
 import screens.add_name.models.MedicationAddNameEvent
-import tech.mobiledeveloper.jethabit.app.AppRes
+import tech.mobiledeveloper.jethabit.resources.*
 import ui.themes.JetHabitTheme
 import ui.themes.components.JetHabitButton
 
@@ -57,7 +58,7 @@ internal fun MedicationAddName(
                     .clickable {
 
                     },
-                text = AppRes.string.action_close,
+                text = stringResource(Res.string.action_close),
                 color = JetHabitTheme.colors.tintColor,
                 fontSize = 16.sp
             )
@@ -65,13 +66,13 @@ internal fun MedicationAddName(
 
         Image(
             modifier = Modifier.padding(top = 56.dp).size(56.dp),
-            painter = painterResource(AppRes.image.medication_add),
+            painter = painterResource(Res.drawable.medication_add),
             contentDescription = "Medication Add Icon"
         )
 
         Text(
             modifier = Modifier.padding(top = 20.dp),
-            text = AppRes.string.medication_add_name,
+            text = stringResource(Res.string.medication_add_name),
             fontSize = 32.sp,
             color = JetHabitTheme.colors.primaryText,
             fontWeight = FontWeight.Bold,
@@ -103,7 +104,7 @@ internal fun MedicationAddName(
         JetHabitButton(
             modifier = Modifier.padding(vertical = 44.dp, horizontal = 20.dp)
                 .fillMaxWidth(),
-            text = AppRes.string.action_next,
+            text = stringResource(Res.string.action_next),
             enabled = viewState.isNext,
             onClick = {
                 viewModel.obtainEvent(MedicationAddNameEvent.NextClicked)

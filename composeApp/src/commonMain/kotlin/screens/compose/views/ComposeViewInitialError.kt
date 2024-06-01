@@ -10,8 +10,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import di.LocalPlatform
 import di.Platform
+import org.jetbrains.compose.resources.stringResource
 import screens.compose.models.ComposeError
-import tech.mobiledeveloper.jethabit.app.AppRes
+import tech.mobiledeveloper.jethabit.resources.Res
+import tech.mobiledeveloper.jethabit.resources.error_new_habit
 import ui.themes.JetHabitTheme
 
 @Composable
@@ -22,7 +24,8 @@ internal fun ComposeViewInitialError(error: ComposeError) {
         Text(
             modifier = Modifier.padding(16.dp).align(Alignment.Center),
             text = when (error) {
-                ComposeError.SendingGeneric -> if (platform == Platform.iOS) "Can't create new habit. Sorry" else AppRes.string.error_new_habit
+                ComposeError.SendingGeneric -> if (platform == Platform.iOS) "Can't create new habit. Sorry" else stringResource(
+                    Res.string.error_new_habit)
             },
             color = JetHabitTheme.colors.errorColor
         )

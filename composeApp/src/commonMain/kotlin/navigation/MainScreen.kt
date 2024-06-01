@@ -17,7 +17,7 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.*
 import feature.daily.ui.DailyScreen
-import screens.detail.DetailScreen
+import feature.detail.ui.DetailScreen
 import screens.settings.SettingsScreen
 import screens.stats.StatisticsScreen
 import ui.themes.JetHabitTheme
@@ -47,8 +47,8 @@ fun MainScreen() {
             navigation(startDestination = DailyScreens.Start.name, route = MainScreens.Daily.route) {
                 composable(DailyScreens.Start.name) { DailyScreen(navController) }
                 composable("${DailyScreens.Detail.name}/{habitId}") { backStackEntry ->
-                    val habitId = backStackEntry.arguments?.getLong("habitId") ?: -1
-                    DetailScreen(habitId = habitId)
+                    val habitId = backStackEntry.arguments?.getString("habitId").orEmpty()
+                    DetailScreen(habitId = habitId, navController = navController)
                 }
             }
             composable(MainScreens.Statistics.route) { StatisticsScreen() }

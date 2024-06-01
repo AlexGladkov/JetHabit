@@ -22,9 +22,10 @@ import feature.settings.presentation.models.SettingsEvent
 import screens.daily.views.HabitCardItem
 import screens.daily.views.HabitCardItemModel
 import feature.settings.presentation.models.SettingsViewState
+import org.jetbrains.compose.resources.stringResource
 import screens.settings.views.MenuItem
 import screens.settings.views.MenuItemModel
-import tech.mobiledeveloper.jethabit.app.AppRes
+import tech.mobiledeveloper.jethabit.resources.*
 import ui.themes.*
 import ui.themes.components.JHDivider
 
@@ -36,7 +37,7 @@ internal fun SettingsScreen(
 ) {
     val viewState by viewModel.viewStates().collectAsState()
     val viewAction by viewModel.viewActions().collectAsState(null)
-    
+
     val settingsEventBus = LocalSettingsEventBus.current
     val currentSettings by settingsEventBus.currentSettings.collectAsState()
 
@@ -54,7 +55,7 @@ internal fun SettingsScreen(
                     modifier = Modifier
                         .weight(1f)
                         .padding(start = JetHabitTheme.shapes.padding),
-                    text = AppRes.string.title_settings,
+                    text = stringResource(Res.string.title_settings),
                     color = JetHabitTheme.colors.primaryText,
                     style = JetHabitTheme.typography.toolbar
                 )
@@ -66,7 +67,7 @@ internal fun SettingsScreen(
             ) {
                 Text(
                     modifier = Modifier.weight(1f),
-                    text = AppRes.string.action_dark_theme_enable,
+                    text = stringResource(Res.string.action_dark_theme_enable),
                     color = JetHabitTheme.colors.primaryText,
                     style = JetHabitTheme.typography.body
                 )
@@ -93,16 +94,16 @@ internal fun SettingsScreen(
 
             MenuItem(
                 model = MenuItemModel(
-                    title = AppRes.string.title_font_size,
+                    title = stringResource(Res.string.title_font_size),
                     currentIndex = when (currentSettings.textSize) {
                         JetHabitSize.Small -> 0
                         JetHabitSize.Medium -> 1
                         JetHabitSize.Big -> 2
                     },
                     values = listOf(
-                        AppRes.string.title_font_size_small,
-                        AppRes.string.title_font_size_medium,
-                        AppRes.string.title_font_size_big
+                        stringResource(Res.string.title_font_size_small),
+                        stringResource(Res.string.title_font_size_medium),
+                        stringResource(Res.string.title_font_size_big)
                     )
                 ),
                 onItemSelected = {
@@ -119,16 +120,16 @@ internal fun SettingsScreen(
 
             MenuItem(
                 model = MenuItemModel(
-                    title = AppRes.string.title_padding_size,
+                    title = stringResource(Res.string.title_padding_size),
                     currentIndex = when (currentSettings.paddingSize) {
                         JetHabitSize.Small -> 0
                         JetHabitSize.Medium -> 1
                         JetHabitSize.Big -> 2
                     },
                     values = listOf(
-                        AppRes.string.title_padding_small,
-                        AppRes.string.title_padding_medium,
-                        AppRes.string.title_padding_big
+                        stringResource(Res.string.title_padding_small),
+                        stringResource(Res.string.title_padding_medium),
+                        stringResource(Res.string.title_padding_big)
                     )
                 ),
                 onItemSelected = {
@@ -145,14 +146,14 @@ internal fun SettingsScreen(
 
             MenuItem(
                 model = MenuItemModel(
-                    title = AppRes.string.title_corners_style,
+                    title = stringResource(Res.string.title_corners_style),
                     currentIndex = when (currentSettings.cornerStyle) {
                         JetHabitCorners.Rounded -> 0
                         JetHabitCorners.Flat -> 1
                     },
                     values = listOf(
-                        AppRes.string.title_corners_style_rounded,
-                        AppRes.string.title_corners_style_flat
+                        stringResource(Res.string.title_corners_style_rounded),
+                        stringResource(Res.string.title_corners_style_flat)
                     )
                 ),
                 onItemSelected = {
@@ -204,15 +205,19 @@ internal fun SettingsScreen(
 
             HabitCardItem(
                 model = HabitCardItemModel(
-                    habitId = 0,
-                    title = AppRes.string.card_example,
+                    habitId = "",
+                    title = stringResource(Res.string.card_example),
                     isChecked = true,
                 )
             )
-            
-            Text(modifier = Modifier.padding(16.dp).clickable {
-                viewModel.obtainEvent(SettingsEvent.ClearAllQueries)
-            }, text = AppRes.string.settings_clear, color = JetHabitTheme.colors.errorColor, style = JetHabitTheme.typography.body)
+
+            Text(
+                modifier = Modifier.padding(16.dp).clickable {
+                    viewModel.obtainEvent(SettingsEvent.ClearAllQueries)
+                },
+                text = stringResource(Res.string.settings_clear),
+                color = JetHabitTheme.colors.errorColor, style = JetHabitTheme.typography.body
+            )
         }
     }
 }
@@ -261,7 +266,7 @@ private fun SettingsView(viewState: SettingsViewState) {
             Column(modifier = Modifier.fillMaxWidth()) {
                 Row(modifier = Modifier.padding(vertical = 16.dp, horizontal = 16.dp)) {
                     Text(
-                        text = AppRes.string.settings_body_metrics,
+                        text = stringResource(Res.string.settings_body_metrics),
                         fontWeight = FontWeight.Medium,
                         fontSize = 16.sp,
                         color = JetHabitTheme.colors.primaryText
@@ -272,7 +277,7 @@ private fun SettingsView(viewState: SettingsViewState) {
 
                 Row(modifier = Modifier.padding(vertical = 16.dp, horizontal = 16.dp)) {
                     Text(
-                        text = AppRes.string.settings_theme,
+                        text = stringResource(Res.string.settings_theme),
                         fontWeight = FontWeight.Medium,
                         fontSize = 16.sp,
                         color = JetHabitTheme.colors.primaryText

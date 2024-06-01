@@ -1,7 +1,6 @@
 package feature.daily.ui
 
 import PreviewApp
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -20,10 +19,14 @@ import androidx.compose.ui.unit.dp
 import feature.daily.ui.models.DailyViewState
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import feature.daily.ui.models.DailyEvent
-import screens.daily.views.DailyViewNoItems
+import org.jetbrains.compose.resources.stringResource
+import feature.daily.ui.views.DailyViewNoItems
 import screens.daily.views.HabitCardItem
-import tech.mobiledeveloper.jethabit.app.AppRes
+import tech.mobiledeveloper.jethabit.resources.Res
+import tech.mobiledeveloper.jethabit.resources.daily_previous_day
 import ui.themes.JetHabitTheme
+import utils.Weekday
+import utils.title
 
 @Composable
 fun DailyView(
@@ -47,7 +50,7 @@ fun DailyView(
                                 end = JetHabitTheme.shapes.padding,
                                 top = JetHabitTheme.shapes.padding + 8.dp
                             ),
-                            text = viewState.currentDay,
+                            text = viewState.currentDay.title(),
                             style = JetHabitTheme.typography.heading,
                             color = JetHabitTheme.colors.primaryText
                         )
@@ -61,7 +64,7 @@ fun DailyView(
                                     bottom = JetHabitTheme.shapes.padding + 8.dp
                                 )
                                 .clickable { eventHandler.invoke(DailyEvent.PreviousDayClicked) },
-                            text = AppRes.string.daily_previous_day,
+                            text = stringResource(Res.string.daily_previous_day),
                             style = JetHabitTheme.typography.body,
                             color = JetHabitTheme.colors.controlColor
                         )
@@ -131,7 +134,7 @@ fun DailyView_Preview() {
     PreviewApp {
         DailyView(
             viewState = DailyViewState(
-                currentDay = "Today",
+                currentDay = Weekday.Today,
                 hasNextDay = true,
                 habits = emptyList()
             )

@@ -73,7 +73,7 @@ class DailyViewModel : BaseViewModel<DailyViewState, DailyAction, DailyEvent>(
         fetchHabitFor(localDate)
     }
 
-    private fun switchCheckForHabit(habitId: Long, newValue: Boolean) {
+    private fun switchCheckForHabit(habitId: String, newValue: Boolean) {
         viewModelScope.launch(Dispatchers.Default) {
             switchHabitUseCase.execute(newValue, habitId, currentDate.current())
             withContext(Dispatchers.Main) {

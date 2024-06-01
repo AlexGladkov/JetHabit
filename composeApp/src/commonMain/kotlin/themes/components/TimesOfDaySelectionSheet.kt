@@ -29,7 +29,8 @@ import androidx.compose.ui.unit.sp
 import ui.themes.JetHabitTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.text.style.TextAlign
-import tech.mobiledeveloper.jethabit.app.AppRes
+import org.jetbrains.compose.resources.stringResource
+import tech.mobiledeveloper.jethabit.resources.*
 
 @Composable
 internal fun TimesOfDaySelectionSheet(
@@ -50,7 +51,7 @@ internal fun TimesOfDaySelectionSheet(
         ) {
             Text(
                 modifier = Modifier.padding(horizontal = 20.dp),
-                text = AppRes.string.medication_frequency,
+                text = stringResource(Res.string.medication_frequency),
                 color = JetHabitTheme.colors.primaryText,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
@@ -77,9 +78,9 @@ internal fun TimesOfDaySelectionSheet(
             for (i in 0 until 3) {
                 TimesOfDayCard(
                     title = when (i) {
-                        0 -> AppRes.string.times_of_day_morning
-                        1 -> AppRes.string.times_of_day_afternoon
-                        2 -> AppRes.string.times_of_day_evening
+                        0 -> stringResource(Res.string.times_of_day_morning)
+                        1 -> stringResource(Res.string.times_of_day_afternoon)
+                        2 -> stringResource(Res.string.times_of_day_evening)
                         else -> throw IllegalStateException()
                     },
                     isSelected = selectedTimes[i],
@@ -98,7 +99,7 @@ internal fun TimesOfDaySelectionSheet(
         JetHabitButton(modifier = Modifier
             .padding(horizontal = 20.dp, vertical = 20.dp)
             .fillMaxWidth(),
-            text = AppRes.string.action_save,
+            text = stringResource(Res.string.action_save),
             onClick = {
                 val containsSelected = selectedTimes.count { it } > 0
                 if (containsSelected)
@@ -111,7 +112,7 @@ internal fun TimesOfDaySelectionSheet(
         if (isErrorDisplay) {
             Text(
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
-                text = AppRes.string.medication_frequency_error,
+                text = stringResource(Res.string.medication_frequency_error),
                 color = JetHabitTheme.colors.errorColor,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Light,

@@ -23,7 +23,7 @@ internal fun DailyScreen(
     val outerNavController = LocalNavHost.current
     val viewState by viewModel.viewStates().collectAsState()
     val viewAction by viewModel.viewActions().collectAsState(null)
-    
+
     DailyView(viewState = viewState) {
         viewModel.obtainEvent(it)
     }

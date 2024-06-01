@@ -14,11 +14,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import screens.compose.models.ComposeEvent
 import screens.compose.models.ComposeViewState
 import screens.compose.views.ComposeViewInitialError
-import tech.mobiledeveloper.jethabit.app.AppRes
+import tech.mobiledeveloper.jethabit.resources.*
 import ui.themes.JetHabitTheme
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -38,7 +39,7 @@ fun ComposeView(
                                 horizontal = JetHabitTheme.shapes.padding,
                                 vertical = JetHabitTheme.shapes.padding + 8.dp
                             ),
-                            text = AppRes.string.compose_new_record,
+                            text = stringResource(Res.string.compose_new_record),
                             style = JetHabitTheme.typography.heading,
                             color = JetHabitTheme.colors.primaryText
                         )
@@ -47,7 +48,7 @@ fun ComposeView(
                     item {
                         Column(modifier = Modifier.padding(start = 16.dp, end = 16.dp)) {
                             Text(
-                                text = AppRes.string.compose_title,
+                                text = stringResource(Res.string.compose_title),
                                 style = JetHabitTheme.typography.caption,
                                 color = JetHabitTheme.colors.secondaryText
                             )
@@ -92,7 +93,7 @@ fun ComposeView(
                         ) {
                             Text(
                                 modifier = Modifier.padding(end = 16.dp),
-                                text = AppRes.string.compose_is_good,
+                                text = stringResource(Res.string.compose_is_good),
                                 style = JetHabitTheme.typography.body,
                                 color = JetHabitTheme.colors.primaryText
                             )
@@ -135,7 +136,7 @@ fun ComposeView(
                                 )
                             } else {
                                 Text(
-                                    text = AppRes.string.action_add,
+                                    text = stringResource(Res.string.action_add),
                                     style = JetHabitTheme.typography.body,
                                     color = Color.White
                                 )
@@ -159,7 +160,7 @@ fun ComposeView(
                             )
                         ) {
                             Text(
-                                text = AppRes.string.action_close,
+                                text = stringResource(Res.string.action_close),
                                 style = JetHabitTheme.typography.body,
                                 color = Color.White
                             )

@@ -2,7 +2,6 @@ package data.features.medication
 
 import com.soywiz.klock.DateTime
 import com.soywiz.klock.weeks
-import tech.mobiledeveloper.jethabit.app.AppRes
 
 class MedicationRepository() {
 
@@ -13,32 +12,32 @@ class MedicationRepository() {
         val periodicityStringBuilder = StringBuilder()
         periodicity.forEachIndexed { index, i ->
             if (i) {
-                periodicityStringBuilder.append(
-                    when (index) {
-                        0 -> AppRes.string.days_monday_short
-                        1 -> AppRes.string.days_tuesday_short
-                        2 -> AppRes.string.days_wednesday_short
-                        3 -> AppRes.string.days_thursday_short
-                        4 -> AppRes.string.days_friday_short
-                        5 -> AppRes.string.days_saturday_short
-                        6 -> AppRes.string.days_sunday_short
-                        else -> throw IllegalStateException()
-                    }
-                )
+//                periodicityStringBuilder.append(
+//                    when (index) {
+//                        0 -> Res.string.days_monday_short
+//                        1 -> Res.string.days_tuesday_short
+//                        2 -> Res.string.days_wednesday_short
+//                        3 -> Res.string.days_thursday_short
+//                        4 -> Res.string.days_friday_short
+//                        5 -> Res.string.days_saturday_short
+//                        6 -> Res.string.days_sunday_short
+//                        else -> throw IllegalStateException()
+//                    }
+//                )
             }
         }
         val frequencyStringBuilder = StringBuilder()
 
         frequency.forEachIndexed { index, i ->
             if (i) {
-                frequencyStringBuilder.append(
-                    when (index) {
-                        0 -> AppRes.string.times_of_day_morning
-                        1 -> AppRes.string.times_of_day_afternoon
-                        2 -> AppRes.string.times_of_day_evening
-                        else -> throw IllegalStateException()
-                    }
-                )
+//                frequencyStringBuilder.append(
+//                    when (index) {
+//                        0 -> AppRes.string.times_of_day_morning
+//                        1 -> AppRes.string.times_of_day_afternoon
+//                        2 -> AppRes.string.times_of_day_evening
+//                        else -> throw IllegalStateException()
+//                    }
+//                )
             }
         }
 

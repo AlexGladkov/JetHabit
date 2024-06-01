@@ -18,7 +18,7 @@ interface DailyDao {
     suspend fun getDailyRecordWith(id: Long): DailyEntity
 
     @Query("DELETE FROM DailyEntity WHERE habitId=:habitId AND timestamp=:timestamp")
-    suspend fun deleteAllHabitsForToday(habitId: Long, timestamp: String)
+    suspend fun deleteAllHabitsForToday(habitId: String, timestamp: String)
 
     @Update
     suspend fun update(item: DailyEntity)

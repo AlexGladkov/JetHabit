@@ -5,8 +5,10 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class HabitEntity(
-    @PrimaryKey(autoGenerate = true) val id: Long = 0,
-    val title: String,
-    val daysToCheck: String,
-    val isGood: Boolean
+    @PrimaryKey var id: String,
+    var title: String,
+    var daysToCheck: String,
+    var isGood: Boolean,
+    var startDate: String,
+    var endDate: String
 )

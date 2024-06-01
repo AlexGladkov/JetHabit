@@ -5,19 +5,18 @@ plugin-compose = "1.6.10" # https://github.com/JetBrains/compose-jb
 
 # Multiplatform
 kotlin = "2.0.0"
-coroutines = "1.7.3"
-serialization = "1.5.1"
-libres = "1.2.2"
-ktor = "2.3.5"
+coroutines = "1.8.1"
+serialization = "1.6.3"
+ktor = "2.3.9"
 klock = "3.4.0"
 
 # Libraries
-room = "2.7.0-alpha02"
-sqlite = "2.5.0-alpha02"
-settings = "1.0.0"
-coil = "2.3.0"
-androidx-appcompat = "1.6.1"
-androidx-activityCompose = "1.8.2"
+room = "2.7.0-alpha03"
+sqlite = "2.5.0-alpha03"
+settings = "1.1.1"
+coil = "2.6.0"
+androidx-appcompat = "1.7.0"
+androidx-activityCompose = "1.9.0"
 
 # Android
 mindsdk = "24"
@@ -27,7 +26,6 @@ plugin-kotlin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.
 plugin-android = { module = "com.android.tools.build:gradle", version.ref = "plugin-android" }
 plugin-compose = { module = "org.jetbrains.compose:compose-gradle-plugin", version.ref = "plugin-compose" }
 plugin-serialization = { module = "org.jetbrains.kotlin:kotlin-serialization", version.ref = "kotlin" }
-plugin-libres = { module = "io.github.skeptick.libres:gradle-plugin", version.ref = "libres" }
 
 ktor-client-android = { module = "io.ktor:ktor-client-android", version.ref = "ktor" }
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
@@ -41,8 +39,6 @@ ktor-http = { module = "io.ktor:ktor-http", version.ref = "ktor" }
 
 kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version.ref = "serialization" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
-
-libres-compose = { module = "io.github.skeptick.libres:libres-compose", version.ref = "libres" }
 
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 kotlinx-coroutines-jvm = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "coroutines" }
@@ -60,9 +56,10 @@ coil-core = { module = "io.coil-kt:coil", version.ref = "coil" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
 
 kodein-di = "org.kodein.di:kodein-di:7.20.2"
+uuid = "app.softwork:kotlinx-uuid-core:0.0.25"
 
-compose-viewmodel = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose:2.8.0-beta02"
-compose-navigation = "org.jetbrains.androidx.navigation:navigation-compose:2.7.0-alpha03"
+compose-viewmodel = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose:2.8.0"
+compose-navigation = "org.jetbrains.androidx.navigation:navigation-compose:2.7.0-alpha07"
 
 klock-common = { module = "com.soywiz.korlibs.klock:klock", version.ref = "klock" }
 klock-jvm = { module = "com.soywiz.korlibs.klock:klock-jvm", version.ref = "klock" }
@@ -82,7 +79,6 @@ kotlin = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 compose-core = { id = "org.jetbrains.compose", version.ref = "plugin-compose" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-libres = { id = "io.github.skeptick.libres", version.ref = "libres" }
 cocoapods = { id = "org.jetbrains.kotlin.native.cocoapods", version.ref = "kotlin" }
 room = { id = "androidx.room", version.ref = "room" }
 ksp = { id ="com.google.devtools.ksp", version = "2.0.0-1.0.21" }

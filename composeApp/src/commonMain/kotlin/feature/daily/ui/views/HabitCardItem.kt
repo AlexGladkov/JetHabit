@@ -14,7 +14,7 @@ import feature.daily.presentation.models.DailyHabit
 import ui.themes.JetHabitTheme
 
 data class HabitCardItemModel(
-    val habitId: Long,
+    val habitId: String,
     val title: String,
     val isChecked: Boolean
 )
