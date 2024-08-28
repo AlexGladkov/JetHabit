@@ -9,7 +9,7 @@ Adopted to full Compose Multiplatform and Kotlin Multiplatform
 ### Tech Stack:
 - Navigation. Odyssey
 - Presentation: KViewModel
-- Database: SqlDelight
+- Database: Room
 - Resources: LibRes
 - DI: Kodein
 - UI: Compose Multiplatform
