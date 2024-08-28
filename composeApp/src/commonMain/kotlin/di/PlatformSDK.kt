@@ -2,7 +2,6 @@ package di
 
 import core.database.AppDatabase
 import data.features.daily.dailyModule
-import data.features.medication.medicationModule
 import org.kodein.di.DI
 import org.kodein.di.bind
 import org.kodein.di.direct
@@ -25,7 +24,6 @@ object PlatformSDK {
                     umbrellaModule,
                     coreModule,
                     dailyModule,
-                    medicationModule,
                     featureModule
                 )
             }.direct

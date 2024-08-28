@@ -3,7 +3,6 @@ package screens.stats
 import androidx.lifecycle.viewModelScope
 import base.BaseViewModel
 import data.features.daily.DailyRepository
-import data.features.medication.MedicationRepository
 import di.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
@@ -17,8 +16,7 @@ import screens.stats.views.StatisticCellModel
 class StatisticsViewModel : BaseViewModel<StatsViewState, StatsAction, StatsEvent>(
     initialState = StatsViewState()
 ) {
-
-    private val medicationRepository: MedicationRepository = Inject.instance()
+    
     private val dailyRepository: DailyRepository = Inject.instance()
 
     init {

@@ -1,6 +1,7 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinCompile
 
 plugins {
     alias(libs.plugins.android)
@@ -14,11 +15,19 @@ plugins {
 
 version = "1.0"
 
-room {
-    schemaDirectory("$projectDir/schemas")
-}
-
 kotlin {
+    cocoapods {
+        summary = "PlayZone iOS SDK"
+        homepage = "https://google.com"
+        ios.deploymentTarget = "14.0"
+
+        framework {
+            @OptIn(ExperimentalKotlinGradlePluginApi::class)
+            transitiveExport = false
+            baseName = "SharedSDK"
+        }
+    }
+
     jvmToolchain(21)
     androidTarget()
     jvm()
@@ -41,18 +50,9 @@ kotlin {
     ).forEach {
         it.binaries.framework {
             baseName = "ComposeApp"
-        }
-    }
-
-    cocoapods {
-        summary = "PlayZone iOS SDK"
-        homepage = "https://google.com"
-        ios.deploymentTarget = "14.0"
-
-        framework {
-            @OptIn(ExperimentalKotlinGradlePluginApi::class)
-            transitiveExport = false
-            baseName = "SharedSDK"
+            isStatic = true
+            // Required when using NativeSQLiteDriver
+            linkerOpts.add("-lsqlite3")
         }
     }
 
@@ -113,15 +113,6 @@ kotlin {
     }
 }
 
-dependencies {
-    add("kspCommonMainMetadata", libs.room.compiler)
-    add("kspAndroid", libs.room.compiler)
-//    add("kspIosX64", libs.room.compiler)
-//    add("kspIosArm64", libs.room.compiler)
-//    add("kspIosSimulatorArm64", libs.room.compiler)
-    add("kspJvm", libs.room.compiler)
-}
-
 android {
     namespace = "tech.mobiledeveloper.jethabit.app"
     compileSdk = 34
@@ -164,4 +155,17 @@ compose.resources {
     publicResClass = true
     packageOfResClass = "tech.mobiledeveloper.jethabit.resources"
     generateResClass = always
+}
+
+dependencies {
+    add("kspCommonMainMetadata", libs.room.compiler)
+    add("kspAndroid", libs.room.compiler)
+//    add("kspIosX64", libs.room.compiler)
+//    add("kspIosArm64", libs.room.compiler)
+//    add("kspIosSimulatorArm64", libs.room.compiler)
+    add("kspJvm", libs.room.compiler)
+}
+
+room {
+    schemaDirectory("$projectDir/schemas")
 }

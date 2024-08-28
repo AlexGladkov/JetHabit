@@ -38,8 +38,8 @@ class GetDetailInfoUseCase(
             habitTitle = habitEntity.title,
             startDate = startDate,
             endDeta = endDate,
-            start = LocalDate.parse(habitEntity.startDate),
-            end = LocalDate.parse(habitEntity.endDate),
+            start = if (habitEntity.startDate.isEmpty()) null else LocalDate.parse(habitEntity.startDate) ,
+            end = if (habitEntity.endDate.isEmpty()) null else LocalDate.parse(habitEntity.endDate),
             isHabitGood = habitEntity.isGood,
             daysToCheck = habitEntity.daysToCheck
         )

@@ -81,4 +81,4 @@ compose-core = { id = "org.jetbrains.compose", version.ref = "plugin-compose" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 cocoapods = { id = "org.jetbrains.kotlin.native.cocoapods", version.ref = "kotlin" }
 room = { id = "androidx.room", version.ref = "room" }
-ksp = { id ="com.google.devtools.ksp", version = "2.0.0-1.0.21" }
+ksp = { id ="com.google.devtools.ksp", version = "2.0.0-1.0.22" }

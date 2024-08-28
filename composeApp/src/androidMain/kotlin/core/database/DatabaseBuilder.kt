@@ -10,5 +10,5 @@ fun getDatabaseBuilder(context: Context): RoomDatabase.Builder<AppDatabase> {
     return Room.databaseBuilder<AppDatabase>(
         context = applicationContext,
         name = databaseFile.absolutePath
-    )
+    ).fallbackToDestructiveMigration(dropAllTables = true)
 }
