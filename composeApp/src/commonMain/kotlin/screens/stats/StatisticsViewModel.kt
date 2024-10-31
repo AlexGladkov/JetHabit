@@ -42,7 +42,6 @@ class StatisticsViewModel : BaseViewModel<StatsViewState, StatsAction, StatsEven
             val nonSmokingStatistics = fetchNonSmokingStatistics()
             withContext(Dispatchers.Main) {
                 viewState = viewState.copy(activeProgress = nonSmokingStatistics)
-                println("Updated viewState with ${viewState.activeProgress.size} items") // Для отладки
             }
         }
     }
