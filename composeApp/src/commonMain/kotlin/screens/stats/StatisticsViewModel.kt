@@ -1,6 +1,5 @@
 package screens.stats
 
-import androidx.compose.ui.input.key.Key.Companion.Period
 import androidx.lifecycle.viewModelScope
 import base.BaseViewModel
 import data.features.daily.DailyRepository
@@ -11,12 +10,10 @@ import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.Clock
-import kotlinx.datetime.DateTimePeriod
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.daysUntil
 import kotlinx.datetime.toLocalDateTime
-import kotlinx.datetime.todayIn
 import screens.daily.views.mapToHabitCardItemModel
 import screens.stats.models.StatsAction
 import screens.stats.models.StatsEvent
@@ -26,7 +23,7 @@ import screens.stats.views.StatisticCellModel
 class StatisticsViewModel : BaseViewModel<StatsViewState, StatsAction, StatsEvent>(
     initialState = StatsViewState()
 ) {
-    
+
     private val dailyRepository: DailyRepository = Inject.instance()
     private val getHabitsForTodayUseCase = Inject.instance<GetHabitsForTodayUseCase>()
 
