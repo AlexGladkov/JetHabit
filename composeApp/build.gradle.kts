@@ -28,7 +28,7 @@ kotlin {
         }
     }
 
-    jvmToolchain(21)
+    jvmToolchain(11)
     androidTarget()
     jvm()
 
@@ -89,6 +89,9 @@ kotlin {
             implementation(libs.room.runtime)
             implementation(libs.room.sqlite)
             implementation(libs.room.sqlite.bundled)
+
+
+            implementation(libs.kotlinx.datetime.v061)
 
         }
 

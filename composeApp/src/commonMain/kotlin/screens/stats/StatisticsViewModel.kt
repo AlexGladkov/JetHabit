@@ -1,13 +1,23 @@
 package screens.stats
 
+import androidx.compose.ui.input.key.Key.Companion.Period
 import androidx.lifecycle.viewModelScope
 import base.BaseViewModel
 import data.features.daily.DailyRepository
 import di.Inject
+import feature.daily.domain.GetHabitsForTodayUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.datetime.Clock
+import kotlinx.datetime.DateTimePeriod
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.daysUntil
+import kotlinx.datetime.toLocalDateTime
+import kotlinx.datetime.todayIn
+import screens.daily.views.mapToHabitCardItemModel
 import screens.stats.models.StatsAction
 import screens.stats.models.StatsEvent
 import screens.stats.models.StatsViewState
@@ -18,6 +28,7 @@ class StatisticsViewModel : BaseViewModel<StatsViewState, StatsAction, StatsEven
 ) {
     
     private val dailyRepository: DailyRepository = Inject.instance()
+    private val getHabitsForTodayUseCase = Inject.instance<GetHabitsForTodayUseCase>()
 
     init {
         loadActivities()
@@ -31,13 +42,40 @@ class StatisticsViewModel : BaseViewModel<StatsViewState, StatsAction, StatsEven
 
     private fun loadActivities() {
         viewModelScope.launch(Dispatchers.IO) {
-            val medicationStatistics = fetchActiveMedication()
-
+            val nonSmokingStatistics = fetchNonSmokingStatistics()
             withContext(Dispatchers.Main) {
-                viewState = viewState.copy(activeProgress = medicationStatistics)
+                viewState = viewState.copy(activeProgress = nonSmokingStatistics)
+                println("Updated viewState with ${viewState.activeProgress.size} items") // Для отладки
             }
         }
     }
+
+    private suspend fun fetchNonSmokingStatistics(): List<StatisticCellModel> {
+        val today = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
+        val habits = getHabitsForTodayUseCase(today)
+            .map { it.mapToHabitCardItemModel() }
+
+        val nonSmokingStats = mutableListOf<StatisticCellModel>()
+
+        val habit = habits.find { it.title == "Don't smoke" && it.startDate?.isNotEmpty() == true }
+        if (habit?.startDate != null) {
+            val startDate = LocalDate.parse(habit.startDate)
+            val daysSinceLast = startDate.daysUntil(today)
+
+            val statistic = StatisticCellModel(
+                title = "You have not smoked for -> $daysSinceLast days",
+                activeDayList = emptyList(),
+                duration = "$daysSinceLast days",
+                fact = daysSinceLast.toString(),
+                percentage = 1f,
+                isPeriodic = false
+            )
+
+            nonSmokingStats.add(statistic)
+        }
+        return nonSmokingStats
+    }
+
 
     private suspend fun fetchActiveMedication(): List<StatisticCellModel> {
 //        val medicationList = medicationRepository.fetchCurrentMedications()

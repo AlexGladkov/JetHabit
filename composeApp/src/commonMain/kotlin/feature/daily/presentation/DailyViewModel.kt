@@ -14,6 +14,8 @@ import kotlinx.coroutines.withContext
 import kotlinx.datetime.*
 import screens.daily.views.mapToHabitCardItemModel
 import utils.getTitle
+import utils.notifications.HabbitNotificationManager
+import utils.tenDaysPassed
 
 class DailyViewModel : BaseViewModel<DailyViewState, DailyAction, DailyEvent>(
     initialState = DailyViewState()
@@ -37,7 +39,10 @@ class DailyViewModel : BaseViewModel<DailyViewState, DailyAction, DailyEvent>(
             DailyEvent.PreviousDayClicked -> performPreviousClick()
             DailyEvent.ReloadScreen -> fetchHabitFor(currentDate.current())
             DailyEvent.ComposeAction -> viewAction = DailyAction.OpenCompose
-            is DailyEvent.HabitCheckClicked -> switchCheckForHabit(viewEvent.habitId, viewEvent.newValue)
+            is DailyEvent.HabitCheckClicked -> switchCheckForHabit(
+                viewEvent.habitId,
+                viewEvent.newValue
+            )
         }
     }
 
@@ -45,15 +50,25 @@ class DailyViewModel : BaseViewModel<DailyViewState, DailyAction, DailyEvent>(
         val today = Clock.System.todayIn(TimeZone.currentSystemDefault())
         val isToday = date.dayOfYear == today.dayOfYear && date.year == today.year
         val title = date.getTitle()
-        
+
         viewState = viewState.copy(
             currentDay = title,
             hasNextDay = !isToday
         )
 
         viewModelScope.launch(Dispatchers.Default) {
-            val habits = getHabitsForTodayUseCase.execute(date)
+            val habits = getHabitsForTodayUseCase(date)
                 .map { it.mapToHabitCardItemModel() }
+
+            val habit = habits.find { it.title == "Don't smoke" && !it.startDate.isNullOrEmpty() }
+                ?: return@launch
+
+            val startDate = LocalDate.parse(habit.startDate.orEmpty())
+            if (tenDaysPassed(startDate)) {
+                HabbitNotificationManager.create().sendNotification(
+                    "Well done!",
+                    "You have not smoked more than 10 days!!!")
+            }
 
             withContext(Dispatchers.Main) {
                 viewState = viewState.copy(habits = habits)
@@ -83,4 +98,5 @@ class DailyViewModel : BaseViewModel<DailyViewState, DailyAction, DailyEvent>(
     }
 }
 
-private fun Instant.current(): LocalDate = this.toLocalDateTime(TimeZone.currentSystemDefault()).date
+private fun Instant.current(): LocalDate =
+    this.toLocalDateTime(TimeZone.currentSystemDefault()).date

@@ -15,6 +15,7 @@ import di.PlatformSDK
 import org.jetbrains.compose.resources.stringResource
 import tech.mobiledeveloper.jethabit.resources.Res
 import tech.mobiledeveloper.jethabit.resources.app_name
+import utils.notifications.HabbitNotificationManager
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,6 +24,8 @@ class MainActivity : AppCompatActivity() {
 
         setContent {
             val appName: String = stringResource(Res.string.app_name)
+
+            HabbitNotificationManager.initialize(this)
 
             CompositionLocalProvider(
                 LocalPlatform provides Platform.Android

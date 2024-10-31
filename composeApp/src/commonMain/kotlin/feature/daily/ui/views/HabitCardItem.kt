@@ -16,15 +16,19 @@ import ui.themes.JetHabitTheme
 data class HabitCardItemModel(
     val habitId: String,
     val title: String,
-    val isChecked: Boolean
+    val isChecked: Boolean,
+    val startDate: String? = null
 )
 
 fun DailyHabit.mapToHabitCardItemModel(): HabitCardItemModel =
     HabitCardItemModel(
         habitId = id,
         title = title,
-        isChecked = isChecked
+        isChecked = isChecked,
+        startDate = startDate
     )
+
+
 
 @Composable
 internal fun HabitCardItem(

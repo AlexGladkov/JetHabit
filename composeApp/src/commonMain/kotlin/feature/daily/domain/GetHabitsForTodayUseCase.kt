@@ -11,8 +11,7 @@ class GetHabitsForTodayUseCase(
     private val habitDao: HabitDao,
     private val dailyDao: DailyDao
 ) {
-
-    suspend fun execute(date: LocalDate): List<DailyHabit> {
+    suspend operator fun invoke(date: LocalDate): List<DailyHabit> {
         val currentDay = date.dayOfWeek.ordinal
 
         val dailyEntries = dailyDao.getAll()
@@ -21,6 +20,7 @@ class GetHabitsForTodayUseCase(
                 date.compareTo(timestamp) == 0 && it.isChecked
             }
             .map { it.habitId }
+
         val habits = habitDao.getAll()
             .filter {
                 val habitDays = json.decodeFromString<List<Int>>(it.daysToCheck)
@@ -30,7 +30,8 @@ class GetHabitsForTodayUseCase(
                 DailyHabit(
                     id = it.id,
                     title = it.title,
-                    isChecked = dailyEntries.contains(it.id)
+                    isChecked = dailyEntries.contains(it.id),
+                    startDate = it.startDate
                 )
             }
         
