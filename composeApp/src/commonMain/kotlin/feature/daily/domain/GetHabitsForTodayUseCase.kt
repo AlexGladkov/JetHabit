@@ -11,7 +11,7 @@ class GetHabitsForTodayUseCase(
     private val habitDao: HabitDao,
     private val dailyDao: DailyDao
 ) {
-    suspend operator fun invoke(date: LocalDate): List<DailyHabit> {
+    suspend fun execute(date: LocalDate): List<DailyHabit> {
         val currentDay = date.dayOfWeek.ordinal
 
         val dailyEntries = dailyDao.getAll()

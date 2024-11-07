@@ -12,9 +12,9 @@ actual class HabbitNotificationManager private constructor(private val context: 
                 as NotificationManager
 
         val builder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel("channel_id", "channel_name", NotificationManager.IMPORTANCE_DEFAULT)
+            val channel = NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT)
             notificationManager.createNotificationChannel(channel)
-            Notification.Builder(context, "channel_id")
+            Notification.Builder(context, CHANNEL_ID)
         } else {
             Notification.Builder(context)
         }
@@ -29,6 +29,8 @@ actual class HabbitNotificationManager private constructor(private val context: 
 
     actual companion object {
         private lateinit var appContext: Context
+        private const val CHANNEL_ID = "Habit_tracker_notifications"
+        private const val CHANNEL_NAME = "Habit notifications"
 
         actual fun create(): HabbitNotificationManager {
             return HabbitNotificationManager(appContext)

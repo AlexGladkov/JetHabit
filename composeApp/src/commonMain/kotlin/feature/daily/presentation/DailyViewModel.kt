@@ -12,10 +12,10 @@ import feature.daily.ui.models.DailyEvent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.*
+import screens.daily.views.daysSinceHabitStarted
 import screens.daily.views.mapToHabitCardItemModel
 import utils.getTitle
 import utils.notifications.HabbitNotificationManager
-import utils.tenDaysPassed
 
 class DailyViewModel : BaseViewModel<DailyViewState, DailyAction, DailyEvent>(
     initialState = DailyViewState()
@@ -57,17 +57,15 @@ class DailyViewModel : BaseViewModel<DailyViewState, DailyAction, DailyEvent>(
         )
 
         viewModelScope.launch(Dispatchers.Default) {
-            val habits = getHabitsForTodayUseCase(date)
+            val habits = getHabitsForTodayUseCase.execute(date)
                 .map { it.mapToHabitCardItemModel() }
 
-            val habit = habits.find { it.title == "Don't smoke" && !it.startDate.isNullOrEmpty() }
-                ?: return@launch
+            val daysSinceStarted = habits.daysSinceHabitStarted(today)
 
-            val startDate = LocalDate.parse(habit.startDate.orEmpty())
-            if (tenDaysPassed(startDate)) {
+            if (daysSinceStarted != null && daysSinceStarted >= 10) {
                 HabbitNotificationManager.create().sendNotification(
                     "Well done!",
-                    "You have not smoked more than 10 days!!!")
+                    "You have not smoked for more than 10 days!!!")
             }
 
             withContext(Dispatchers.Main) {

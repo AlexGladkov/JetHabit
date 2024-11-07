@@ -11,6 +11,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import feature.daily.presentation.models.DailyHabit
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.daysUntil
 import ui.themes.JetHabitTheme
 
 data class HabitCardItemModel(
@@ -28,7 +30,14 @@ fun DailyHabit.mapToHabitCardItemModel(): HabitCardItemModel =
         startDate = startDate
     )
 
+const val SMOKING_HABIT_TITLE = "Don't smoke"
 
+fun List<HabitCardItemModel>.daysSinceHabitStarted(currentDate: LocalDate): Int? {
+    val habit = find { it.title == SMOKING_HABIT_TITLE && !it.startDate.isNullOrEmpty() }
+    return habit?.startDate?.let {
+        LocalDate.parse(it).daysUntil(currentDate)
+    }
+}
 
 @Composable
 internal fun HabitCardItem(

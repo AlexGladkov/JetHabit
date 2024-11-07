@@ -91,7 +91,7 @@ kotlin {
             implementation(libs.room.sqlite.bundled)
 
 
-            implementation(libs.kotlinx.datetime.v061)
+            implementation(libs.kotlinx.datetime)
 
         }
 
