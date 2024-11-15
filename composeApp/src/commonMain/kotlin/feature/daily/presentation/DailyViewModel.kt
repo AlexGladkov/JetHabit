@@ -5,15 +5,27 @@ import base.BaseViewModel
 import di.Inject
 import feature.daily.domain.GetHabitsForTodayUseCase
 import feature.daily.domain.SwitchHabitUseCase
-import feature.daily.ui.models.DailyViewState
-import kotlinx.coroutines.launch
 import feature.daily.ui.models.DailyAction
 import feature.daily.ui.models.DailyEvent
+import feature.daily.ui.models.DailyViewState
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlinx.datetime.*
+import kotlinx.datetime.Clock
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.minus
+import kotlinx.datetime.plus
+import kotlinx.datetime.toLocalDateTime
+import kotlinx.datetime.todayIn
+import org.jetbrains.compose.resources.getString
 import screens.daily.views.daysSinceHabitStarted
 import screens.daily.views.mapToHabitCardItemModel
+import tech.mobiledeveloper.jethabit.resources.Res
+import tech.mobiledeveloper.jethabit.resources.no_smoke_ten_days
+import tech.mobiledeveloper.jethabit.resources.well_done
 import utils.getTitle
 import utils.notifications.HabbitNotificationManager
 
@@ -64,8 +76,9 @@ class DailyViewModel : BaseViewModel<DailyViewState, DailyAction, DailyEvent>(
 
             if (daysSinceStarted != null && daysSinceStarted >= 10) {
                 HabbitNotificationManager.create().sendNotification(
-                    "Well done!",
-                    "You have not smoked for more than 10 days!!!")
+                   title = getString(Res.string.well_done),
+                   content = getString(Res.string.no_smoke_ten_days)
+                )
             }
 
             withContext(Dispatchers.Main) {

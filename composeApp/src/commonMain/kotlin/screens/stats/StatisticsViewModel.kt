@@ -2,7 +2,6 @@ package screens.stats
 
 import androidx.lifecycle.viewModelScope
 import base.BaseViewModel
-import data.features.daily.DailyEntity
 import di.Inject
 import feature.daily.domain.GetHabitsForTodayUseCase
 import kotlinx.coroutines.Dispatchers
@@ -12,12 +11,15 @@ import kotlinx.coroutines.withContext
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import org.jetbrains.compose.resources.getString
 import screens.daily.views.daysSinceHabitStarted
 import screens.daily.views.mapToHabitCardItemModel
 import screens.stats.models.StatsAction
 import screens.stats.models.StatsEvent
 import screens.stats.models.StatsViewState
 import screens.stats.views.StatisticCellModel
+import tech.mobiledeveloper.jethabit.resources.Res
+import tech.mobiledeveloper.jethabit.resources.no_smoke_ten_days
 
 class StatisticsViewModel : BaseViewModel<StatsViewState, StatsAction, StatsEvent>(
     initialState = StatsViewState()
@@ -53,7 +55,7 @@ class StatisticsViewModel : BaseViewModel<StatsViewState, StatsAction, StatsEven
 
         if (daysSinceLast != null) {
             val statistic = StatisticCellModel(
-                title = DailyEntity.NOT_SMOKED_DAYS_MESSAGE,
+                title = getString(Res.string.no_smoke_ten_days),
                 activeDayList = emptyList(),
                 duration = "$daysSinceLast days",
                 fact = daysSinceLast.toString(),

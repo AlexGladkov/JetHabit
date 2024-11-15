@@ -30,10 +30,8 @@ fun DailyHabit.mapToHabitCardItemModel(): HabitCardItemModel =
         startDate = startDate
     )
 
-const val SMOKING_HABIT_TITLE = "Don't smoke"
-
 fun List<HabitCardItemModel>.daysSinceHabitStarted(currentDate: LocalDate): Int? {
-    val habit = find { it.title == SMOKING_HABIT_TITLE && !it.startDate.isNullOrEmpty() }
+    val habit = find { !it.startDate.isNullOrEmpty() }
     return habit?.startDate?.let {
         LocalDate.parse(it).daysUntil(currentDate)
     }
