@@ -85,4 +85,8 @@
     
     <string name="good_habit">Good habit</string>
     <string name="bad_habit">Bad habit</string>
+
+    <string name="well_done">Well done!</string>
+    <string name="no_smoke_ten_days">You have not smoked for more than 10 days!!!</string>
+
 </resources>

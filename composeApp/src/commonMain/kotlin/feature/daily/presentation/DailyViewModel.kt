@@ -5,15 +5,29 @@ import base.BaseViewModel
 import di.Inject
 import feature.daily.domain.GetHabitsForTodayUseCase
 import feature.daily.domain.SwitchHabitUseCase
-import feature.daily.ui.models.DailyViewState
-import kotlinx.coroutines.launch
 import feature.daily.ui.models.DailyAction
 import feature.daily.ui.models.DailyEvent
+import feature.daily.ui.models.DailyViewState
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlinx.datetime.*
+import kotlinx.datetime.Clock
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.minus
+import kotlinx.datetime.plus
+import kotlinx.datetime.toLocalDateTime
+import kotlinx.datetime.todayIn
+import org.jetbrains.compose.resources.getString
+import screens.daily.views.daysSinceHabitStarted
 import screens.daily.views.mapToHabitCardItemModel
+import tech.mobiledeveloper.jethabit.resources.Res
+import tech.mobiledeveloper.jethabit.resources.no_smoke_ten_days
+import tech.mobiledeveloper.jethabit.resources.well_done
 import utils.getTitle
+import utils.notifications.HabbitNotificationManager
 
 class DailyViewModel : BaseViewModel<DailyViewState, DailyAction, DailyEvent>(
     initialState = DailyViewState()
@@ -37,7 +51,10 @@ class DailyViewModel : BaseViewModel<DailyViewState, DailyAction, DailyEvent>(
             DailyEvent.PreviousDayClicked -> performPreviousClick()
             DailyEvent.ReloadScreen -> fetchHabitFor(currentDate.current())
             DailyEvent.ComposeAction -> viewAction = DailyAction.OpenCompose
-            is DailyEvent.HabitCheckClicked -> switchCheckForHabit(viewEvent.habitId, viewEvent.newValue)
+            is DailyEvent.HabitCheckClicked -> switchCheckForHabit(
+                viewEvent.habitId,
+                viewEvent.newValue
+            )
         }
     }
 
@@ -45,7 +62,7 @@ class DailyViewModel : BaseViewModel<DailyViewState, DailyAction, DailyEvent>(
         val today = Clock.System.todayIn(TimeZone.currentSystemDefault())
         val isToday = date.dayOfYear == today.dayOfYear && date.year == today.year
         val title = date.getTitle()
-        
+
         viewState = viewState.copy(
             currentDay = title,
             hasNextDay = !isToday
@@ -54,6 +71,15 @@ class DailyViewModel : BaseViewModel<DailyViewState, DailyAction, DailyEvent>(
         viewModelScope.launch(Dispatchers.Default) {
             val habits = getHabitsForTodayUseCase.execute(date)
                 .map { it.mapToHabitCardItemModel() }
+
+            val daysSinceStarted = habits.daysSinceHabitStarted(today)
+
+            if (daysSinceStarted != null && daysSinceStarted >= 10) {
+                HabbitNotificationManager.create().sendNotification(
+                   title = getString(Res.string.well_done),
+                   content = getString(Res.string.no_smoke_ten_days)
+                )
+            }
 
             withContext(Dispatchers.Main) {
                 viewState = viewState.copy(habits = habits)
@@ -83,4 +109,5 @@ class DailyViewModel : BaseViewModel<DailyViewState, DailyAction, DailyEvent>(
     }
 }
 
-private fun Instant.current(): LocalDate = this.toLocalDateTime(TimeZone.currentSystemDefault()).date
+private fun Instant.current(): LocalDate =
+    this.toLocalDateTime(TimeZone.currentSystemDefault()).date

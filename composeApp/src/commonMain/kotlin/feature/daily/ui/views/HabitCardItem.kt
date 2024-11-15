@@ -11,20 +11,31 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import feature.daily.presentation.models.DailyHabit
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.daysUntil
 import ui.themes.JetHabitTheme
 
 data class HabitCardItemModel(
     val habitId: String,
     val title: String,
-    val isChecked: Boolean
+    val isChecked: Boolean,
+    val startDate: String? = null
 )
 
 fun DailyHabit.mapToHabitCardItemModel(): HabitCardItemModel =
     HabitCardItemModel(
         habitId = id,
         title = title,
-        isChecked = isChecked
+        isChecked = isChecked,
+        startDate = startDate
     )
+
+fun List<HabitCardItemModel>.daysSinceHabitStarted(currentDate: LocalDate): Int? {
+    val habit = find { !it.startDate.isNullOrEmpty() }
+    return habit?.startDate?.let {
+        LocalDate.parse(it).daysUntil(currentDate)
+    }
+}
 
 @Composable
 internal fun HabitCardItem(

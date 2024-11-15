@@ -1,5 +1,6 @@
 [versions]
 # Plugins
+kotlinxDatetime = "0.6.1"
 plugin-android = "8.2.2" # https://developer.android.com/studio/releases/gradle-plugin
 plugin-compose = "1.6.10" # https://github.com/JetBrains/compose-jb
 
@@ -22,6 +23,7 @@ androidx-activityCompose = "1.9.0"
 mindsdk = "24"
 
 [libraries]
+kotlinx-datetime-v061 = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinxDatetime" }
 plugin-kotlin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 plugin-android = { module = "com.android.tools.build:gradle", version.ref = "plugin-android" }
 plugin-compose = { module = "org.jetbrains.compose:compose-gradle-plugin", version.ref = "plugin-compose" }
@@ -42,7 +44,7 @@ kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serializa
 
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 kotlinx-coroutines-jvm = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "coroutines" }
-kotlinx-datetime = "org.jetbrains.kotlinx:kotlinx-datetime:0.6.0"
+kotlinx-datetime = "org.jetbrains.kotlinx:kotlinx-datetime:0.6.1"
 
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
