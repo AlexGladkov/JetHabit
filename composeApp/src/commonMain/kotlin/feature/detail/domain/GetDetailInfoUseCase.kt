@@ -2,6 +2,7 @@ package feature.detail.domain
 
 import feature.habits.data.HabitDao
 import feature.habits.data.HabitEntity
+import feature.habits.data.HabitType
 import utils.CalendarDays
 import kotlinx.datetime.LocalDate
 
@@ -12,7 +13,8 @@ class HabitDetail(
     val endDeta: CalendarDays,
     val start: LocalDate?,
     val end: LocalDate?,
-    val daysToCheck: String
+    val daysToCheck: List<Int>,
+    val type: HabitType
 )
 
 class GetDetailInfoUseCase(
@@ -34,6 +36,12 @@ class GetDetailInfoUseCase(
             CalendarDays.Custom(habitEntity.endDate)
         }
 
+        val daysToCheck = habitEntity.daysToCheck
+            .trim('[', ']') // Remove brackets
+            .split(",")
+            .filter { it.isNotBlank() }
+            .map { it.trim().toInt() }
+
         return HabitDetail(
             habitTitle = habitEntity.title,
             startDate = startDate,
@@ -41,7 +49,8 @@ class GetDetailInfoUseCase(
             start = if (habitEntity.startDate.isEmpty()) null else LocalDate.parse(habitEntity.startDate) ,
             end = if (habitEntity.endDate.isEmpty()) null else LocalDate.parse(habitEntity.endDate),
             isHabitGood = habitEntity.isGood,
-            daysToCheck = habitEntity.daysToCheck
+            daysToCheck = daysToCheck,
+            type = habitEntity.type
         )
     }
 }

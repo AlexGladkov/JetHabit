@@ -2,34 +2,42 @@ package screens.daily.views
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Card
-import androidx.compose.material.Checkbox
-import androidx.compose.material.CheckboxDefaults
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import feature.daily.presentation.models.DailyHabit
+import feature.habits.data.HabitType
+import org.jetbrains.compose.resources.stringResource
+import tech.mobiledeveloper.jethabit.resources.*
 import ui.themes.JetHabitTheme
 
 data class HabitCardItemModel(
     val habitId: String,
     val title: String,
-    val isChecked: Boolean
+    val isChecked: Boolean,
+    val type: HabitType = HabitType.REGULAR,
+    val value: Double? = null
 )
 
 fun DailyHabit.mapToHabitCardItemModel(): HabitCardItemModel =
     HabitCardItemModel(
         habitId = id,
         title = title,
-        isChecked = isChecked
+        isChecked = isChecked,
+        type = type,
+        value = value
     )
 
 @Composable
 internal fun HabitCardItem(
     model: HabitCardItemModel,
     onCheckedChange: ((Boolean) -> Unit)? = null,
+    onValueChange: ((Double) -> Unit)? = null,
     onCardClicked: (() -> Unit)? = null
 ) {
     Card(
@@ -44,27 +52,59 @@ internal fun HabitCardItem(
         backgroundColor = JetHabitTheme.colors.primaryBackground,
         shape = JetHabitTheme.shapes.cornersStyle
     ) {
-        Row(
+        Column(
             modifier = Modifier
                 .padding(JetHabitTheme.shapes.padding)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+                .fillMaxWidth()
         ) {
-            Text(
-                modifier = Modifier.weight(1f),
-                text = model.title,
-                style = JetHabitTheme.typography.body,
-                color = JetHabitTheme.colors.primaryText
-            )
-
-            Checkbox(
-                checked = model.isChecked,
-                onCheckedChange = onCheckedChange,
-                colors = CheckboxDefaults.colors(
-                    checkedColor = JetHabitTheme.colors.tintColor,
-                    uncheckedColor = JetHabitTheme.colors.secondaryText
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    modifier = Modifier.weight(1f),
+                    text = model.title,
+                    style = JetHabitTheme.typography.body,
+                    color = JetHabitTheme.colors.primaryText
                 )
-            )
+
+                when (model.type) {
+                    HabitType.REGULAR -> {
+                        Checkbox(
+                            checked = model.isChecked,
+                            onCheckedChange = onCheckedChange,
+                            colors = CheckboxDefaults.colors(
+                                checkedColor = JetHabitTheme.colors.tintColor,
+                                uncheckedColor = JetHabitTheme.colors.secondaryText
+                            )
+                        )
+                    }
+                    HabitType.TRACKER -> {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            if (model.value != null) {
+                                Text(
+                                    text = stringResource(Res.string.tracker_value_kg, model.value.toString()),
+                                    style = JetHabitTheme.typography.body,
+                                    color = JetHabitTheme.colors.secondaryText,
+                                    textAlign = TextAlign.End
+                                )
+                            }
+                            
+                            Checkbox(
+                                checked = model.isChecked,
+                                onCheckedChange = onCheckedChange,
+                                colors = CheckboxDefaults.colors(
+                                    checkedColor = JetHabitTheme.colors.tintColor,
+                                    uncheckedColor = JetHabitTheme.colors.secondaryText
+                                )
+                            )
+                        }
+                    }
+                }
+            }
         }
     }
 }

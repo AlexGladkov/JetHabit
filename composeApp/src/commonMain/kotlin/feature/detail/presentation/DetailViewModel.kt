@@ -10,11 +10,15 @@ import feature.detail.presentation.models.DateSelectionState
 import feature.detail.presentation.models.DetailAction
 import feature.detail.presentation.models.DetailEvent
 import feature.detail.presentation.models.DetailViewState
+import feature.habits.data.HabitType
+import feature.tracker.data.TrackerDao
+import feature.tracker.data.TrackerEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlinx.datetime.LocalDate
+import kotlinx.datetime.*
 import utils.CalendarDays
+import java.util.UUID
 
 class DetailViewModel(private val habitId: String) : BaseViewModel<DetailViewState, DetailAction, DetailEvent>(
     initialState = DetailViewState(habitId = habitId)
@@ -23,6 +27,7 @@ class DetailViewModel(private val habitId: String) : BaseViewModel<DetailViewSta
     private val getDetailInfoUseCase = Inject.instance<GetDetailInfoUseCase>()
     private val deleteHabitUseCase = Inject.instance<DeleteHabitUseCase>()
     private val updateHabitUseCase = Inject.instance<UpdateHabitUseCase>()
+    private val trackerDao = Inject.instance<TrackerDao>()
 
     init {
         fetchDetailedInformation()
@@ -36,12 +41,26 @@ class DetailViewModel(private val habitId: String) : BaseViewModel<DetailViewSta
             DetailEvent.StartDateClicked -> viewState = viewState.copy(dateSelectionState = DateSelectionState.Start)
             DetailEvent.EndDateClicked -> viewState = viewState.copy(dateSelectionState = DateSelectionState.End)
             is DetailEvent.DateSelected -> selectDate(viewEvent.value)
+            is DetailEvent.NewValueChanged -> parseTrackerValue(viewEvent.value)
         }
+    }
+
+    private fun parseTrackerValue(value: String?) {
+        val newValue = if (value.isNullOrEmpty()) {
+            null
+        } else {
+            value.toDoubleOrNull()
+        }
+
+        viewState = viewState.copy(newValue = newValue)
     }
 
     private fun fetchDetailedInformation() {
         viewModelScope.launch(Dispatchers.Default) {
             val details = getDetailInfoUseCase.execute(habitId)
+            val currentValue = if (details.type == HabitType.TRACKER) {
+                trackerDao.getLatestValueFor(habitId)?.value
+            } else null
 
             withContext(Dispatchers.Main) {
                 viewState = viewState.copy(
@@ -51,7 +70,9 @@ class DetailViewModel(private val habitId: String) : BaseViewModel<DetailViewSta
                     start = details.start,
                     end = details.end,
                     daysToCheck = details.daysToCheck,
-                    isGood = details.isHabitGood
+                    isGood = details.isHabitGood,
+                    type = details.type,
+                    currentValue = currentValue
                 )
             }
         }
@@ -99,9 +120,22 @@ class DetailViewModel(private val habitId: String) : BaseViewModel<DetailViewSta
                     habitTitle = viewState.itemTitle,
                     startDate = viewState.start,
                     endDate = viewState.end,
-                    daysToCheck = viewState.daysToCheck,
+                    daysToCheck = viewState.daysToCheck.joinToString(","),
                     isGood = viewState.isGood
                 )
+
+                // Update tracker value if changed
+                val currentNewValue = viewState.newValue
+                if (viewState.type == HabitType.TRACKER && currentNewValue != null) {
+                    trackerDao.insert(
+                        TrackerEntity(
+                            id = UUID.randomUUID().toString(),
+                            habitId = viewState.habitId,
+                            timestamp = Clock.System.now().toString(),
+                            value = currentNewValue
+                        )
+                    )
+                }
 
                 withContext(Dispatchers.Main) {
                     viewAction = DetailAction.CloseScreen

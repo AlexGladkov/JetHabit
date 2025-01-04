@@ -10,17 +10,23 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import feature.habits.data.HabitType
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import screens.compose.models.ComposeEvent
-import screens.compose.models.ComposeViewState
 import screens.compose.views.ComposeViewInitialError
 import tech.mobiledeveloper.jethabit.resources.*
 import ui.themes.JetHabitTheme
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import feature.create.presentation.models.ComposeEvent
+import feature.create.presentation.models.ComposeViewState
+import feature.habits.data.Measurement
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -46,11 +52,15 @@ fun ComposeView(
                     }
 
                     item {
-                        Column(modifier = Modifier.padding(start = 16.dp, end = 16.dp)) {
+                        Column(
+                            modifier = Modifier.padding(
+                                horizontal = JetHabitTheme.shapes.padding
+                            )
+                        ) {
                             Text(
                                 text = stringResource(Res.string.compose_title),
-                                style = JetHabitTheme.typography.caption,
-                                color = JetHabitTheme.colors.secondaryText
+                                style = JetHabitTheme.typography.body,
+                                color = JetHabitTheme.colors.primaryText
                             )
 
                             TextField(
@@ -87,29 +97,139 @@ fun ComposeView(
                     }
 
                     item {
-                        Row(
-                            modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp),
-                            verticalAlignment = Alignment.CenterVertically
+                        Column(
+                            modifier = Modifier.padding(
+                                horizontal = JetHabitTheme.shapes.padding,
+                                vertical = JetHabitTheme.shapes.padding
+                            )
                         ) {
                             Text(
-                                modifier = Modifier.padding(end = 16.dp),
-                                text = stringResource(Res.string.compose_is_good),
+                                text = stringResource(Res.string.compose_habit_type),
                                 style = JetHabitTheme.typography.body,
                                 color = JetHabitTheme.colors.primaryText
                             )
 
-                            Checkbox(
-                                checked = viewState.isGoodHabit,
-                                enabled = !viewState.isSending,
-                                onCheckedChange = { eventHandler.invoke(ComposeEvent.CheckboxClicked(it)) },
-                                colors = CheckboxDefaults.colors(
-                                    checkedColor = JetHabitTheme.colors.tintColor,
-                                    uncheckedColor = JetHabitTheme.colors.secondaryText,
-                                    disabledColor = JetHabitTheme.colors.tintColor.copy(
-                                        alpha = 0.3f
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(top = 8.dp),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                HabitType.values().forEach { type ->
+                                    OutlinedButton(
+                                        onClick = { eventHandler.invoke(ComposeEvent.TypeSelected(type)) },
+                                        modifier = Modifier.weight(1f),
+                                        colors = ButtonDefaults.outlinedButtonColors(
+                                            backgroundColor = if (viewState.habitType == type) 
+                                                JetHabitTheme.colors.tintColor 
+                                            else 
+                                                Color.Transparent
+                                        )
+                                    ) {
+                                        Text(
+                                            text = when (type) {
+                                                HabitType.REGULAR -> stringResource(Res.string.compose_habit_type_regular)
+                                                HabitType.TRACKER -> stringResource(Res.string.compose_habit_type_tracker)
+                                            },
+                                            color = if (viewState.habitType == type)
+                                                Color.White
+                                            else
+                                                JetHabitTheme.colors.primaryText
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    item {
+                        if (viewState.habitType == HabitType.TRACKER) {
+                            Column(
+                                modifier = Modifier.padding(
+                                    horizontal = JetHabitTheme.shapes.padding,
+                                    vertical = JetHabitTheme.shapes.padding
+                                )
+                            ) {
+                                Text(
+                                    text = stringResource(Res.string.measurement_label),
+                                    style = JetHabitTheme.typography.body,
+                                    color = JetHabitTheme.colors.primaryText
+                                )
+
+                                var expanded by remember { mutableStateOf(false) }
+
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(top = 8.dp)
+                                ) {
+                                    OutlinedButton(
+                                        onClick = { expanded = true },
+                                        modifier = Modifier.fillMaxWidth(),
+                                        colors = ButtonDefaults.outlinedButtonColors(
+                                            backgroundColor = Color.Transparent
+                                        )
+                                    ) {
+                                        Text(
+                                            text = viewState.measurement?.let { 
+                                                stringResource(it.stringRes)
+                                            } ?: stringResource(Res.string.measurement_select),
+                                            color = JetHabitTheme.colors.primaryText
+                                        )
+                                    }
+
+                                    DropdownMenu(
+                                        expanded = expanded,
+                                        onDismissRequest = { expanded = false },
+                                        modifier = Modifier.fillMaxWidth()
+                                    ) {
+                                        Measurement.entries.forEach { measurement ->
+                                            DropdownMenuItem(
+                                                onClick = {
+                                                    eventHandler.invoke(ComposeEvent.MeasurementSelected(measurement))
+                                                    expanded = false
+                                                }
+                                            ) {
+                                                Text(
+                                                    text = stringResource(measurement.stringRes),
+                                                    color = JetHabitTheme.colors.primaryText
+                                                )
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    item {
+                        if (viewState.habitType == HabitType.REGULAR) {
+                            Row(
+                                modifier = Modifier
+                                    .padding(horizontal = JetHabitTheme.shapes.padding)
+                                    .fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    modifier = Modifier.weight(1f),
+                                    text = stringResource(Res.string.good_habit),
+                                    style = JetHabitTheme.typography.body,
+                                    color = JetHabitTheme.colors.primaryText
+                                )
+
+                                Switch(
+                                    checked = viewState.isGoodHabit,
+                                    onCheckedChange = {
+                                        eventHandler.invoke(ComposeEvent.CheckboxClicked(it))
+                                    },
+                                    colors = SwitchDefaults.colors(
+                                        checkedThumbColor = JetHabitTheme.colors.tintColor,
+                                        checkedTrackColor = JetHabitTheme.colors.tintColor.copy(alpha = 0.5f),
+                                        uncheckedThumbColor = JetHabitTheme.colors.controlColor,
+                                        uncheckedTrackColor = JetHabitTheme.colors.controlColor.copy(alpha = 0.5f)
                                     )
                                 )
-                            )
+                            }
                         }
                     }
 
@@ -164,12 +284,6 @@ fun ComposeView(
                                 style = JetHabitTheme.typography.body,
                                 color = Color.White
                             )
-                        }
-                    }
-
-                    viewState.sendingError?.let { error ->
-                        item {
-                            ComposeViewInitialError(error = error)
                         }
                     }
                 })

@@ -1,4 +1,4 @@
-package screens.compose
+package feature.create.ui
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.runtime.Composable
@@ -8,12 +8,10 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.lifecycle.viewmodel.compose.viewModel
 import feature.create.presentation.ComposeViewModel
-import feature.create.ui.ComposeView
 import navigation.LocalNavHost
+import org.jetbrains.compose.resources.stringResource
 import screens.compose.models.ComposeAction
-import screens.compose.models.ComposeEvent
-import screens.compose.models.ComposeViewState
-import screens.compose.views.ComposeViewSuccess
+import tech.mobiledeveloper.jethabit.resources.Res
 
 @ExperimentalComposeUiApi
 @ExperimentalFoundationApi
@@ -31,13 +29,18 @@ internal fun ComposeScreen(
     }
 
     when (viewAction) {
-        ComposeAction.CloseScreen -> {
-            viewModel.clearAction()
+        ComposeAction.Success -> {
+            keyboardController?.hide()
             outerNavigation.popBackStack()
+            viewModel.clearAction()
         }
-        ComposeAction.ShowSuccess -> {
+        ComposeAction.Error -> {
             viewModel.clearAction()
+        }
+        ComposeAction.CloseScreen -> {
+            keyboardController?.hide()
             outerNavigation.popBackStack()
+            viewModel.clearAction()
         }
         null -> {}
     }

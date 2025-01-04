@@ -6,10 +6,11 @@ import di.Inject
 import feature.daily.domain.GetHabitsForTodayUseCase
 import feature.daily.domain.SwitchHabitUseCase
 import feature.daily.ui.models.DailyViewState
-import kotlinx.coroutines.launch
 import feature.daily.ui.models.DailyAction
 import feature.daily.ui.models.DailyEvent
+import feature.tracker.domain.UpdateTrackerValueUseCase
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.*
 import screens.daily.views.mapToHabitCardItemModel
@@ -21,6 +22,7 @@ class DailyViewModel : BaseViewModel<DailyViewState, DailyAction, DailyEvent>(
 
     private val getHabitsForTodayUseCase = Inject.instance<GetHabitsForTodayUseCase>()
     private val switchHabitUseCase = Inject.instance<SwitchHabitUseCase>()
+    private val updateTrackerValueUseCase = Inject.instance<UpdateTrackerValueUseCase>()
 
     private val timeZone = TimeZone.currentSystemDefault()
     private var currentDate = Clock.System.now()
@@ -38,6 +40,7 @@ class DailyViewModel : BaseViewModel<DailyViewState, DailyAction, DailyEvent>(
             DailyEvent.ReloadScreen -> fetchHabitFor(currentDate.current())
             DailyEvent.ComposeAction -> viewAction = DailyAction.OpenCompose
             is DailyEvent.HabitCheckClicked -> switchCheckForHabit(viewEvent.habitId, viewEvent.newValue)
+            is DailyEvent.TrackerValueUpdated -> updateTrackerValue(viewEvent.habitId, viewEvent.value)
         }
     }
 
@@ -76,6 +79,15 @@ class DailyViewModel : BaseViewModel<DailyViewState, DailyAction, DailyEvent>(
     private fun switchCheckForHabit(habitId: String, newValue: Boolean) {
         viewModelScope.launch(Dispatchers.Default) {
             switchHabitUseCase.execute(newValue, habitId, currentDate.current())
+            withContext(Dispatchers.Main) {
+                fetchHabitFor(currentDate.current())
+            }
+        }
+    }
+
+    private fun updateTrackerValue(habitId: String, value: Double) {
+        viewModelScope.launch(Dispatchers.Default) {
+            updateTrackerValueUseCase.execute(habitId, value, currentDate.current())
             withContext(Dispatchers.Main) {
                 fetchHabitFor(currentDate.current())
             }

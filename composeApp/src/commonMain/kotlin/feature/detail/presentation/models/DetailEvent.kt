@@ -8,5 +8,6 @@ sealed class DetailEvent {
     data object SaveChanges : DetailEvent()
     data object StartDateClicked: DetailEvent()
     data object EndDateClicked : DetailEvent()
-    class DateSelected(val value: LocalDate) : DetailEvent()
+    data class DateSelected(val value: LocalDate) : DetailEvent()
+    data class NewValueChanged(val value: String?) : DetailEvent()
 }

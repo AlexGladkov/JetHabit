@@ -2,19 +2,22 @@ package feature.detail.ui
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import di.LocalPlatform
 import di.Platform
 import feature.detail.presentation.models.DetailEvent
 import feature.detail.presentation.models.DetailViewState
+import feature.habits.data.HabitType
 import org.jetbrains.compose.resources.stringResource
 import tech.mobiledeveloper.jethabit.resources.*
 import ui.themes.JetHabitTheme
@@ -59,16 +62,18 @@ internal fun DetailView(
                         color = JetHabitTheme.colors.primaryText
                     )
 
-                    Text(
-                        modifier = Modifier.padding(
-                            start = JetHabitTheme.shapes.padding,
-                            end = JetHabitTheme.shapes.padding,
-                            top = 2.dp
-                        ),
-                        text = if (viewState.isGood) stringResource(Res.string.good_habit) else stringResource(Res.string.bad_habit),
-                        style = JetHabitTheme.typography.caption,
-                        color = JetHabitTheme.colors.controlColor
-                    )
+                    if (viewState.type == HabitType.REGULAR) {
+                        Text(
+                            modifier = Modifier.padding(
+                                start = JetHabitTheme.shapes.padding,
+                                end = JetHabitTheme.shapes.padding,
+                                top = 2.dp
+                            ),
+                            text = if (viewState.isGood) stringResource(Res.string.good_habit) else stringResource(Res.string.bad_habit),
+                            style = JetHabitTheme.typography.caption,
+                            color = JetHabitTheme.colors.controlColor
+                        )
+                    }
                 }
 
                 Icon(
@@ -81,18 +86,92 @@ internal fun DetailView(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            JetMenu(
-                title = stringResource(Res.string.title_start_date),
-                value = viewState.startDate.title()
-            ) {
-                eventHandler.invoke(DetailEvent.StartDateClicked)
+            if (viewState.type == HabitType.TRACKER) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = JetHabitTheme.shapes.padding)
+                ) {
+                    Text(
+                        text = stringResource(Res.string.tracker_current_value),
+                        style = JetHabitTheme.typography.body,
+                        color = JetHabitTheme.colors.primaryText
+                    )
+                    
+                    Text(
+                        modifier = Modifier.padding(top = 4.dp),
+                        text = viewState.currentValue?.let { 
+                            stringResource(Res.string.tracker_value_kg, it.toString())
+                        } ?: stringResource(Res.string.tracker_no_value),
+                        style = JetHabitTheme.typography.body,
+                        color = JetHabitTheme.colors.secondaryText
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Text(
+                        text = stringResource(Res.string.tracker_new_value),
+                        style = JetHabitTheme.typography.body,
+                        color = JetHabitTheme.colors.primaryText
+                    )
+
+                    OutlinedTextField(
+                        value = viewState.newValue?.toString() ?: "",
+                        onValueChange = { newValue ->
+                            eventHandler.invoke(DetailEvent.NewValueChanged(newValue.ifEmpty { null }))
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 4.dp),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        placeholder = {
+                            Text(
+                                text = stringResource(Res.string.tracker_value_hint),
+                                style = JetHabitTheme.typography.body,
+                                color = JetHabitTheme.colors.secondaryText
+                            )
+                        },
+                        colors = TextFieldDefaults.outlinedTextFieldColors(
+                            textColor = JetHabitTheme.colors.primaryText,
+                            cursorColor = JetHabitTheme.colors.tintColor,
+                            focusedBorderColor = JetHabitTheme.colors.tintColor,
+                            unfocusedBorderColor = JetHabitTheme.colors.secondaryText
+                        )
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Text(
+                        text = stringResource(Res.string.tracker_measurement),
+                        style = JetHabitTheme.typography.body,
+                        color = JetHabitTheme.colors.primaryText
+                    )
+
+                    Text(
+                        modifier = Modifier.padding(top = 4.dp),
+                        text = stringResource(Res.string.tracker_measurement_kg),
+                        style = JetHabitTheme.typography.body,
+                        color = JetHabitTheme.colors.secondaryText
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(24.dp))
             }
 
-            JetMenu(
-                title = stringResource(Res.string.title_end_date),
-                value = viewState.endDate.title()
-            ) {
-                eventHandler.invoke(DetailEvent.EndDateClicked)
+            if (viewState.type == HabitType.REGULAR) {
+                JetMenu(
+                    title = stringResource(Res.string.title_start_date),
+                    value = viewState.startDate.title()
+                ) {
+                    eventHandler.invoke(DetailEvent.StartDateClicked)
+                }
+
+                JetMenu(
+                    title = stringResource(Res.string.title_end_date),
+                    value = viewState.endDate.title()
+                ) {
+                    eventHandler.invoke(DetailEvent.EndDateClicked)
+                }
             }
 
             Spacer(modifier = Modifier.weight(1f))
