@@ -13,7 +13,8 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.*
 import feature.daily.ui.DailyScreen
 import feature.detail.ui.DetailScreen
-import feature.health.ui.HealthScreen
+import feature.health.list.ui.HealthScreen
+import feature.health.track.ui.TrackHabitScreen
 import screens.settings.SettingsScreen
 import screens.stats.StatisticsScreen
 import ui.themes.JetHabitTheme
@@ -47,7 +48,14 @@ fun MainScreen() {
                     DetailScreen(habitId = habitId, navController = navController)
                 }
             }
-            composable(AppScreens.Health.title) { HealthScreen() }
+            composable(AppScreens.Health.title) { HealthScreen(navController) }
+            composable(NavigationGraph.HEALTH_TRACK) { backStackEntry ->
+                val habitId = backStackEntry.arguments?.getString("habitId").orEmpty()
+                TrackHabitScreen(
+                    habitId = habitId,
+                    onClose = { navController.popBackStack() }
+                )
+            }
             composable(AppScreens.Statistics.title) { StatisticsScreen() }
             composable(AppScreens.Settings.title) { SettingsScreen() }
         }

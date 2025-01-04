@@ -5,7 +5,8 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class TrackerEntity(
-    @PrimaryKey val id: String,
+    @PrimaryKey
+    val id: String,
     val habitId: String,
     val timestamp: String,
     val value: Double

@@ -28,27 +28,15 @@ class GetHabitsForTodayUseCase(
         val habits = habitDao.getAll()
             .filter {
                 val habitDays = json.decodeFromString<List<Int>>(it.daysToCheck)
-                habitDays.contains(currentDay)
+                habitDays.contains(currentDay) && it.type == HabitType.REGULAR
             }
             .map { habit ->
-                when (habit.type) {
-                    HabitType.REGULAR -> DailyHabit(
-                        id = habit.id,
-                        title = habit.title,
-                        isChecked = dailyEntries.contains(habit.id),
-                        type = HabitType.REGULAR
-                    )
-                    HabitType.TRACKER -> {
-                        val trackerValue = trackerDao.getValueForDate(habit.id, date.toString())
-                        DailyHabit(
-                            id = habit.id,
-                            title = habit.title,
-                            isChecked = trackerValue != null,
-                            type = HabitType.TRACKER,
-                            value = trackerValue?.value
-                        )
-                    }
-                }
+                DailyHabit(
+                    id = habit.id,
+                    title = habit.title,
+                    isChecked = dailyEntries.contains(habit.id),
+                    type = HabitType.REGULAR
+                )
             }
         
         return habits
