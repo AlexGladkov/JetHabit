@@ -42,7 +42,6 @@ internal fun HabitCardItem(
 ) {
     Card(
         modifier = Modifier
-            .clickable { onCardClicked?.invoke() }
             .padding(
                 horizontal = JetHabitTheme.shapes.padding,
                 vertical = JetHabitTheme.shapes.padding / 2
@@ -52,53 +51,61 @@ internal fun HabitCardItem(
         backgroundColor = JetHabitTheme.colors.primaryBackground,
         shape = JetHabitTheme.shapes.cornersStyle
     ) {
-        Column(
+        Row(
             modifier = Modifier
-                .padding(JetHabitTheme.shapes.padding)
                 .fillMaxWidth()
+                .padding(JetHabitTheme.shapes.padding),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    modifier = Modifier.weight(1f),
-                    text = model.title,
-                    style = JetHabitTheme.typography.body,
-                    color = JetHabitTheme.colors.primaryText
-                )
+            Text(
+                modifier = Modifier
+                    .weight(1f)
+                    .clickable { onCardClicked?.invoke() },
+                text = model.title,
+                style = JetHabitTheme.typography.body,
+                color = JetHabitTheme.colors.primaryText
+            )
 
-                when (model.type) {
-                    HabitType.REGULAR -> {
+            when (model.type) {
+                HabitType.REGULAR -> {
+                    Box(
+                        modifier = Modifier.padding(start = 8.dp)
+                    ) {
                         Checkbox(
                             checked = model.isChecked,
                             onCheckedChange = onCheckedChange,
                             colors = CheckboxDefaults.colors(
                                 checkedColor = JetHabitTheme.colors.tintColor,
-                                uncheckedColor = JetHabitTheme.colors.secondaryText
+                                uncheckedColor = JetHabitTheme.colors.secondaryText,
+                                checkmarkColor = JetHabitTheme.colors.primaryBackground
                             )
                         )
                     }
-                    HabitType.TRACKER -> {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                }
+                HabitType.TRACKER -> {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        if (model.value != null) {
+                            Text(
+                                text = stringResource(Res.string.tracker_value_kg, model.value.toString()),
+                                style = JetHabitTheme.typography.body,
+                                color = JetHabitTheme.colors.secondaryText,
+                                textAlign = TextAlign.End
+                            )
+                        }
+                        
+                        Box(
+                            modifier = Modifier.padding(start = 8.dp)
                         ) {
-                            if (model.value != null) {
-                                Text(
-                                    text = stringResource(Res.string.tracker_value_kg, model.value.toString()),
-                                    style = JetHabitTheme.typography.body,
-                                    color = JetHabitTheme.colors.secondaryText,
-                                    textAlign = TextAlign.End
-                                )
-                            }
-                            
                             Checkbox(
                                 checked = model.isChecked,
                                 onCheckedChange = onCheckedChange,
                                 colors = CheckboxDefaults.colors(
                                     checkedColor = JetHabitTheme.colors.tintColor,
-                                    uncheckedColor = JetHabitTheme.colors.secondaryText
+                                    uncheckedColor = JetHabitTheme.colors.secondaryText,
+                                    checkmarkColor = JetHabitTheme.colors.primaryBackground
                                 )
                             )
                         }

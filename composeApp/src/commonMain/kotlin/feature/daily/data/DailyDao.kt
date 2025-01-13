@@ -28,4 +28,7 @@ interface DailyDao {
 
     @Query("SELECT EXISTS(SELECT 1 FROM DailyEntity WHERE habitId = :habitId AND timestamp = :date AND isChecked = 1)")
     suspend fun isHabitChecked(habitId: String, date: String): Boolean
+
+    @Query("SELECT EXISTS(SELECT 1 FROM DailyEntity WHERE habitId = :habitId AND timestamp = :date)")
+    suspend fun wasDateEverChecked(habitId: String, date: String): Boolean
 }

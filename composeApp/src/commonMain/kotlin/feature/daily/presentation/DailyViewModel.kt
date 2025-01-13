@@ -78,9 +78,21 @@ class DailyViewModel : BaseViewModel<DailyViewState, DailyAction, DailyEvent>(
 
     private fun switchCheckForHabit(habitId: String, newValue: Boolean) {
         viewModelScope.launch(Dispatchers.Default) {
-            switchHabitUseCase.execute(newValue, habitId, currentDate.current())
-            withContext(Dispatchers.Main) {
-                fetchHabitFor(currentDate.current())
+            try {
+                // Update database first
+                switchHabitUseCase.execute(newValue, habitId, currentDate.current())
+                
+                // Then update UI with the latest state from database
+                val habits = getHabitsForTodayUseCase.execute(currentDate.current())
+                    .map { it.mapToHabitCardItemModel() }
+                
+                withContext(Dispatchers.Main) {
+                    viewState = viewState.copy(habits = habits)
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    fetchHabitFor(currentDate.current())
+                }
             }
         }
     }

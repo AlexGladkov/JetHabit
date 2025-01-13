@@ -72,12 +72,14 @@ class StatisticsViewModel : BaseViewModel<StatsViewState, StatsAction, StatsEven
                                 if (daysToCheck.contains(currentDate.dayOfWeek.ordinal)) {
                                     totalDays++
                                     val isChecked = dailyDao.isHabitChecked(habit.id, currentDate.toString())
+                                    val wasEverChecked = dailyDao.wasDateEverChecked(habit.id, currentDate.toString())
                                     if (isChecked) trackedCount++
                                     
                                     trackedDays.add(
                                         TrackedDay(
                                             date = currentDate.toString(),
-                                            isChecked = isChecked
+                                            isChecked = isChecked,
+                                            wasEverChecked = wasEverChecked
                                         )
                                     )
                                 }
@@ -100,12 +102,14 @@ class StatisticsViewModel : BaseViewModel<StatsViewState, StatsAction, StatsEven
 
                             while (currentDate <= today) {
                                 val isChecked = dailyDao.isHabitChecked(habit.id, currentDate.toString())
+                                val wasEverChecked = dailyDao.wasDateEverChecked(habit.id, currentDate.toString())
                                 if (isChecked) trackedCount++
                                 
                                 trackedDays.add(
                                     TrackedDay(
                                         date = currentDate.toString(),
-                                        isChecked = isChecked
+                                        isChecked = isChecked,
+                                        wasEverChecked = wasEverChecked
                                     )
                                 )
                                 currentDate = currentDate.plus(1, DateTimeUnit.DAY)

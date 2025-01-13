@@ -19,6 +19,7 @@ import feature.health.track.ui.TrackHabitScreen
 import screens.settings.SettingsScreen
 import screens.stats.StatisticsScreen
 import feature.create.ui.ComposeScreen
+import feature.profile.ui.ProfileScreen
 import ui.themes.JetHabitTheme
 import org.jetbrains.compose.resources.stringResource
 
@@ -40,7 +41,7 @@ fun MainScreen() {
         AppScreens.Daily,
         AppScreens.Health,
         AppScreens.Statistics,
-        AppScreens.Settings
+        AppScreens.Profile
     )
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -71,7 +72,17 @@ fun MainScreen() {
                 }
             }
             composable(AppScreens.Statistics.title) { StatisticsScreen() }
-            composable(AppScreens.Settings.title) { SettingsScreen() }
+            navigation(
+                startDestination = "${AppScreens.Profile.title}/${ProfileScreens.Start.name}",
+                route = AppScreens.Profile.title
+            ) {
+                composable("${AppScreens.Profile.title}/${ProfileScreens.Start.name}") { 
+                    ProfileScreen(navController) 
+                }
+                composable("${AppScreens.Profile.title}/${ProfileScreens.Settings.name}") { 
+                    SettingsScreen() 
+                }
+            }
         }
 
         BottomNavigation(
@@ -86,11 +97,22 @@ fun MainScreen() {
                     icon = {
                         Icon(
                             screen.icon,
-                            tint = JetHabitTheme.colors.primaryText,
+                            tint = if (currentDestination?.hierarchy?.any { it.route == screen.title } == true)
+                                JetHabitTheme.colors.tintColor
+                            else
+                                JetHabitTheme.colors.primaryText,
                             contentDescription = null
                         )
                     },
-                    label = { Text(stringResource(screen.titleRes), color = JetHabitTheme.colors.primaryText) },
+                    label = { 
+                        Text(
+                            stringResource(screen.titleRes), 
+                            color = if (currentDestination?.hierarchy?.any { it.route == screen.title } == true)
+                                JetHabitTheme.colors.tintColor
+                            else
+                                JetHabitTheme.colors.primaryText
+                        ) 
+                    },
                     selected = currentDestination?.hierarchy?.any { it.route == screen.title } == true,
                     onClick = {
                         navController.navigate(screen.title) {
@@ -100,7 +122,10 @@ fun MainScreen() {
 //                            launchSingleTop = true
 //                            restoreState = true
                         }
-                    }
+                    },
+                    selectedContentColor = JetHabitTheme.colors.tintColor,
+                    unselectedContentColor = JetHabitTheme.colors.primaryText,
+                    alwaysShowLabel = true
                 )
             }
         }
