@@ -102,7 +102,15 @@ fun TrackHabitScreen(
                                 tint = JetHabitTheme.colors.primaryText
                             )
                         }
-                    }
+                    },
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        textColor = JetHabitTheme.colors.primaryText,
+                        cursorColor = JetHabitTheme.colors.tintColor,
+                        focusedBorderColor = JetHabitTheme.colors.tintColor,
+                        unfocusedBorderColor = JetHabitTheme.colors.secondaryText,
+                        focusedLabelColor = JetHabitTheme.colors.tintColor,
+                        unfocusedLabelColor = JetHabitTheme.colors.secondaryText
+                    )
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -118,7 +126,17 @@ fun TrackHabitScreen(
                     },
                     modifier = Modifier.fillMaxWidth(),
                     textStyle = JetHabitTheme.typography.body.copy(color = JetHabitTheme.colors.primaryText),
-                    isError = viewState.error != null
+                    isError = viewState.error != null,
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        textColor = JetHabitTheme.colors.primaryText,
+                        cursorColor = JetHabitTheme.colors.tintColor,
+                        focusedBorderColor = JetHabitTheme.colors.tintColor,
+                        unfocusedBorderColor = JetHabitTheme.colors.secondaryText,
+                        focusedLabelColor = JetHabitTheme.colors.tintColor,
+                        unfocusedLabelColor = JetHabitTheme.colors.secondaryText,
+                        errorBorderColor = JetHabitTheme.colors.errorColor,
+                        errorLabelColor = JetHabitTheme.colors.errorColor
+                    )
                 )
 
                 viewState.error?.let { errorResId ->

@@ -8,18 +8,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import kotlinx.datetime.LocalDate
 import screens.stats.models.TrackedDay
 import ui.themes.JetHabitTheme
 
 @Composable
-fun HabitTrackingChart(
+internal fun HabitTrackingChart(
     trackedDays: List<TrackedDay>,
     completionRate: Float,
     modifier: Modifier = Modifier
 ) {
     val tintColor = JetHabitTheme.colors.tintColor
-    val secondaryBackground = JetHabitTheme.colors.secondaryBackground
+    val neverCheckedColor = JetHabitTheme.colors.errorColor.copy(alpha = 0.05f)
+    val uncheckedColor = JetHabitTheme.colors.errorColor.copy(alpha = 0.20f)
     
     Column(
         modifier = modifier
@@ -77,8 +80,13 @@ fun HabitTrackingChart(
 
             trackedDays.forEachIndexed { index, day ->
                 val x = index * (squareSize + spacing)
+                val color = when {
+                    day.isChecked -> tintColor
+                    day.wasEverChecked -> uncheckedColor
+                    else -> neverCheckedColor
+                }
                 drawRect(
-                    color = if (day.isChecked) tintColor else secondaryBackground,
+                    color = color,
                     topLeft = Offset(x, 0f),
                     size = Size(squareSize, squareSize)
                 )
@@ -93,12 +101,18 @@ fun HabitTrackingChart(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = trackedDays.firstOrNull()?.date?.take(10) ?: "",
+                text = trackedDays.firstOrNull()?.let { day ->
+                    val date = LocalDate.parse(day.date)
+                    "${date.dayOfMonth.toString().padStart(2, '0')}.${date.monthNumber.toString().padStart(2, '0')}.${date.year}"
+                } ?: "",
                 style = JetHabitTheme.typography.caption,
                 color = JetHabitTheme.colors.secondaryText
             )
             Text(
-                text = trackedDays.lastOrNull()?.date?.take(10) ?: "",
+                text = trackedDays.lastOrNull()?.let { day ->
+                    val date = LocalDate.parse(day.date)
+                    "${date.dayOfMonth.toString().padStart(2, '0')}.${date.monthNumber.toString().padStart(2, '0')}.${date.year}"
+                } ?: "",
                 style = JetHabitTheme.typography.caption,
                 color = JetHabitTheme.colors.secondaryText
             )

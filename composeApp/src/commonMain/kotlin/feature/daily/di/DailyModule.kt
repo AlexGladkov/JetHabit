@@ -22,7 +22,7 @@ val dailyModule = DI.Module("DailyModule") {
     }
     
     bind<SwitchHabitUseCase>() with provider {
-        SwitchHabitUseCase(instance())
+        SwitchHabitUseCase(instance(), instance())
     }
 
     bind<DailyRepository>() with provider {

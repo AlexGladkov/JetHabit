@@ -14,5 +14,6 @@ data class HabitStatistics(
 
 data class TrackedDay(
     val date: String,
-    val isChecked: Boolean
+    val isChecked: Boolean,
+    val wasEverChecked: Boolean = false
 )
