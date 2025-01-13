@@ -39,7 +39,7 @@ class HealthViewModel : BaseViewModel<HealthViewState, Nothing, HealthEvent>(
                     val history = trackerDao.getAllForHabit(habit.id)
                     TrackerHabitItem(
                         id = habit.id,
-                        title = habit.title,
+                        title = habit.title.lowercase().replaceFirstChar { it.uppercase() },
                         measurement = habit.measurement,
                         lastValue = history.firstOrNull()?.value,
                         values = history.map { it.value }

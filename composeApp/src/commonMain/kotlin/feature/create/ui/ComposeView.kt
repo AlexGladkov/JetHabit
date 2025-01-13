@@ -181,18 +181,22 @@ fun ComposeView(
                                     DropdownMenu(
                                         expanded = expanded,
                                         onDismissRequest = { expanded = false },
-                                        modifier = Modifier.fillMaxWidth()
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .background(JetHabitTheme.colors.primaryBackground)
                                     ) {
                                         Measurement.entries.forEach { measurement ->
                                             DropdownMenuItem(
                                                 onClick = {
                                                     eventHandler.invoke(ComposeEvent.MeasurementSelected(measurement))
                                                     expanded = false
-                                                }
+                                                },
+                                                modifier = Modifier.background(JetHabitTheme.colors.primaryBackground)
                                             ) {
                                                 Text(
                                                     text = stringResource(measurement.stringRes),
-                                                    color = JetHabitTheme.colors.primaryText
+                                                    color = JetHabitTheme.colors.primaryText,
+                                                    style = JetHabitTheme.typography.body
                                                 )
                                             }
                                         }

@@ -6,6 +6,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -17,6 +18,7 @@ import feature.health.list.ui.HealthScreen
 import feature.health.track.ui.TrackHabitScreen
 import screens.settings.SettingsScreen
 import screens.stats.StatisticsScreen
+import feature.create.ui.ComposeScreen
 import ui.themes.JetHabitTheme
 import org.jetbrains.compose.resources.stringResource
 
@@ -24,7 +26,13 @@ enum class DailyScreens {
     Start, Detail
 }
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
+enum class HealthScreens {
+    Start, Track, Create
+}
+
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class,
+    ExperimentalComposeUiApi::class
+)
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
@@ -48,13 +56,19 @@ fun MainScreen() {
                     DetailScreen(habitId = habitId, navController = navController)
                 }
             }
-            composable(AppScreens.Health.title) { HealthScreen(navController) }
-            composable(NavigationGraph.HEALTH_TRACK) { backStackEntry ->
-                val habitId = backStackEntry.arguments?.getString("habitId").orEmpty()
-                TrackHabitScreen(
-                    habitId = habitId,
-                    onClose = { navController.popBackStack() }
-                )
+            navigation(startDestination = HealthScreens.Start.name, route = AppScreens.Health.title) {
+                composable(HealthScreens.Start.name) { HealthScreen(navController) }
+                composable("${HealthScreens.Track.name}/{habitId}") { backStackEntry ->
+                    val habitId = backStackEntry.arguments?.getString("habitId").orEmpty()
+                    TrackHabitScreen(
+                        habitId = habitId,
+                        navController = navController
+                    )
+                }
+                composable("${HealthScreens.Create.name}?type={type}") { backStackEntry ->
+                    val type = backStackEntry.arguments?.getString("type")
+                    ComposeScreen(type = type)
+                }
             }
             composable(AppScreens.Statistics.title) { StatisticsScreen() }
             composable(AppScreens.Settings.title) { SettingsScreen() }
@@ -80,11 +94,11 @@ fun MainScreen() {
                     selected = currentDestination?.hierarchy?.any { it.route == screen.title } == true,
                     onClick = {
                         navController.navigate(screen.title) {
-                            popUpTo(navController.graph.findStartDestination().id) {
-                                saveState = true
-                            }
-                            launchSingleTop = true
-                            restoreState = true
+//                            popUpTo(navController.graph.findStartDestination().id) {
+//                                saveState = true
+//                            }
+//                            launchSingleTop = true
+//                            restoreState = true
                         }
                     }
                 )

@@ -99,6 +99,7 @@
     <string name="tracker_measurement_km">Kilometers (km)</string>
     <string name="tracker_measurement_g">Grams (g)</string>
     <string name="tracker_measurement_cal">Calories (kcal)</string>
+    <string name="tracker_measurement_cm">Centimeter (cm)</string>
 
     <string name="measurement_kilograms">Kilograms (kg)</string>
     <string name="measurement_kilometers">Kilometers (km)</string>
@@ -115,4 +116,12 @@
 
     <string name="daily_title">Daily Habits</string>
     <string name="settings_title">Settings</string>
+
+    <string name="tracker_date">Date</string>
+    <string name="tracker_select_date">Select date</string>
+    <string name="error_value_exists">Value for this date is already added</string>
+    <string name="action_ok">OK</string>
+    <string name="action_cancel">Cancel</string>
+
+    <string name="error_empty_value">Please enter a valid number</string>
 </resources>

@@ -21,6 +21,7 @@ import androidx.navigation.NavController
 import feature.health.list.presentation.HealthViewModel
 import feature.health.list.presentation.models.HealthEvent
 import feature.health.list.presentation.models.TrackerHabitItem
+import navigation.HealthScreens
 import ui.themes.JetHabitTheme
 
 @Composable
@@ -51,7 +52,7 @@ fun HealthScreen(
                     contentAlignment = Alignment.Center
                 ) {
                     Button(
-                        onClick = { navController.navigate(NavigationGraph.createHabit("tracker")) }
+                        onClick = { navController.navigate("${HealthScreens.Create.name}?type=tracker") }
                     ) {
                         Text("Track a Habit")
                     }
@@ -62,7 +63,7 @@ fun HealthScreen(
                         TrackerHabitCard(
                             habit = habit,
                             onTrackClick = { 
-                                navController.navigate(NavigationGraph.healthTrack(habit.id))
+                                navController.navigate("${HealthScreens.Track.name}/${habit.id}")
                             }
                         )
                     }
@@ -97,7 +98,7 @@ private fun TrackerHabitCard(
                         color = JetHabitTheme.colors.primaryText
                     )
                     Text(
-                        text = "${habit.lastValue} ${habit.measurement}",
+                        text = habit.lastValue?.let { "${it.toInt()} ${habit.measurement.toString().lowercase().replaceFirstChar { it.uppercase() }}" } ?: "No tracked data",
                         style = JetHabitTheme.typography.caption,
                         color = JetHabitTheme.colors.secondaryText
                     )
@@ -128,6 +129,7 @@ private fun TrackerGraph(
     modifier: Modifier = Modifier
 ) {
     if (values.isEmpty()) return
+    val tintColor = JetHabitTheme.colors.tintColor
 
     Canvas(modifier = modifier) {
         val width = size.width
@@ -160,7 +162,7 @@ private fun TrackerGraph(
         // Draw the line
         drawPath(
             path = strokePath,
-            color = Color.Red,
+            color = tintColor,
             style = Stroke(
                 width = 2.dp.toPx(),
                 cap = StrokeCap.Round
@@ -170,7 +172,7 @@ private fun TrackerGraph(
         // Draw points
         points.forEach { point ->
             drawCircle(
-                color = Color.Green,
+                color = tintColor,
                 radius = 3.dp.toPx(),
                 center = point
             )
