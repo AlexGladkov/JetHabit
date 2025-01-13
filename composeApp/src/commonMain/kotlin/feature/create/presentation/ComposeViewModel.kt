@@ -10,47 +10,62 @@ import feature.habits.domain.CreateHabitUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.datetime.*
 import screens.compose.models.ComposeAction
 
-class ComposeViewModel: BaseViewModel<ComposeViewState, ComposeAction, ComposeEvent>(
-    initialState = ComposeViewState()
+class ComposeViewModel : BaseViewModel<ComposeViewState, ComposeAction, ComposeEvent>(
+    initialState = ComposeViewState(
+        startDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date,
+        endDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date.plus(30, DateTimeUnit.DAY)
+    )
 ) {
-    private val createHabitUseCase = Inject.instance<CreateHabitUseCase>()
+    private val createHabitUseCase: CreateHabitUseCase = Inject.instance()
 
     override fun obtainEvent(viewEvent: ComposeEvent) {
         when (viewEvent) {
-            is ComposeEvent.TitleChanged -> {
-                viewState = viewState.copy(
-                    habitTitle = viewEvent.value
-                )
-            }
-            is ComposeEvent.CheckboxClicked -> viewState = viewState.copy(isGoodHabit = viewEvent.value)
-            is ComposeEvent.TypeSelected -> handleTypeSelection(viewEvent.type)
+            is ComposeEvent.TitleChanged -> viewState = viewState.copy(habitTitle = viewEvent.title)
+            is ComposeEvent.CheckboxClicked -> viewState = viewState.copy(isGoodHabit = viewEvent.isChecked)
+            is ComposeEvent.TypeSelected -> viewState = viewState.copy(habitType = viewEvent.type)
             is ComposeEvent.MeasurementSelected -> viewState = viewState.copy(measurement = viewEvent.measurement)
-            ComposeEvent.SaveClicked -> createNewHabit()
+            is ComposeEvent.StartDateSelected -> {
+                if (viewEvent.date <= (viewState.endDate ?: viewEvent.date)) {
+                    viewState = viewState.copy(
+                        startDate = viewEvent.date,
+                        showStartDatePicker = false
+                    )
+                }
+            }
+            is ComposeEvent.EndDateSelected -> {
+                if (viewEvent.date >= (viewState.startDate ?: viewEvent.date)) {
+                    viewState = viewState.copy(
+                        endDate = viewEvent.date,
+                        showEndDatePicker = false
+                    )
+                }
+            }
+            ComposeEvent.ShowStartDatePicker -> viewState = viewState.copy(showStartDatePicker = true)
+            ComposeEvent.ShowEndDatePicker -> viewState = viewState.copy(showEndDatePicker = true)
+            ComposeEvent.HideStartDatePicker -> viewState = viewState.copy(showStartDatePicker = false)
+            ComposeEvent.HideEndDatePicker -> viewState = viewState.copy(showEndDatePicker = false)
+            ComposeEvent.SaveClicked -> saveHabit()
             ComposeEvent.ClearClicked -> viewState = viewState.copy(habitTitle = "")
             ComposeEvent.CloseClicked -> viewAction = ComposeAction.CloseScreen
         }
     }
 
-    private fun handleTypeSelection(newType: HabitType) {
-        viewState = viewState.copy(
-            habitType = newType,
-        )
-    }
+    private fun saveHabit() {
+        if (viewState.habitTitle.isBlank()) return
 
-    private fun createNewHabit() {
+        viewState = viewState.copy(isSending = true)
         viewModelScope.launch(Dispatchers.Default) {
-            withContext(Dispatchers.Main) {
-                viewState = viewState.copy(isSending = true)
-            }
-
             try {
                 createHabitUseCase.execute(
                     title = viewState.habitTitle,
                     isGood = viewState.isGoodHabit,
                     type = viewState.habitType,
-                    measurement = viewState.measurement
+                    measurement = viewState.measurement,
+                    startDate = viewState.startDate?.toString() ?: "",
+                    endDate = viewState.endDate?.toString() ?: ""
                 )
 
                 withContext(Dispatchers.Main) {
@@ -58,9 +73,8 @@ class ComposeViewModel: BaseViewModel<ComposeViewState, ComposeAction, ComposeEv
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    viewState = viewState.copy(
-                        isSending = false
-                    )
+                    viewState = viewState.copy(isSending = false)
+                    viewAction = ComposeAction.Error
                 }
             }
         }

@@ -21,6 +21,7 @@ import tech.mobiledeveloper.jethabit.resources.tracker_new_value
 import tech.mobiledeveloper.jethabit.resources.tracker_select_date
 import ui.themes.JetHabitTheme
 import themes.components.CCalendar
+import ui.themes.components.JetHabitButton
 
 @Composable
 fun TrackHabitScreen(
@@ -132,12 +133,12 @@ fun TrackHabitScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Button(
-                onClick = { viewModel.obtainEvent(TrackHabitEvent.SaveClicked) },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(stringResource(Res.string.action_save))
-            }
+            JetHabitButton(
+                modifier = Modifier.fillMaxWidth(),
+                backgroundColor = JetHabitTheme.colors.tintColor,
+                text = stringResource(Res.string.action_save),
+                onClick = { viewModel.obtainEvent(TrackHabitEvent.SaveClicked) }
+            )
         }
     }
 } 

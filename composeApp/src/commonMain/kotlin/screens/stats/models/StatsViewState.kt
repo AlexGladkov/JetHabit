@@ -1,8 +1,18 @@
 package screens.stats.models
 
-import screens.stats.views.StatisticCellModel
-
 data class StatsViewState(
-    val activeProgress: List<StatisticCellModel> = emptyList(),
-    val pastActivities: List<StatisticCellModel> = emptyList()
+    val habits: List<HabitStatistics> = emptyList(),
+    val isLoading: Boolean = false
+)
+
+data class HabitStatistics(
+    val id: String,
+    val title: String,
+    val trackedDays: List<TrackedDay>,
+    val completionRate: Float // Percentage of days tracked
+)
+
+data class TrackedDay(
+    val date: String,
+    val isChecked: Boolean
 )

@@ -7,5 +7,6 @@ data class TrackerHabitItem(
     val title: String,
     val measurement: Measurement,
     val lastValue: Double?,
-    val values: List<Double>
+    val values: List<Double>,
+    val dates: List<String>
 ) 

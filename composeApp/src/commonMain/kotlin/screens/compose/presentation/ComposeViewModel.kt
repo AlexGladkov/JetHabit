@@ -19,13 +19,19 @@ class ComposeViewModel: BaseViewModel<ComposeViewState, ComposeAction, ComposeEv
 
     override fun obtainEvent(viewEvent: ComposeEvent) {
         when (viewEvent) {
-            is ComposeEvent.TitleChanged -> viewState = viewState.copy(habitTitle = viewEvent.value)
-            is ComposeEvent.CheckboxClicked -> viewState = viewState.copy(isGoodHabit = viewEvent.value)
+            is ComposeEvent.TitleChanged -> viewState = viewState.copy(habitTitle = viewEvent.title)
+            is ComposeEvent.CheckboxClicked -> viewState = viewState.copy(isGoodHabit = viewEvent.isChecked)
             is ComposeEvent.TypeSelected -> handleTypeSelection(viewEvent.type)
             is ComposeEvent.MeasurementSelected -> viewState = viewState.copy(measurement = viewEvent.measurement)
             ComposeEvent.SaveClicked -> createNewHabit()
             ComposeEvent.ClearClicked -> viewState = viewState.copy(habitTitle = "")
             ComposeEvent.CloseClicked -> viewAction = ComposeAction.CloseScreen
+            is ComposeEvent.EndDateSelected -> TODO()
+            ComposeEvent.HideEndDatePicker -> TODO()
+            ComposeEvent.HideStartDatePicker -> TODO()
+            ComposeEvent.ShowEndDatePicker -> TODO()
+            ComposeEvent.ShowStartDatePicker -> TODO()
+            is ComposeEvent.StartDateSelected -> TODO()
         }
     }
 
