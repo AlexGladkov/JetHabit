@@ -3,56 +3,75 @@ package navigation
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.List
-import androidx.compose.material.icons.outlined.Check
-import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.*
 import feature.daily.ui.DailyScreen
 import feature.detail.ui.DetailScreen
+import feature.health.list.ui.HealthScreen
+import feature.health.track.ui.TrackHabitScreen
 import screens.settings.SettingsScreen
 import screens.stats.StatisticsScreen
+import feature.create.ui.ComposeScreen
 import ui.themes.JetHabitTheme
-
-sealed class MainScreens(val route: String, val title: String, val image: ImageVector) {
-    data object Daily : MainScreens("daily", "Daily", Icons.AutoMirrored.Filled.List)
-    data object Statistics : MainScreens("statistics", "Statistics", Icons.Outlined.Check)
-    data object Settings : MainScreens("settings", "Settings", Icons.Outlined.Settings)
-}
+import org.jetbrains.compose.resources.stringResource
 
 enum class DailyScreens {
     Start, Detail
 }
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
+enum class HealthScreens {
+    Start, Track, Create
+}
+
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class,
+    ExperimentalComposeUiApi::class
+)
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
-    val items = listOf(MainScreens.Daily, MainScreens.Statistics, MainScreens.Settings)
+    val items = listOf(
+        AppScreens.Daily,
+        AppScreens.Health,
+        AppScreens.Statistics,
+        AppScreens.Settings
+    )
 
     Box(modifier = Modifier.fillMaxSize()) {
         NavHost(
             navController,
             modifier = Modifier.padding(bottom = 56.dp).fillMaxSize(),
-            startDestination = MainScreens.Daily.route
+            startDestination = AppScreens.Daily.title
         ) {
-            navigation(startDestination = DailyScreens.Start.name, route = MainScreens.Daily.route) {
+            navigation(startDestination = DailyScreens.Start.name, route = AppScreens.Daily.title) {
                 composable(DailyScreens.Start.name) { DailyScreen(navController) }
                 composable("${DailyScreens.Detail.name}/{habitId}") { backStackEntry ->
                     val habitId = backStackEntry.arguments?.getString("habitId").orEmpty()
                     DetailScreen(habitId = habitId, navController = navController)
                 }
             }
-            composable(MainScreens.Statistics.route) { StatisticsScreen() }
-            composable(MainScreens.Settings.route) { SettingsScreen() }
+            navigation(startDestination = HealthScreens.Start.name, route = AppScreens.Health.title) {
+                composable(HealthScreens.Start.name) { HealthScreen(navController) }
+                composable("${HealthScreens.Track.name}/{habitId}") { backStackEntry ->
+                    val habitId = backStackEntry.arguments?.getString("habitId").orEmpty()
+                    TrackHabitScreen(
+                        habitId = habitId,
+                        navController = navController
+                    )
+                }
+                composable("${HealthScreens.Create.name}?type={type}") { backStackEntry ->
+                    val type = backStackEntry.arguments?.getString("type")
+                    ComposeScreen(type = type)
+                }
+            }
+            composable(AppScreens.Statistics.title) { StatisticsScreen() }
+            composable(AppScreens.Settings.title) { SettingsScreen() }
         }
 
         BottomNavigation(
@@ -66,26 +85,20 @@ fun MainScreen() {
                 BottomNavigationItem(
                     icon = {
                         Icon(
-                            screen.image,
+                            screen.icon,
                             tint = JetHabitTheme.colors.primaryText,
-                            contentDescription = screen.title
+                            contentDescription = null
                         )
                     },
-                    label = { Text(screen.title, color = JetHabitTheme.colors.primaryText) },
-                    selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
+                    label = { Text(stringResource(screen.titleRes), color = JetHabitTheme.colors.primaryText) },
+                    selected = currentDestination?.hierarchy?.any { it.route == screen.title } == true,
                     onClick = {
-                        navController.navigate(screen.route) {
-                            // Pop up to  the start destination of the graph to
-                            // avoid building up a large stack of destinations
-                            // on the back stack as users select items
-                            popUpTo(navController.graph.findStartDestination().route.toString()) {
-                                saveState = true
-                            }
-                            // Avoid multiple copies of the same destination when
-                            // reselecting the same item
-                            launchSingleTop = true
-                            // Restore state when reselecting a previously selected item
-                            restoreState = true
+                        navController.navigate(screen.title) {
+//                            popUpTo(navController.graph.findStartDestination().id) {
+//                                saveState = true
+//                            }
+//                            launchSingleTop = true
+//                            restoreState = true
                         }
                     }
                 )

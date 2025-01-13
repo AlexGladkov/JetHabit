@@ -9,8 +9,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import feature.create.ui.ComposeScreen
 import screens.add_name.MedicationAddName
-import screens.compose.ComposeScreen
 
 enum class CreateFlowScreens(val title: String) {
     Start("start"), AddName("add_name"), AddDate("add_date")

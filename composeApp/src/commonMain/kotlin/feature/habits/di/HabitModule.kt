@@ -12,6 +12,6 @@ val habitModule = DI.Module("HabitModule") {
     }
     
     bind<CreateHabitUseCase>() with provider {
-        CreateHabitUseCase(instance(), instance())
+        CreateHabitUseCase(instance())
     }
 }

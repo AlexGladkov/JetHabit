@@ -56,6 +56,9 @@
     <string name="compose_title">Title</string>
     <string name="compose_is_good">Good habit</string>
     <string name="compose_success_add">New habit successfully created</string>
+    <string name="compose_habit_type">Habit Type</string>
+    <string name="compose_habit_type_regular">Regular</string>
+    <string name="compose_habit_type_tracker">Tracker</string>
 
     <string name="error_date">Start date must precede End date</string>
 
@@ -85,4 +88,40 @@
     
     <string name="good_habit">Good habit</string>
     <string name="bad_habit">Bad habit</string>
+
+    <string name="tracker_value_hint">Enter value</string>
+    <string name="tracker_value_kg">%s kg</string>
+    <string name="tracker_no_value">No value</string>
+    <string name="tracker_current_value">Current value</string>
+    <string name="tracker_new_value">New value</string>
+    <string name="tracker_measurement">Measurement</string>
+    <string name="tracker_measurement_kg">Kilograms (kg)</string>
+    <string name="tracker_measurement_km">Kilometers (km)</string>
+    <string name="tracker_measurement_g">Grams (g)</string>
+    <string name="tracker_measurement_cal">Calories (kcal)</string>
+    <string name="tracker_measurement_cm">Centimeter (cm)</string>
+
+    <string name="measurement_kilograms">Kilograms (kg)</string>
+    <string name="measurement_kilometers">Kilometers (km)</string>
+    <string name="measurement_grams">Grams (g)</string>
+    <string name="measurement_calories">Calories (kcal)</string>
+    <string name="measurement_select">Select measurement</string>
+    <string name="measurement_label">Measurement</string>
+
+    <string name="error_empty_title">Title cannot be empty</string>
+    <string name="error_network">Network error occurred. Please try again</string>
+
+    <string name="health_title">Health Tracking</string>
+    <string name="health_tab">Health</string>
+
+    <string name="daily_title">Daily Habits</string>
+    <string name="settings_title">Settings</string>
+
+    <string name="tracker_date">Date</string>
+    <string name="tracker_select_date">Select date</string>
+    <string name="error_value_exists">Value for this date is already added</string>
+    <string name="action_ok">OK</string>
+    <string name="action_cancel">Cancel</string>
+
+    <string name="error_empty_value">Please enter a valid number</string>
 </resources>

@@ -8,4 +8,5 @@ sealed class DailyEvent {
     data object ComposeAction : DailyEvent()
     class HabitClicked(val habitId: String) : DailyEvent()
     class HabitCheckClicked(val habitId: String, val newValue: Boolean) : DailyEvent()
+    class TrackerValueUpdated(val habitId: String, val value: Double) : DailyEvent()
 }

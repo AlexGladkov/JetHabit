@@ -1,6 +1,7 @@
 package feature.daily.di
 
 import core.database.AppDatabase
+import data.features.daily.DailyRepository
 import di.Inject.instance
 import feature.daily.data.DailyDao
 import feature.daily.domain.GetHabitsForTodayUseCase
@@ -17,10 +18,14 @@ val dailyModule = DI.Module("DailyModule") {
     }
     
     bind<GetHabitsForTodayUseCase>() with provider {
-        GetHabitsForTodayUseCase(instance(), instance(), instance())
+        GetHabitsForTodayUseCase(instance(), instance(), instance(), instance())
     }
     
     bind<SwitchHabitUseCase>() with provider {
         SwitchHabitUseCase(instance())
+    }
+
+    bind<DailyRepository>() with provider {
+        DailyRepository()
     }
 }

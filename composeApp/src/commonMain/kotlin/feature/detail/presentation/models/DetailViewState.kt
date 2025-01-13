@@ -1,7 +1,8 @@
 package feature.detail.presentation.models
 
-import kotlinx.datetime.LocalDate
+import feature.habits.data.HabitType
 import utils.CalendarDays
+import kotlinx.datetime.LocalDate
 
 enum class DateSelectionState {
     None, Start, End
@@ -10,12 +11,15 @@ enum class DateSelectionState {
 data class DetailViewState(
     val habitId: String,
     val itemTitle: String = "",
-    val startDate: CalendarDays = CalendarDays.NotSelected,
-    val endDate: CalendarDays = CalendarDays.NotSelected,
+    val startDate: CalendarDays = CalendarDays.Today,
+    val endDate: CalendarDays = CalendarDays.Today,
     val start: LocalDate? = null,
     val end: LocalDate? = null,
-    val dateSelectionState: DateSelectionState = DateSelectionState.None,
-    val isGood: Boolean = false,
+    val daysToCheck: List<Int> = emptyList(),
+    val isGood: Boolean = true,
     val isDeleting: Boolean = false,
-    val daysToCheck: String = ""
+    val dateSelectionState: DateSelectionState = DateSelectionState.None,
+    val type: HabitType = HabitType.REGULAR,
+    val currentValue: Double? = null,
+    val newValue: Double? = null
 )
