@@ -16,13 +16,23 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.rotate
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.drawText
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import feature.health.list.presentation.HealthViewModel
 import feature.health.list.presentation.models.HealthEvent
 import feature.health.list.presentation.models.TrackerHabitItem
+import feature.health.list.ui.views.HealthViewNoItems
 import navigation.HealthScreens
 import ui.themes.JetHabitTheme
+import org.jetbrains.compose.resources.stringResource
+import tech.mobiledeveloper.jethabit.resources.Res
+import tech.mobiledeveloper.jethabit.resources.health_title
+import kotlinx.datetime.LocalDate
 
 @Composable
 fun HealthScreen(
@@ -38,26 +48,19 @@ fun HealthScreen(
         Column(
             modifier = Modifier.fillMaxSize().padding(JetHabitTheme.shapes.padding)
         ) {
-            Text(
-                text = "Health Tracking",
-                style = JetHabitTheme.typography.heading,
-                color = JetHabitTheme.colors.primaryText
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
             if (viewState.habits.isEmpty()) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Button(
-                        onClick = { navController.navigate("${HealthScreens.Create.name}?type=tracker") }
-                    ) {
-                        Text("Track a Habit")
-                    }
-                }
+                HealthViewNoItems(
+                    onTrackClick = { navController.navigate("${HealthScreens.Create.name}?type=tracker") }
+                )
             } else {
+                Text(
+                    text = stringResource(Res.string.health_title),
+                    style = JetHabitTheme.typography.heading,
+                    color = JetHabitTheme.colors.primaryText
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
                 LazyColumn {
                     items(viewState.habits) { habit ->
                         TrackerHabitCard(
@@ -113,10 +116,12 @@ private fun TrackerHabitCard(
             if (habit.values.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(16.dp))
                 TrackerGraph(
-                    values = habit.values,
+                    values = habit.values.reversed(),
+                    dates = habit.dates.reversed(),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(100.dp)
+                        .height(170.dp)
+                        .padding(bottom = 16.dp)
                 )
             }
         }
@@ -126,42 +131,110 @@ private fun TrackerHabitCard(
 @Composable
 private fun TrackerGraph(
     values: List<Double>,
+    dates: List<String>,
     modifier: Modifier = Modifier
 ) {
     if (values.isEmpty()) return
     val tintColor = JetHabitTheme.colors.tintColor
+    val textColor = JetHabitTheme.colors.secondaryText
+    val textMeasurer = rememberTextMeasurer()
+    val textStyle = TextStyle(
+        fontSize = 10.sp,
+        color = textColor
+    )
 
     Canvas(modifier = modifier) {
         val width = size.width
         val height = size.height
+        val leftPadding = 35f // Space for y-axis labels
+        val bottomPadding = 45f // More space for x-axis labels
+        val topPadding = 10f // Space from top
+        val rightPadding = 10f // Space from right
+        
+        val graphWidth = width - (leftPadding + rightPadding)
+        val graphHeight = height - (bottomPadding + topPadding)
+
         val maxValue = values.maxOrNull() ?: 0.0
         val minValue = values.minOrNull() ?: 0.0
         val range = (maxValue - minValue).coerceAtLeast(0.1)
-        val path = Path()
-        val strokePath = Path()
 
-        val xStep = width / (values.size - 1).coerceAtLeast(1)
-        val points = values.mapIndexed { index, value ->
-            Offset(
-                x = index * xStep,
-                y = height - (height * (value - minValue) / range).toFloat()
+        // Draw axes
+        drawLine(
+            color = textColor,
+            start = Offset(leftPadding, topPadding),
+            end = Offset(leftPadding, height - bottomPadding),
+            strokeWidth = 1f
+        )
+        drawLine(
+            color = textColor,
+            start = Offset(leftPadding, height - bottomPadding),
+            end = Offset(width - rightPadding, height - bottomPadding),
+            strokeWidth = 1f
+        )
+
+        // Draw min and max y-axis labels
+        drawText(
+            textMeasurer = textMeasurer,
+            text = String.format("%.0f", maxValue),
+            style = textStyle,
+            topLeft = Offset(0f, topPadding)
+        )
+        drawText(
+            textMeasurer = textMeasurer,
+            text = String.format("%.0f", minValue),
+            style = textStyle,
+            topLeft = Offset(0f, height - bottomPadding - 8f)
+        )
+
+        // Draw start and end dates
+        if (dates.size >= 2) {
+            // Format dates as dd/mm
+            val formatDate = { date: String ->
+                val localDate = LocalDate.parse(date)
+                "${localDate.dayOfMonth.toString().padStart(2, '0')}/${localDate.monthNumber.toString().padStart(2, '0')}"
+            }
+
+            // Start date
+            val startDate = formatDate(dates.first())
+            drawText(
+                textMeasurer = textMeasurer,
+                text = startDate,
+                style = textStyle,
+                topLeft = Offset(leftPadding - 10f, height - bottomPadding + 15f)
+            )
+
+            // End date
+            val endDate = formatDate(dates.last())
+            val endDateResult = textMeasurer.measure(endDate, textStyle)
+            drawText(
+                textMeasurer = textMeasurer,
+                text = endDate,
+                style = textStyle,
+                topLeft = Offset(width - rightPadding - endDateResult.size.width + 10f, height - bottomPadding + 15f)
             )
         }
 
         // Draw line graph
-        points.forEachIndexed { index, point ->
-            if (index == 0) {
-                path.moveTo(point.x, point.y)
-                strokePath.moveTo(point.x, point.y)
-            } else {
-                path.lineTo(point.x, point.y)
-                strokePath.lineTo(point.x, point.y)
-            }
+        val xStep = graphWidth / (values.size - 1).coerceAtLeast(1)
+        val points = values.mapIndexed { index, value ->
+            Offset(
+                x = leftPadding + (index * xStep),
+                y = topPadding + (graphHeight * (1 - (value - minValue) / range)).toFloat()
+            )
         }
 
         // Draw the line
+        val path = Path()
+        points.forEachIndexed { index, point ->
+            if (index == 0) {
+                path.moveTo(point.x, point.y)
+            } else {
+                path.lineTo(point.x, point.y)
+            }
+        }
+
         drawPath(
-            path = strokePath,
+            path = path,
             color = tintColor,
             style = Stroke(
                 width = 2.dp.toPx(),

@@ -27,6 +27,10 @@ import androidx.compose.runtime.setValue
 import feature.create.presentation.models.ComposeEvent
 import feature.create.presentation.models.ComposeViewState
 import feature.habits.data.Measurement
+import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
+import themes.components.CCalendar
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -202,6 +206,98 @@ fun ComposeView(
                                         }
                                     }
                                 }
+                            }
+                        }
+                    }
+
+                    item {
+                        if (viewState.habitType == HabitType.REGULAR) {
+                            Column(
+                                modifier = Modifier.padding(
+                                    horizontal = JetHabitTheme.shapes.padding,
+                                    vertical = JetHabitTheme.shapes.padding
+                                )
+                            ) {
+                                Text(
+                                    text = stringResource(Res.string.compose_time_distance),
+                                    style = JetHabitTheme.typography.body,
+                                    color = JetHabitTheme.colors.primaryText
+                                )
+
+                                Spacer(modifier = Modifier.height(8.dp))
+
+                                // Start date
+                                OutlinedButton(
+                                    onClick = { eventHandler.invoke(ComposeEvent.ShowStartDatePicker) },
+                                    modifier = Modifier.fillMaxWidth(),
+                                    colors = ButtonDefaults.outlinedButtonColors(
+                                        backgroundColor = Color.Transparent
+                                    )
+                                ) {
+                                    Text(
+                                        text = viewState.startDate?.toString() ?: stringResource(Res.string.compose_select_start_date),
+                                        color = JetHabitTheme.colors.primaryText
+                                    )
+                                }
+
+                                Spacer(modifier = Modifier.height(8.dp))
+
+                                // End date
+                                OutlinedButton(
+                                    onClick = { eventHandler.invoke(ComposeEvent.ShowEndDatePicker) },
+                                    modifier = Modifier.fillMaxWidth(),
+                                    colors = ButtonDefaults.outlinedButtonColors(
+                                        backgroundColor = Color.Transparent
+                                    )
+                                ) {
+                                    Text(
+                                        text = viewState.endDate?.toString() ?: stringResource(Res.string.compose_select_end_date),
+                                        color = JetHabitTheme.colors.primaryText
+                                    )
+                                }
+                            }
+
+                            // Date pickers
+                            if (viewState.showStartDatePicker) {
+                                AlertDialog(
+                                    onDismissRequest = { eventHandler.invoke(ComposeEvent.HideStartDatePicker) },
+                                    text = {
+                                        CCalendar(
+                                            selectedDate = viewState.startDate ?: Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date,
+                                            textColor = JetHabitTheme.colors.primaryText,
+                                            dayOfWeekColor = JetHabitTheme.colors.secondaryText,
+                                            selectedColor = JetHabitTheme.colors.tintColor,
+                                            allowSameDate = true,
+                                            onDateSelected = { date ->
+                                                eventHandler.invoke(ComposeEvent.StartDateSelected(date))
+                                            }
+                                        )
+                                    },
+                                    buttons = { },
+                                    backgroundColor = JetHabitTheme.colors.primaryBackground,
+                                    contentColor = JetHabitTheme.colors.primaryText
+                                )
+                            }
+
+                            if (viewState.showEndDatePicker) {
+                                AlertDialog(
+                                    onDismissRequest = { eventHandler.invoke(ComposeEvent.HideEndDatePicker) },
+                                    text = {
+                                        CCalendar(
+                                            selectedDate = viewState.endDate ?: Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date,
+                                            textColor = JetHabitTheme.colors.primaryText,
+                                            dayOfWeekColor = JetHabitTheme.colors.secondaryText,
+                                            selectedColor = JetHabitTheme.colors.tintColor,
+                                            allowSameDate = true,
+                                            onDateSelected = { date ->
+                                                eventHandler.invoke(ComposeEvent.EndDateSelected(date))
+                                            }
+                                        )
+                                    },
+                                    buttons = { },
+                                    backgroundColor = JetHabitTheme.colors.primaryBackground,
+                                    contentColor = JetHabitTheme.colors.primaryText
+                                )
                             }
                         }
                     }

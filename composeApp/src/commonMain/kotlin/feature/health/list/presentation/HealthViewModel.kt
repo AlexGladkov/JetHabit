@@ -42,7 +42,8 @@ class HealthViewModel : BaseViewModel<HealthViewState, Nothing, HealthEvent>(
                         title = habit.title.lowercase().replaceFirstChar { it.uppercase() },
                         measurement = habit.measurement,
                         lastValue = history.firstOrNull()?.value,
-                        values = history.map { it.value }
+                        values = history.map { it.value },
+                        dates = history.map { it.timestamp }
                     )
                 }
 

@@ -113,6 +113,7 @@
 
     <string name="health_title">Health Tracking</string>
     <string name="health_tab">Health</string>
+    <string name="health_no_items">You haven't tracked any health metrics yet. Start tracking your first health habit!</string>
 
     <string name="daily_title">Daily Habits</string>
     <string name="settings_title">Settings</string>
@@ -124,4 +125,8 @@
     <string name="action_cancel">Cancel</string>
 
     <string name="error_empty_value">Please enter a valid number</string>
+
+    <string name="compose_time_distance">Time Distance</string>
+    <string name="compose_select_start_date">Select start date</string>
+    <string name="compose_select_end_date">Select end date</string>
 </resources>

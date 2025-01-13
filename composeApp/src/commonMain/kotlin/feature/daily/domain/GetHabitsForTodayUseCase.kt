@@ -6,10 +6,8 @@ import feature.habits.data.HabitDao
 import feature.habits.data.HabitType
 import feature.tracker.data.TrackerDao
 import kotlinx.datetime.*
-import kotlinx.serialization.json.Json
 
 class GetHabitsForTodayUseCase(
-    private val json: Json,
     private val habitDao: HabitDao,
     private val dailyDao: DailyDao,
     private val trackerDao: TrackerDao
@@ -27,8 +25,15 @@ class GetHabitsForTodayUseCase(
             
         val habits = habitDao.getAll()
             .filter {
-                val habitDays = json.decodeFromString<List<Int>>(it.daysToCheck)
-                habitDays.contains(currentDay) && it.type == HabitType.REGULAR
+                val cleanDaysToCheck = it.daysToCheck.replace("[", "").replace("]", "")
+                val habitDays = cleanDaysToCheck.split(",").map { day -> day.trim().toInt() }
+                val startDate = LocalDate.parse(it.startDate)
+                val endDate = LocalDate.parse(it.endDate)
+                
+                habitDays.contains(currentDay) && 
+                it.type == HabitType.REGULAR &&
+                (date.compareTo(startDate) >= 0) && 
+                (date.compareTo(endDate) <= 0)
             }
             .map { habit ->
                 DailyHabit(
