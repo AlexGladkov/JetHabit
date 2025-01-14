@@ -17,9 +17,10 @@ import feature.detail.ui.DetailScreen
 import feature.health.list.ui.HealthScreen
 import feature.health.track.ui.TrackHabitScreen
 import screens.settings.SettingsScreen
-import screens.stats.StatisticsScreen
+import feature.statistics.ui.StatisticsScreen
 import feature.create.ui.ComposeScreen
-import feature.profile.ui.ProfileScreen
+import feature.profile.edit.ui.EditProfileScreen
+import feature.profile.start.ui.ProfileScreen
 import ui.themes.JetHabitTheme
 import org.jetbrains.compose.resources.stringResource
 
@@ -71,16 +72,21 @@ fun MainScreen() {
                     ComposeScreen(type = type)
                 }
             }
-            composable(AppScreens.Statistics.title) { StatisticsScreen() }
+            composable(AppScreens.Statistics.title) { 
+                StatisticsScreen()
+            }
             navigation(
-                startDestination = "${AppScreens.Profile.title}/${ProfileScreens.Start.name}",
+                startDestination = ProfileScreens.Start.name,
                 route = AppScreens.Profile.title
             ) {
-                composable("${AppScreens.Profile.title}/${ProfileScreens.Start.name}") { 
-                    ProfileScreen(navController) 
+                composable(ProfileScreens.Start.name) {
+                    ProfileScreen(navController)
                 }
-                composable("${AppScreens.Profile.title}/${ProfileScreens.Settings.name}") { 
+                composable(ProfileScreens.Settings.name) {
                     SettingsScreen() 
+                }
+                composable(ProfileScreens.Edit.name) {
+                    EditProfileScreen(navController)
                 }
             }
         }

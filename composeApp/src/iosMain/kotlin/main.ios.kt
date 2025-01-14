@@ -6,6 +6,9 @@ import di.PlatformConfiguration
 import di.PlatformSDK
 import platform.UIKit.UIViewController
 import themes.MainTheme
+import coil3.PlatformContext
+import coil3.SingletonPlatformContext
+import core.di.initializeCoil
 
 fun MainViewController(): UIViewController =
     ComposeUIViewController {
@@ -23,3 +26,7 @@ fun MainViewController(): UIViewController =
             App()
         }
     }
+
+fun initializeIOSApp() {
+    initializeCoil(SingletonPlatformContext)
+}

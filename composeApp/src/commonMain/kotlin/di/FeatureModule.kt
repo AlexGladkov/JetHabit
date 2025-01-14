@@ -1,18 +1,51 @@
 package di
 
-import feature.daily.di.dailyModule
+import feature.daily.domain.GetHabitsForTodayUseCase
+import feature.daily.domain.SwitchHabitUseCase
 import feature.detail.di.detailModule
-import feature.habits.di.habitModule
-import feature.settings.di.settingsModule
-import feature.tracker.di.trackerModule
+import feature.habits.data.HabitDao
+import feature.habits.domain.CreateHabitUseCase
+import feature.settings.domain.ClearAllHabitsUseCase
+import feature.tracker.data.TrackerDao
+import feature.tracker.domain.UpdateTrackerValueUseCase
 import org.kodein.di.DI
+import org.kodein.di.bind
+import org.kodein.di.instance
+import org.kodein.di.singleton
 
-val featureModule = DI.Module("FeatureModule") {
+fun featureModule() = DI.Module("feature") {
     importAll(
-        dailyModule,
-        habitModule,
-        settingsModule,
-        detailModule,
-        trackerModule
+        detailModule
     )
+    
+    // Use Cases
+    bind<GetHabitsForTodayUseCase>() with singleton { 
+        GetHabitsForTodayUseCase(
+            habitDao = instance(),
+            trackerDao = instance(),
+            dailyDao = instance()
+        )
+    }
+    bind<SwitchHabitUseCase>() with singleton { 
+        SwitchHabitUseCase(
+            habitDao = instance(),
+            dailyDao = instance()
+        )
+    }
+    bind<CreateHabitUseCase>() with singleton { 
+        CreateHabitUseCase(
+            habitDao = instance()
+        )
+    }
+    bind<UpdateTrackerValueUseCase>() with singleton { 
+        UpdateTrackerValueUseCase(
+            trackerDao = instance()
+        )
+    }
+    bind<ClearAllHabitsUseCase>() with singleton {
+        ClearAllHabitsUseCase(
+            habitDao = instance(),
+            dailyDao = instance()
+        )
+    }
 }

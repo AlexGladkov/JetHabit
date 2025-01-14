@@ -90,6 +90,8 @@ kotlin {
             implementation(libs.room.sqlite)
             implementation(libs.room.sqlite.bundled)
 
+            implementation(libs.coil.multiplatform.compose)
+            implementation(libs.coil.multiplatform.network.okhttp)
         }
 
         androidMain.dependencies {
@@ -110,6 +112,10 @@ kotlin {
             implementation(npm("sql.js", "1.6.2"))
             implementation(devNpm("copy-webpack-plugin", "9.1.0"))
         }
+
+        iosMain.dependencies {
+            implementation(libs.coil.multiplatform.network.ktor)
+        }
     }
 }
 
@@ -118,7 +124,7 @@ android {
     compileSdk = 34
     defaultConfig {
         applicationId = "com.mobiledeveloper.playzone_mobile.android"
-        minSdk = libs.versions.mindsdk.get().toInt()
+        minSdk = 23
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"

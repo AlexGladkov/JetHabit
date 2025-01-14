@@ -1,30 +1,43 @@
 package di
 
-import core.database.AppDatabase
 import org.kodein.di.DI
+import org.kodein.di.DirectDI
 import org.kodein.di.bind
 import org.kodein.di.direct
+import org.kodein.di.instance
 import org.kodein.di.singleton
 
 object PlatformSDK {
+    private var _di: DirectDI? = null
+    val di: DirectDI
+        get() = requireNotNull(_di)
 
     fun init(
         configuration: PlatformConfiguration,
-        appDatabase: AppDatabase
+        appDatabase: Any? = null
     ) {
-        val umbrellaModule = DI.Module("umbrella") {
+        val configModule = DI.Module("config") {
             bind<PlatformConfiguration>() with singleton { configuration }
-            bind<AppDatabase>() with singleton { appDatabase }
+            if (appDatabase != null) {
+                bind<Any>("appDatabase") with singleton { appDatabase }
+            }
         }
 
-        Inject.createDependencies(
-            DI {
-                importAll(
-                    umbrellaModule,
-                    coreModule,
-                    featureModule
-                )
-            }.direct
-        )
+        val platformModule = DI.Module("platform") {
+            provideImagePicker()
+        }
+
+        _di = DI {
+            importAll(
+                configModule,
+                platformModule,
+                databaseModule(),
+                featureModule()
+            )
+        }.direct
+    }
+
+    inline fun <reified T> instance(): T {
+        return di.instance()
     }
 }

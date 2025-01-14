@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Divider
+import androidx.compose.material.DropdownMenu
+import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -87,29 +89,32 @@ internal fun MenuItem(
 
         // Dropdown doesnt work
         // https://issuetracker.google.com/u/1/issues/211474319
-//        DropdownMenu(
-//            expanded = isDropdownOpen.value,
-//            onDismissRequest = {
-//                isDropdownOpen.value = false
-//            },
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .background(JetHabitTheme.colors.primaryBackground)
-//        ) {
-//            model.values.forEachIndexed { index, value ->
-//                DropdownMenuItem(onClick = {
-//                    currentPosition.value = index
-//                    isDropdownOpen.value = false
-//                    onItemSelected?.invoke(index)
-//                }) {
-//                    Text(
-//                        text = value,
-//                        style = JetHabitTheme.typography.body,
-//                        color = JetHabitTheme.colors.primaryText
-//                    )
-//                }
-//            }
-//        }
+        DropdownMenu(
+            expanded = isDropdownOpen.value,
+            onDismissRequest = {
+                isDropdownOpen.value = false
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(JetHabitTheme.colors.primaryBackground)
+        ) {
+            model.values.forEachIndexed { index, value ->
+                DropdownMenuItem(
+                    onClick = {
+                        currentPosition.value = index
+                        isDropdownOpen.value = false
+                        onItemSelected?.invoke(index)
+                    },
+                    modifier = Modifier.background(JetHabitTheme.colors.primaryBackground)
+                ) {
+                    Text(
+                        text = value,
+                        style = JetHabitTheme.typography.body,
+                        color = JetHabitTheme.colors.primaryText
+                    )
+                }
+            }
+        }
     }
 }
 
