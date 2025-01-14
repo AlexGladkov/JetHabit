@@ -8,6 +8,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -92,7 +93,9 @@ fun MainScreen() {
         }
 
         BottomNavigation(
-            modifier = Modifier.align(Alignment.BottomStart),
+            modifier = Modifier
+                .align(Alignment.BottomStart)
+                .testTag("BottomNavigation"),
             backgroundColor = JetHabitTheme.colors.secondaryBackground
         ) {
             val navBackStackEntry by navController.currentBackStackEntryAsState()
