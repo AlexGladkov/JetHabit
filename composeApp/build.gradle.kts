@@ -97,7 +97,7 @@ kotlin {
             implementation(libs.room.sqlite.bundled)
 
             implementation(libs.coil.multiplatform.compose)
-            implementation(libs.coil.multiplatform.network.okhttp)
+//            implementation(libs.coil.multiplatform.network.okhttp)
         }
 
         androidMain.dependencies {
@@ -128,6 +128,17 @@ kotlin {
 android {
     namespace = "tech.mobiledeveloper.jethabit.app"
     compileSdk = 34
+    
+    signingConfigs {
+        create("release") {
+            // These will be set from environment variables or local.properties
+            storeFile = file(System.getenv("KEYSTORE_FILE") ?: "release.keystore")
+            storePassword = System.getenv("KEYSTORE_PASSWORD") ?: ""
+            keyAlias = System.getenv("KEY_ALIAS") ?: ""
+            keyPassword = System.getenv("KEY_PASSWORD") ?: ""
+        }
+    }
+
     defaultConfig {
         applicationId = "com.mobiledeveloper.playzone_mobile.android"
         minSdk = 23
@@ -139,6 +150,7 @@ android {
 
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 
     composeOptions {
@@ -146,8 +158,20 @@ android {
     }
 
     buildTypes {
-        getByName("release") {
-            isMinifyEnabled = false
+        release {
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            signingConfig = signingConfigs.getByName("release")
+            manifestPlaceholders["appName"] = "@string/app_name"
+        }
+        
+        debug {
+            applicationIdSuffix = ".debug"
+            versionNameSuffix = "-debug"
+            isDebuggable = true
+            signingConfig = signingConfigs.getByName("debug")
+            manifestPlaceholders["appName"] = "@string/app_name_debug"
         }
     }
 

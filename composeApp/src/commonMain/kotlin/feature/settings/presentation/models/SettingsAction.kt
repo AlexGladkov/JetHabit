@@ -1,3 +1,5 @@
 package feature.settings.presentation.models
 
-sealed class SettingsAction
+sealed class SettingsAction {
+    data object NavigateBack : SettingsAction()
+}

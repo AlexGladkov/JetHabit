@@ -53,7 +53,7 @@ multiplatform-settings-no-arg = { module = "com.russhwolf:multiplatform-settings
 coil-core = { module = "io.coil-kt:coil", version.ref = "coil" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
 coil-multiplatform-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil-multiplatform" }
-coil-multiplatform-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coil-multiplatform" }
+#coil-multiplatform-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coil-multiplatform" }
 coil-multiplatform-network-ktor = { module = "io.coil-kt.coil3:coil-network-ktor", version.ref = "coil-multiplatform" }
 
 kodein-di = "org.kodein.di:kodein-di:7.20.2"

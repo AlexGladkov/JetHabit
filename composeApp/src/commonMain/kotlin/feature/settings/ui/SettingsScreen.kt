@@ -16,8 +16,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import data.features.settings.LocalSettingsEventBus
 import feature.settings.presentation.SettingsViewModel
+import feature.settings.presentation.models.SettingsAction
 import feature.settings.presentation.models.SettingsEvent
 import screens.daily.views.HabitCardItem
 import screens.daily.views.HabitCardItemModel
@@ -28,16 +30,37 @@ import screens.settings.views.MenuItemModel
 import tech.mobiledeveloper.jethabit.resources.*
 import ui.themes.*
 import ui.themes.components.JHDivider
+import ui.components.AppHeader
 
 @ExperimentalMaterialApi
 @ExperimentalFoundationApi
 @Composable
 internal fun SettingsScreen(
+    navController: NavController,
     viewModel: SettingsViewModel = viewModel { SettingsViewModel() }
 ) {
     val viewState by viewModel.viewStates().collectAsState()
     val viewAction by viewModel.viewActions().collectAsState(null)
 
+    SettingsView(
+        viewState = viewState,
+        eventHandler = viewModel::obtainEvent
+    )
+
+    when (viewAction) {
+        SettingsAction.NavigateBack -> {
+            navController.popBackStack()
+            viewModel.clearAction()
+        }
+        null -> { }
+    }
+}
+
+@Composable
+private fun SettingsView(
+    viewState: SettingsViewState,
+    eventHandler: (SettingsEvent) -> Unit
+) {
     val settingsEventBus = LocalSettingsEventBus.current
     val currentSettings by settingsEventBus.currentSettings.collectAsState()
 
@@ -47,19 +70,11 @@ internal fun SettingsScreen(
         Column(
             Modifier.fillMaxSize()
         ) {
-            TopAppBar(
-                backgroundColor = JetHabitTheme.colors.primaryBackground,
-                elevation = 8.dp
-            ) {
-                Text(
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(start = JetHabitTheme.shapes.padding),
-                    text = stringResource(Res.string.title_settings),
-                    color = JetHabitTheme.colors.primaryText,
-                    style = JetHabitTheme.typography.toolbar
-                )
-            }
+            AppHeader(
+                title = stringResource(Res.string.title_settings),
+                isBackButtonAvailable = true,
+                backClicked = { eventHandler(SettingsEvent.BackClicked) }
+            )
 
             Row(
                 modifier = Modifier.padding(JetHabitTheme.shapes.padding),
@@ -72,9 +87,9 @@ internal fun SettingsScreen(
                     style = JetHabitTheme.typography.body
                 )
 
-                println("Cur value ${currentSettings.isDarkMode}")
                 Checkbox(
-                    checked = currentSettings.isDarkMode, onCheckedChange = {
+                    checked = currentSettings.isDarkMode,
+                    onCheckedChange = {
                         settingsEventBus.updateDarkMode(!currentSettings.isDarkMode)
                     },
                     colors = CheckboxDefaults.colors(
@@ -213,79 +228,12 @@ internal fun SettingsScreen(
 
             Text(
                 modifier = Modifier.padding(16.dp).clickable {
-                    viewModel.obtainEvent(SettingsEvent.ClearAllQueries)
+                    eventHandler(SettingsEvent.ClearAllQueries)
                 },
                 text = stringResource(Res.string.settings_clear),
-                color = JetHabitTheme.colors.errorColor, style = JetHabitTheme.typography.body
+                color = JetHabitTheme.colors.errorColor,
+                style = JetHabitTheme.typography.body
             )
-        }
-    }
-}
-
-@Composable
-private fun SettingsView(viewState: SettingsViewState) {
-    Column(modifier = Modifier.fillMaxSize().background(JetHabitTheme.colors.secondaryBackground)) {
-        Spacer(modifier = Modifier.height(12.dp))
-
-        Row(modifier = Modifier.padding(20.dp)) {
-            Card(
-                modifier = Modifier.weight(1f).height(80.dp),
-                backgroundColor = JetHabitTheme.colors.primaryBackground,
-                elevation = 4.dp,
-                shape = RoundedCornerShape(10.dp)
-            ) {
-
-            }
-
-            Spacer(modifier = Modifier.width(20.dp))
-
-            Card(
-                modifier = Modifier.size(80.dp),
-                backgroundColor = JetHabitTheme.colors.primaryBackground,
-                elevation = 4.dp,
-                shape = RoundedCornerShape(10.dp)
-            ) {
-                Box(modifier = Modifier.fillMaxSize()) {
-                    Text(
-                        modifier = Modifier.align(Alignment.Center),
-                        text = "${viewState.healthPercentage}",
-                        fontSize = 20.sp,
-                        color = JetHabitTheme.colors.tintColor,
-                        fontWeight = FontWeight.Medium
-                    )
-                }
-            }
-        }
-
-        Card(
-            modifier = Modifier.padding(horizontal = 20.dp).fillMaxWidth(),
-            backgroundColor = JetHabitTheme.colors.primaryBackground,
-            elevation = 4.dp,
-            shape = RoundedCornerShape(10.dp)
-        ) {
-            Column(modifier = Modifier.fillMaxWidth()) {
-                Row(modifier = Modifier.padding(vertical = 16.dp, horizontal = 16.dp)) {
-                    Text(
-                        text = stringResource(Res.string.settings_body_metrics),
-                        fontWeight = FontWeight.Medium,
-                        fontSize = 16.sp,
-                        color = JetHabitTheme.colors.primaryText
-                    )
-                }
-
-                JHDivider()
-
-                Row(modifier = Modifier.padding(vertical = 16.dp, horizontal = 16.dp)) {
-                    Text(
-                        text = stringResource(Res.string.settings_theme),
-                        fontWeight = FontWeight.Medium,
-                        fontSize = 16.sp,
-                        color = JetHabitTheme.colors.primaryText
-                    )
-                }
-
-                JHDivider()
-            }
         }
     }
 }

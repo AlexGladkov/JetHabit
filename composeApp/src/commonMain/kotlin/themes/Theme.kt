@@ -63,11 +63,11 @@ internal fun MainTheme(
         ),
         toolbar = TextStyle(
             fontSize = when (textSize) {
-                JetHabitSize.Small -> 14.sp
-                JetHabitSize.Medium -> 16.sp
-                JetHabitSize.Big -> 18.sp
+                JetHabitSize.Small -> 18.sp
+                JetHabitSize.Medium -> 20.sp
+                JetHabitSize.Big -> 22.sp
             },
-            fontWeight = FontWeight.Medium
+            fontWeight = FontWeight.SemiBold
         ),
         caption = TextStyle(
             fontSize = when (textSize) {

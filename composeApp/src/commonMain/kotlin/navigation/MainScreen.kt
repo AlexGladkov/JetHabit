@@ -84,7 +84,7 @@ fun MainScreen() {
                     ProfileScreen(navController)
                 }
                 composable(ProfileScreens.Settings.name) {
-                    SettingsScreen() 
+                    SettingsScreen(navController)
                 }
                 composable(ProfileScreens.Edit.name) {
                     EditProfileScreen(navController)

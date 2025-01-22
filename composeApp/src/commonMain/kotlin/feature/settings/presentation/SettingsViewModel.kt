@@ -19,6 +19,7 @@ class SettingsViewModel: BaseViewModel<SettingsViewState, SettingsAction, Settin
     override fun obtainEvent(viewEvent: SettingsEvent) {
         when (viewEvent) {
             SettingsEvent.ClearAllQueries -> clearAllData()
+            SettingsEvent.BackClicked -> viewAction = SettingsAction.NavigateBack
         }
     }
     
