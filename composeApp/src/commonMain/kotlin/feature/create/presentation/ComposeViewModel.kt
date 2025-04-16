@@ -8,12 +8,13 @@ import feature.create.presentation.models.ComposeViewState
 import feature.habits.data.HabitType
 import feature.habits.domain.CreateHabitUseCase
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.*
 import screens.compose.models.ComposeAction
 
-class ComposeViewModel : BaseViewModel<ComposeViewState, ComposeAction, ComposeEvent>(
+class   ComposeViewModel : BaseViewModel<ComposeViewState, ComposeAction, ComposeEvent>(
     initialState = ComposeViewState(
         startDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date,
         endDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date.plus(30, DateTimeUnit.DAY)
@@ -56,27 +57,31 @@ class ComposeViewModel : BaseViewModel<ComposeViewState, ComposeAction, ComposeE
     private fun saveHabit() {
         if (viewState.habitTitle.isBlank()) return
 
-        viewState = viewState.copy(isSending = true)
-        viewModelScope.launch(Dispatchers.Default) {
-            try {
-                createHabitUseCase.execute(
-                    title = viewState.habitTitle,
-                    isGood = viewState.isGoodHabit,
-                    type = viewState.habitType,
-                    measurement = viewState.measurement,
-                    startDate = viewState.startDate?.toString() ?: "",
-                    endDate = viewState.endDate?.toString() ?: ""
-                )
-
-                withContext(Dispatchers.Main) {
-                    viewAction = ComposeAction.Success
-                }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    viewState = viewState.copy(isSending = false)
-                    viewAction = ComposeAction.Error
-                }
-            }
+        viewModelScope.launch(Dispatchers.Main.immediate) {
+            viewState = viewState.copy(isSending = true)
+            delay(3000)
+            viewState = viewState.copy(isSending = false)
         }
+//        viewModelScope.launch(Dispatchers.Default) {
+//            try {
+//                createHabitUseCase.execute(
+//                    title = viewState.habitTitle,
+//                    isGood = viewState.isGoodHabit,
+//                    type = viewState.habitType,
+//                    measurement = viewState.measurement,
+//                    startDate = viewState.startDate?.toString() ?: "",
+//                    endDate = viewState.endDate?.toString() ?: ""
+//                )
+//
+//                withContext(Dispatchers.Main) {
+//                    viewAction = ComposeAction.Success
+//                }
+//            } catch (e: Exception) {
+//                withContext(Dispatchers.Main) {
+//                    viewState = viewState.copy(isSending = false)
+//                    viewAction = ComposeAction.Error
+//                }
+//            }
+//        }
     }
 }

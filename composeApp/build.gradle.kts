@@ -105,6 +105,17 @@ kotlin {
             implementation(libs.androidx.activity.compose)
         }
 
+        val androidInstrumentedTest by getting {
+            dependencies {
+                implementation("androidx.benchmark:benchmark-junit4:1.2.0")
+                implementation("androidx.benchmark:benchmark-macro-junit4:1.3.3")
+                implementation("androidx.test.ext:junit:1.2.1")
+                implementation("androidx.test.uiautomator:uiautomator:2.3.0")
+                implementation("androidx.test:rules:1.5.0'")
+                implementation("androidx.test.espresso:espresso-core:3.6.1")
+            }
+        }
+
         jvmMain.dependencies {
             implementation(compose.desktop.common)
             implementation(compose.desktop.macos_arm64)
@@ -128,6 +139,18 @@ kotlin {
 android {
     namespace = "tech.mobiledeveloper.jethabit.app"
     compileSdk = 34
+
+    testOptions {
+        managedDevices {
+            devices {
+                create("pixel5Api30", com.android.build.api.dsl.ManagedVirtualDevice::class) {
+                    device = "Pixel 5"
+                    apiLevel = 30
+                    systemImageSource = "aosp"
+                }
+            }
+        }
+    }
     
     signingConfigs {
         create("release") {
@@ -145,7 +168,8 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "androidx.benchmark.junit4.AndroidBenchmarkRunner" // Macrobenchmark
+//        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner" // Microbenchmark
     }
 
     buildFeatures {
