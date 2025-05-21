@@ -1,0 +1,64 @@
+name: CI Build
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  jvm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+      - name: Grant execute permission
+        run: chmod +x gradlew
+      - name: Build JVM
+        run: ./gradlew jvmJar --stacktrace
+      - name: Run JVM
+        run: ./gradlew jvmRun --stacktrace
+
+  android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+      - name: Grant execute permission
+        run: chmod +x gradlew
+      - name: Build Android
+        run: ./gradlew assembleDebug --stacktrace
+
+  ios:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+      - name: Grant execute permission
+        run: chmod +x gradlew
+      - name: Build iOS
+        run: ./gradlew linkDebugFrameworkIosX64 --stacktrace
+
+  js:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+      - name: Grant execute permission
+        run: chmod +x gradlew
+      - name: Build JS
+        run: ./gradlew jsBrowserProductionWebpack --stacktrace
