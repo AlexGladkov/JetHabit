@@ -66,7 +66,7 @@ class DetailViewModel(private val habitId: String) : BaseViewModel<DetailViewSta
                 viewState = viewState.copy(
                     itemTitle = details.habitTitle,
                     startDate = details.startDate,
-                    endDate = details.endDeta,
+                    endDate = details.endDate,
                     start = details.start,
                     end = details.end,
                     daysToCheck = details.daysToCheck,
