@@ -17,6 +17,7 @@ import feature.daily.ui.DailyScreen
 import feature.detail.ui.DetailScreen
 import feature.health.list.ui.HealthScreen
 import feature.health.track.ui.TrackHabitScreen
+import feature.chat.ui.ChatScreen
 import screens.settings.SettingsScreen
 import feature.statistics.ui.StatisticsScreen
 import feature.create.ui.ComposeScreen
@@ -33,6 +34,10 @@ enum class HealthScreens {
     Start, Track, Create
 }
 
+enum class ChatScreens {
+    Start
+}
+
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class,
     ExperimentalComposeUiApi::class
 )
@@ -43,6 +48,7 @@ fun MainScreen() {
         AppScreens.Daily,
         AppScreens.Health,
         AppScreens.Statistics,
+        AppScreens.Chat,
         AppScreens.Profile
     )
 
@@ -73,8 +79,11 @@ fun MainScreen() {
                     ComposeScreen(type = type)
                 }
             }
-            composable(AppScreens.Statistics.title) { 
+            composable(AppScreens.Statistics.title) {
                 StatisticsScreen()
+            }
+            composable(AppScreens.Chat.title) {
+                ChatScreen(navController)
             }
             navigation(
                 startDestination = ProfileScreens.Start.name,
