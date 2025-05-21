@@ -10,7 +10,7 @@ class HabitDetail(
     val habitTitle: String,
     val isHabitGood: Boolean,
     val startDate: CalendarDays,
-    val endDeta: CalendarDays,
+    val endDate: CalendarDays,
     val start: LocalDate?,
     val end: LocalDate?,
     val daysToCheck: List<Int>,
@@ -45,7 +45,7 @@ class GetDetailInfoUseCase(
         return HabitDetail(
             habitTitle = habitEntity.title,
             startDate = startDate,
-            endDeta = endDate,
+            endDate = endDate,
             start = if (habitEntity.startDate.isEmpty()) null else LocalDate.parse(habitEntity.startDate) ,
             end = if (habitEntity.endDate.isEmpty()) null else LocalDate.parse(habitEntity.endDate),
             isHabitGood = habitEntity.isGood,
