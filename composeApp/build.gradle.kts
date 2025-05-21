@@ -122,6 +122,10 @@ kotlin {
         iosMain.dependencies {
             implementation(libs.coil.multiplatform.network.ktor)
         }
+
+        commonTest.dependencies {
+            implementation(kotlin("test"))
+        }
     }
 }
 
