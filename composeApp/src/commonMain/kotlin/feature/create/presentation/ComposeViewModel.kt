@@ -5,7 +5,6 @@ import base.BaseViewModel
 import di.Inject
 import feature.create.presentation.models.ComposeEvent
 import feature.create.presentation.models.ComposeViewState
-import feature.habits.data.HabitType
 import feature.habits.domain.CreateHabitUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

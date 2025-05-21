@@ -3,10 +3,8 @@ package di
 import feature.daily.domain.GetHabitsForTodayUseCase
 import feature.daily.domain.SwitchHabitUseCase
 import feature.detail.di.detailModule
-import feature.habits.data.HabitDao
 import feature.habits.domain.CreateHabitUseCase
 import feature.settings.domain.ClearAllHabitsUseCase
-import feature.tracker.data.TrackerDao
 import feature.tracker.domain.UpdateTrackerValueUseCase
 import org.kodein.di.DI
 import org.kodein.di.bind
