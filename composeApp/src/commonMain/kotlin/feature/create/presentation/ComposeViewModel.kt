@@ -69,6 +69,7 @@ class ComposeViewModel : BaseViewModel<ComposeViewState, ComposeAction, ComposeE
                 )
 
                 withContext(Dispatchers.Main) {
+                    viewState = viewState.copy(isSending = false)
                     viewAction = ComposeAction.Success
                 }
             } catch (e: Exception) {
