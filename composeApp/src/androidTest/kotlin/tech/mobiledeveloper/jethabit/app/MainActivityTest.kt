@@ -1,6 +1,8 @@
 package tech.mobiledeveloper.jethabit.app
 
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.onNodeWithText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.Rule
 import org.junit.Test
@@ -13,8 +15,8 @@ class MainActivityTest {
 
     @Test
     fun testAppLaunchesSuccessfully() {
-        // Just wait for the app to launch and verify no crashes
         composeTestRule.waitForIdle()
-        // If we reach this point, the app launched successfully without crashing
+        composeTestRule.onNodeWithText("Daily", useUnmergedTree = true).assertIsDisplayed()
+        composeTestRule.onNodeWithText("Stats", useUnmergedTree = true).assertIsDisplayed()
     }
-} 
+}
