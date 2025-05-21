@@ -8,7 +8,6 @@ import feature.profile.start.ui.models.ProfileEvent
 import feature.profile.start.ui.models.ProfileAction
 import feature.profile.start.ui.models.ProfileViewState
 import kotlinx.coroutines.launch
-import navigation.ProfileScreens
 
 class ProfileViewModel(
     private val imagePicker: ImagePicker,

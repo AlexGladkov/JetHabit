@@ -1,8 +1,6 @@
 package tech.mobiledeveloper.jethabit.app
 
 import App
-import MainView
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts

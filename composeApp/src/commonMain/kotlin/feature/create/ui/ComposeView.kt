@@ -18,7 +18,6 @@ import androidx.compose.ui.unit.dp
 import feature.habits.data.HabitType
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import screens.compose.views.ComposeViewInitialError
 import tech.mobiledeveloper.jethabit.resources.*
 import ui.themes.JetHabitTheme
 import androidx.compose.runtime.mutableStateOf

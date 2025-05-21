@@ -1,7 +1,6 @@
 package feature.detail.domain
 
 import feature.habits.data.HabitDao
-import feature.habits.data.HabitEntity
 import feature.habits.data.HabitType
 import utils.CalendarDays
 import kotlinx.datetime.LocalDate
