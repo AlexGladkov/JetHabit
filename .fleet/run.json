@@ -6,7 +6,7 @@
             "type": "gradle",
             "workingDir": "$PROJECT_DIR$",
             "tasks": ["jvmRun"],
-            "args": ["-DmainClass=MainKt", "--quiet", "-p", "$PROJECT_DIR$/composeApp"],
+            "args": ["-DmainClass=Main_desktopKt", "--quiet", "-p", "$PROJECT_DIR$/composeApp"],
             "initScripts": {
                 "flmapper": "ext.mapPath = { path -> null }"
             }
