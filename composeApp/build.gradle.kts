@@ -8,23 +8,30 @@ plugins {
     alias(libs.plugins.kotlin)
     alias(libs.plugins.compose.core)
     alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.cocoapods)
     alias(libs.plugins.room)
     alias(libs.plugins.ksp)
+}
+
+val enableIos = System.getProperty("os.name") == "Mac OS X"
+
+if (enableIos) {
+    apply(plugin = libs.plugins.cocoapods.get().pluginId)
 }
 
 version = "1.0"
 
 kotlin {
-    cocoapods {
-        summary = "PlayZone iOS SDK"
-        homepage = "https://google.com"
-        ios.deploymentTarget = "14.0"
+    if (enableIos) {
+        cocoapods {
+            summary = "PlayZone iOS SDK"
+            homepage = "https://google.com"
+            ios.deploymentTarget = "14.0"
 
-        framework {
-            @OptIn(ExperimentalKotlinGradlePluginApi::class)
-            transitiveExport = false
-            baseName = "SharedSDK"
+            framework {
+                @OptIn(ExperimentalKotlinGradlePluginApi::class)
+                transitiveExport = false
+                baseName = "SharedSDK"
+            }
         }
     }
 
@@ -38,34 +45,35 @@ kotlin {
     }
     jvm()
 
-//    For now Room doesn't work with JS
-//    js {
-//        moduleName = "composeApp"
-//        browser {
-//            commonWebpackConfig {
-//                outputFileName = "composeApp.js"
-//            }
-//        }
-//        binaries.executable()
-//    }
-
-    listOf(
-        iosArm64(),
-        iosX64(),
-        iosSimulatorArm64()
-    ).forEach {
-        it.binaries.framework {
-            baseName = "ComposeApp"
-            isStatic = true
-            // Required when using NativeSQLiteDriver
-            linkerOpts.add("-lsqlite3")
+    js {
+        moduleName = "composeApp"
+        browser {
+            commonWebpackConfig {
+                outputFileName = "composeApp.js"
+            }
         }
+        binaries.executable()
     }
 
-    targets.withType<KotlinNativeTarget> {
-        binaries {
-            all {
-                linkerOpts("-lsqlite3")
+    if (enableIos) {
+        listOf(
+            iosArm64(),
+            iosX64(),
+            iosSimulatorArm64()
+        ).forEach {
+            it.binaries.framework {
+                baseName = "ComposeApp"
+                isStatic = true
+                // Required when using NativeSQLiteDriver
+                linkerOpts.add("-lsqlite3")
+            }
+        }
+
+        targets.withType<KotlinNativeTarget> {
+            binaries {
+                all {
+                    linkerOpts("-lsqlite3")
+                }
             }
         }
     }
@@ -119,8 +127,10 @@ kotlin {
             implementation(devNpm("copy-webpack-plugin", "9.1.0"))
         }
 
-        iosMain.dependencies {
-            implementation(libs.coil.multiplatform.network.ktor)
+        if (enableIos) {
+            iosMain.dependencies {
+                implementation(libs.coil.multiplatform.network.ktor)
+            }
         }
 
         commonTest.dependencies {
@@ -224,6 +234,7 @@ dependencies {
 //    add("kspIosArm64", libs.room.compiler)
 //    add("kspIosSimulatorArm64", libs.room.compiler)
     add("kspJvm", libs.room.compiler)
+    add("kspJs", libs.room.compiler)
 }
 
 room {
