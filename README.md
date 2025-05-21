@@ -20,6 +20,11 @@ Android | iOS | Web | Windows | MacOS | Linux (In Progress)
 ### iOS Run
 Just launch xcode workspace as usual
 
+### Continuous Integration
+CI is configured with GitHub Actions. Every pull request to the `main`
+branch triggers builds for Android, JVM, iOS and JavaScript targets to
+ensure the project compiles and runs without errors on each platform.
+
 ### Youtube support
 
 All this code has video support on YouTube (only in Russian)
