@@ -28,6 +28,9 @@ class ProfileViewModel(
             ProfileEvent.OpenSettings -> {
                 viewAction = ProfileAction.NavigateToSettings
             }
+            ProfileEvent.OpenProjects -> {
+                viewAction = ProfileAction.NavigateToProjects
+            }
             ProfileEvent.LoadProfile -> loadProfile()
         }
     }

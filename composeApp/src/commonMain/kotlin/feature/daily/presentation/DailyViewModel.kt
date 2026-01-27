@@ -8,6 +8,7 @@ import feature.daily.domain.SwitchHabitUseCase
 import feature.daily.ui.models.DailyViewState
 import feature.daily.ui.models.DailyAction
 import feature.daily.ui.models.DailyEvent
+import feature.projects.domain.GetAllProjectsUseCase
 import feature.tracker.domain.UpdateTrackerValueUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -23,11 +24,13 @@ class DailyViewModel : BaseViewModel<DailyViewState, DailyAction, DailyEvent>(
     private val getHabitsForTodayUseCase = Inject.instance<GetHabitsForTodayUseCase>()
     private val switchHabitUseCase = Inject.instance<SwitchHabitUseCase>()
     private val updateTrackerValueUseCase = Inject.instance<UpdateTrackerValueUseCase>()
+    private val getAllProjectsUseCase = Inject.instance<GetAllProjectsUseCase>()
 
     private val timeZone = TimeZone.currentSystemDefault()
     private var currentDate = Clock.System.now()
 
     init {
+        loadProjects()
         fetchHabitFor(date = currentDate.current())
     }
 
@@ -41,6 +44,17 @@ class DailyViewModel : BaseViewModel<DailyViewState, DailyAction, DailyEvent>(
             DailyEvent.ComposeAction -> viewAction = DailyAction.OpenCompose
             is DailyEvent.HabitCheckClicked -> switchCheckForHabit(viewEvent.habitId, viewEvent.newValue)
             is DailyEvent.TrackerValueUpdated -> updateTrackerValue(viewEvent.habitId, viewEvent.value)
+            is DailyEvent.ProjectFilterSelected -> {
+                viewState = viewState.copy(selectedProjectId = viewEvent.projectId)
+                fetchHabitFor(currentDate.current())
+            }
+        }
+    }
+
+    private fun loadProjects() {
+        viewModelScope.launch(Dispatchers.Default) {
+            val projects = getAllProjectsUseCase.execute()
+            viewState = viewState.copy(projects = projects)
         }
     }
 
@@ -55,7 +69,7 @@ class DailyViewModel : BaseViewModel<DailyViewState, DailyAction, DailyEvent>(
         )
 
         viewModelScope.launch(Dispatchers.Default) {
-            val habits = getHabitsForTodayUseCase.execute(date)
+            val habits = getHabitsForTodayUseCase.execute(date, viewState.selectedProjectId)
                 .map { it.mapToHabitCardItemModel() }
 
             withContext(Dispatchers.Main) {

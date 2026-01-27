@@ -13,7 +13,7 @@ class GetHabitsForTodayUseCase(
     private val trackerDao: TrackerDao
 ) {
 
-    suspend fun execute(date: LocalDate): List<DailyHabit> {
+    suspend fun execute(date: LocalDate, projectId: String? = null): List<DailyHabit> {
         val currentDay = date.dayOfWeek.ordinal
 
         val dailyEntries = dailyDao.getAll()
@@ -22,18 +22,27 @@ class GetHabitsForTodayUseCase(
                 date.compareTo(timestamp) == 0 && it.isChecked
             }
             .map { it.habitId }
-            
-        val habits = habitDao.getAll()
+
+        val allHabits = habitDao.getAll()
+
+        val habits = allHabits
             .filter {
                 val cleanDaysToCheck = it.daysToCheck.replace("[", "").replace("]", "")
                 val habitDays = cleanDaysToCheck.split(",").map { day -> day.trim().toInt() }
                 val startDate = LocalDate.parse(it.startDate)
                 val endDate = LocalDate.parse(it.endDate)
-                
-                habitDays.contains(currentDay) && 
-                it.type == HabitType.REGULAR &&
-                (date.compareTo(startDate) >= 0) && 
-                (date.compareTo(endDate) <= 0)
+
+                val matchesDate = habitDays.contains(currentDay) &&
+                    it.type == HabitType.REGULAR &&
+                    (date.compareTo(startDate) >= 0) &&
+                    (date.compareTo(endDate) <= 0)
+
+                val matchesProject = when (projectId) {
+                    null -> true  // Show all habits when no filter is selected
+                    else -> it.projectId == projectId
+                }
+
+                matchesDate && matchesProject
             }
             .map { habit ->
                 DailyHabit(
@@ -43,7 +52,7 @@ class GetHabitsForTodayUseCase(
                     type = HabitType.REGULAR
                 )
             }
-        
+
         return habits
     }
 }

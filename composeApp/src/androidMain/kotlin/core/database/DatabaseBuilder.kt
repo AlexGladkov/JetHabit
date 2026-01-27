@@ -3,6 +3,7 @@ package core.database
 import android.content.Context
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import core.database.migrations.MIGRATION_7_8
 
 fun getDatabaseBuilder(context: Context): RoomDatabase.Builder<AppDatabase> {
     val applicationContext = context.applicationContext
@@ -10,5 +11,7 @@ fun getDatabaseBuilder(context: Context): RoomDatabase.Builder<AppDatabase> {
     return Room.databaseBuilder<AppDatabase>(
         context = applicationContext,
         name = databaseFile.absolutePath
-    ).fallbackToDestructiveMigration(dropAllTables = true)
+    )
+        .addMigrations(MIGRATION_7_8)
+        .fallbackToDestructiveMigration(dropAllTables = true)
 }

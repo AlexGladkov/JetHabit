@@ -6,6 +6,7 @@ import di.Inject
 import feature.create.presentation.models.ComposeEvent
 import feature.create.presentation.models.ComposeViewState
 import feature.habits.domain.CreateHabitUseCase
+import feature.projects.domain.GetAllProjectsUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -19,6 +20,11 @@ class ComposeViewModel : BaseViewModel<ComposeViewState, ComposeAction, ComposeE
     )
 ) {
     private val createHabitUseCase: CreateHabitUseCase = Inject.instance()
+    private val getAllProjectsUseCase: GetAllProjectsUseCase = Inject.instance()
+
+    init {
+        loadProjects()
+    }
 
     override fun obtainEvent(viewEvent: ComposeEvent) {
         when (viewEvent) {
@@ -26,6 +32,7 @@ class ComposeViewModel : BaseViewModel<ComposeViewState, ComposeAction, ComposeE
             is ComposeEvent.CheckboxClicked -> viewState = viewState.copy(isGoodHabit = viewEvent.isChecked)
             is ComposeEvent.TypeSelected -> viewState = viewState.copy(habitType = viewEvent.type)
             is ComposeEvent.MeasurementSelected -> viewState = viewState.copy(measurement = viewEvent.measurement)
+            is ComposeEvent.ProjectSelected -> viewState = viewState.copy(selectedProjectId = viewEvent.projectId)
             is ComposeEvent.StartDateSelected -> {
                 if (viewEvent.date <= (viewState.endDate ?: viewEvent.date)) {
                     viewState = viewState.copy(
@@ -52,6 +59,13 @@ class ComposeViewModel : BaseViewModel<ComposeViewState, ComposeAction, ComposeE
         }
     }
 
+    private fun loadProjects() {
+        viewModelScope.launch(Dispatchers.Default) {
+            val projects = getAllProjectsUseCase.execute()
+            viewState = viewState.copy(projects = projects)
+        }
+    }
+
     private fun saveHabit() {
         if (viewState.habitTitle.isBlank()) return
 
@@ -64,7 +78,8 @@ class ComposeViewModel : BaseViewModel<ComposeViewState, ComposeAction, ComposeE
                     type = viewState.habitType,
                     measurement = viewState.measurement,
                     startDate = viewState.startDate?.toString() ?: "",
-                    endDate = viewState.endDate?.toString() ?: ""
+                    endDate = viewState.endDate?.toString() ?: "",
+                    projectId = viewState.selectedProjectId
                 )
 
                 withContext(Dispatchers.Main) {

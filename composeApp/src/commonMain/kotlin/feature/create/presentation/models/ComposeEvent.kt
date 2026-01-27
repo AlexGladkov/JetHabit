@@ -11,6 +11,7 @@ sealed interface ComposeEvent {
     data class MeasurementSelected(val measurement: Measurement) : ComposeEvent
     data class StartDateSelected(val date: LocalDate) : ComposeEvent
     data class EndDateSelected(val date: LocalDate) : ComposeEvent
+    data class ProjectSelected(val projectId: String?) : ComposeEvent
     data object ShowStartDatePicker : ComposeEvent
     data object ShowEndDatePicker : ComposeEvent
     data object HideStartDatePicker : ComposeEvent

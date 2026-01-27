@@ -23,6 +23,7 @@ import feature.statistics.ui.StatisticsScreen
 import feature.create.ui.ComposeScreen
 import feature.profile.edit.ui.EditProfileScreen
 import feature.profile.start.ui.ProfileScreen
+import feature.projects.ui.ProjectListScreen
 import ui.themes.JetHabitTheme
 import org.jetbrains.compose.resources.stringResource
 
@@ -97,6 +98,9 @@ fun MainScreen() {
                 }
                 composable(ProfileScreens.Edit.name) {
                     EditProfileScreen(navController)
+                }
+                composable(ProfileScreens.Projects.name) {
+                    ProjectListScreen(navController)
                 }
             }
         }

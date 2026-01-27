@@ -9,4 +9,5 @@ sealed class DailyEvent {
     class HabitClicked(val habitId: String) : DailyEvent()
     class HabitCheckClicked(val habitId: String, val newValue: Boolean) : DailyEvent()
     class TrackerValueUpdated(val habitId: String, val value: Double) : DailyEvent()
+    class ProjectFilterSelected(val projectId: String?) : DailyEvent()
 }

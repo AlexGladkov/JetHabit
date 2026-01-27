@@ -38,6 +38,10 @@ internal fun ProfileScreen(
             navController.navigate("Settings")
             viewModel.clearAction()
         }
+        ProfileAction.NavigateToProjects -> {
+            navController.navigate("Projects")
+            viewModel.clearAction()
+        }
         null -> {}
     }
 } 
