@@ -5,7 +5,8 @@ import feature.habits.data.HabitEntity
 import feature.habits.data.HabitType
 import feature.habits.data.Measurement
 import kotlinx.datetime.*
-import java.util.UUID
+import kotlinx.uuid.UUID
+import kotlinx.uuid.generateUUID
 
 class CreateHabitUseCase(
     private val habitDao: HabitDao
@@ -16,7 +17,8 @@ class CreateHabitUseCase(
         type: HabitType,
         measurement: Measurement,
         startDate: String = "",
-        endDate: String = ""
+        endDate: String = "",
+        projectId: String? = null
     ) {
         // Set default dates if not provided
         val timeZone = TimeZone.currentSystemDefault()
@@ -27,14 +29,15 @@ class CreateHabitUseCase(
         val finalEndDate = if (endDate.isBlank()) defaultEndDate.toString() else endDate
 
         val habitEntity = HabitEntity(
-            id = UUID.randomUUID().toString(),
+            id = UUID.generateUUID().toString(),
             title = title,
             isGood = isGood,
             startDate = finalStartDate,
             endDate = finalEndDate,
             daysToCheck = "[0,1,2,3,4,5,6]",
             type = type,
-            measurement = measurement
+            measurement = measurement,
+            projectId = projectId
         )
 
         habitDao.insert(habitEntity)

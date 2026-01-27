@@ -13,7 +13,8 @@ class HabitDetail(
     val start: LocalDate?,
     val end: LocalDate?,
     val daysToCheck: List<Int>,
-    val type: HabitType
+    val type: HabitType,
+    val projectId: String? = null
 )
 
 class GetDetailInfoUseCase(
@@ -49,7 +50,8 @@ class GetDetailInfoUseCase(
             end = if (habitEntity.endDate.isEmpty()) null else LocalDate.parse(habitEntity.endDate),
             isHabitGood = habitEntity.isGood,
             daysToCheck = daysToCheck,
-            type = habitEntity.type
+            type = habitEntity.type,
+            projectId = habitEntity.projectId
         )
     }
 }

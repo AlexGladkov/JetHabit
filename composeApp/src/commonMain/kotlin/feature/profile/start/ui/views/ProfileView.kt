@@ -41,6 +41,21 @@ internal fun ProfileView(
             MenuItem(
                 icon = {
                     Icon(
+                        imageVector = Icons.Default.Folder,
+                        contentDescription = null,
+                        tint = JetHabitTheme.colors.primaryText
+                    )
+                },
+                title = "My Projects",
+                onClick = { eventHandler(ProfileEvent.OpenProjects) }
+            )
+            Divider(
+                color = JetHabitTheme.colors.primaryBackground,
+                modifier = Modifier.padding(horizontal = 20.dp)
+            )
+            MenuItem(
+                icon = {
+                    Icon(
                         imageVector = Icons.Default.Settings,
                         contentDescription = null,
                         tint = JetHabitTheme.colors.primaryText

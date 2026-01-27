@@ -1,5 +1,5 @@
 package navigation
 
 enum class ProfileScreens {
-    Start, Settings, Edit
+    Start, Settings, Edit, Projects
 } 

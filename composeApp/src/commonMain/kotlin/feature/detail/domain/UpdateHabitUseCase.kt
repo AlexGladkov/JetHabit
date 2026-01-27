@@ -14,20 +14,22 @@ class UpdateHabitUseCase(
         startDate: LocalDate?,
         endDate: LocalDate?,
         daysToCheck: String,
-        isGood: Boolean
+        isGood: Boolean,
+        projectId: String? = null
     ) {
         if (startDate == null || endDate == null) throw NullPointerException("Date must not be null")
         if (startDate >= endDate) throw IllegalStateException("Start date must be before end date")
         if (habitTitle.isEmpty()) throw NullPointerException("Habit title must not be empty")
-        
+
+        val existingHabit = habitDao.getHabitWith(habitId)
         habitDao.insert(
-            HabitEntity(
-                id = habitId,
+            existingHabit.copy(
                 title = habitTitle,
                 startDate = startDate.toString(),
                 endDate = endDate.toString(),
                 daysToCheck = daysToCheck,
-                isGood = isGood
+                isGood = isGood,
+                projectId = projectId
             )
         )
     }

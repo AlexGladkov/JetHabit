@@ -18,5 +18,6 @@ data class HabitEntity(
     val endDate: String,
     val daysToCheck: String,
     val type: HabitType = HabitType.REGULAR,
-    val measurement: Measurement = Measurement.KILOGRAMS
+    val measurement: Measurement = Measurement.KILOGRAMS,
+    val projectId: String? = null
 )
