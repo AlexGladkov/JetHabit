@@ -7,9 +7,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import feature.projects.data.ProjectEntity
+import feature.projects.ui.utils.parseColor
 
 private val PRESET_COLORS = listOf(
     "#FF5722", // Red
@@ -93,14 +93,4 @@ fun ProjectEditDialog(
             }
         }
     )
-}
-
-private fun parseColor(hexString: String): Color {
-    return try {
-        val cleanHex = hexString.removePrefix("#")
-        val colorInt = cleanHex.toLong(16)
-        Color(colorInt or 0xFF000000)
-    } catch (e: Exception) {
-        Color.Gray
-    }
 }
