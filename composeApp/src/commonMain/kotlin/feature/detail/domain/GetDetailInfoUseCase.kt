@@ -14,7 +14,10 @@ class HabitDetail(
     val end: LocalDate?,
     val daysToCheck: List<Int>,
     val type: HabitType,
-    val projectId: String? = null
+    val projectId: String? = null,
+    val currentStreak: Int = 0,
+    val longestStreak: Int = 0,
+    val lastCompletedDate: String? = null
 )
 
 class GetDetailInfoUseCase(
@@ -51,7 +54,10 @@ class GetDetailInfoUseCase(
             isHabitGood = habitEntity.isGood,
             daysToCheck = daysToCheck,
             type = habitEntity.type,
-            projectId = habitEntity.projectId
+            projectId = habitEntity.projectId,
+            currentStreak = habitEntity.currentStreak,
+            longestStreak = habitEntity.longestStreak,
+            lastCompletedDate = habitEntity.lastCompletedDate
         )
     }
 }

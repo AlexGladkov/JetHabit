@@ -134,4 +134,10 @@
     <string name="compose_time_distance">Time Distance</string>
     <string name="compose_select_start_date">Select start date</string>
     <string name="compose_select_end_date">Select end date</string>
+
+    <string name="streak_statistics">Streak Statistics</string>
+    <string name="current_streak">Current Streak</string>
+    <string name="longest_streak">Longest Streak</string>
+    <string name="streak_days">%d days</string>
+    <string name="last_completed">Last completed: %s</string>
 </resources>

@@ -7,5 +7,7 @@ class DailyHabit(
     val title: String,
     val isChecked: Boolean,
     val type: HabitType = HabitType.REGULAR,
-    val value: Double? = null
+    val value: Double? = null,
+    val currentStreak: Int = 0,
+    val longestStreak: Int = 0
 )

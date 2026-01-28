@@ -21,4 +21,7 @@ interface HabitDao {
 
     @Query("SELECT * FROM HabitEntity WHERE projectId = :projectId")
     suspend fun getByProject(projectId: String): List<HabitEntity>
+
+    @Query("UPDATE HabitEntity SET currentStreak = :currentStreak, longestStreak = :longestStreak, lastCompletedDate = :lastCompletedDate WHERE id = :habitId")
+    suspend fun updateStreakInfo(habitId: String, currentStreak: Int, longestStreak: Int, lastCompletedDate: String?)
 }

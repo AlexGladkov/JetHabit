@@ -31,4 +31,7 @@ interface DailyDao {
 
     @Query("SELECT EXISTS(SELECT 1 FROM DailyEntity WHERE habitId = :habitId AND timestamp = :date)")
     suspend fun wasDateEverChecked(habitId: String, date: String): Boolean
+
+    @Query("SELECT timestamp FROM DailyEntity WHERE habitId = :habitId AND isChecked = 1 ORDER BY timestamp DESC")
+    suspend fun getCompletedDatesForHabit(habitId: String): List<String>
 }

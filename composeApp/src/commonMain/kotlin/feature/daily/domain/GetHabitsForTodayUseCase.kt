@@ -49,7 +49,9 @@ class GetHabitsForTodayUseCase(
                     id = habit.id,
                     title = habit.title,
                     isChecked = dailyEntries.contains(habit.id),
-                    type = HabitType.REGULAR
+                    type = HabitType.REGULAR,
+                    currentStreak = habit.currentStreak,
+                    longestStreak = habit.longestStreak
                 )
             }
 

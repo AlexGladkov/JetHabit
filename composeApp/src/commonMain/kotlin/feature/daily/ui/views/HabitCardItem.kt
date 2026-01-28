@@ -19,7 +19,8 @@ data class HabitCardItemModel(
     val title: String,
     val isChecked: Boolean,
     val type: HabitType = HabitType.REGULAR,
-    val value: Double? = null
+    val value: Double? = null,
+    val currentStreak: Int = 0
 )
 
 fun DailyHabit.mapToHabitCardItemModel(): HabitCardItemModel =
@@ -28,7 +29,8 @@ fun DailyHabit.mapToHabitCardItemModel(): HabitCardItemModel =
         title = title,
         isChecked = isChecked,
         type = type,
-        value = value
+        value = value,
+        currentStreak = currentStreak
     )
 
 @Composable
@@ -55,14 +57,27 @@ internal fun HabitCardItem(
                 .padding(JetHabitTheme.shapes.padding),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
+            Row(
                 modifier = Modifier
                     .weight(1f)
                     .clickable { onCardClicked?.invoke() },
-                text = model.title,
-                style = JetHabitTheme.typography.body,
-                color = JetHabitTheme.colors.primaryText
-            )
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Text(
+                    text = model.title,
+                    style = JetHabitTheme.typography.body,
+                    color = JetHabitTheme.colors.primaryText
+                )
+
+                if (model.currentStreak > 0) {
+                    Text(
+                        text = "\uD83D\uDD25 ${model.currentStreak}",
+                        style = JetHabitTheme.typography.caption,
+                        color = JetHabitTheme.colors.tintColor
+                    )
+                }
+            }
 
             when (model.type) {
                 HabitType.REGULAR -> {

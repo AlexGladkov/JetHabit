@@ -9,7 +9,8 @@ import kotlinx.uuid.generateUUID
 
 class SwitchHabitUseCase(
     private val dailyDao: DailyDao,
-    private val habitDao: HabitDao
+    private val habitDao: HabitDao,
+    private val updateStreakUseCase: UpdateStreakUseCase
 ) {
 
     suspend fun execute(checked: Boolean, habitId: String, date: LocalDate) {
@@ -29,5 +30,8 @@ class SwitchHabitUseCase(
                 )
             )
         }
+
+        // Update streak information after checking/unchecking
+        updateStreakUseCase.execute(habitId)
     }
 }

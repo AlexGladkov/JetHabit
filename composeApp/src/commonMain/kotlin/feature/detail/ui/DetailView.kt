@@ -86,6 +86,65 @@ internal fun DetailView(
 
             Spacer(modifier = Modifier.height(24.dp))
 
+            // Streak Statistics Section
+            if (viewState.type == HabitType.REGULAR) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = JetHabitTheme.shapes.padding)
+                ) {
+                    Text(
+                        text = stringResource(Res.string.streak_statistics),
+                        style = JetHabitTheme.typography.body,
+                        color = JetHabitTheme.colors.primaryText
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = stringResource(Res.string.current_streak),
+                                style = JetHabitTheme.typography.caption,
+                                color = JetHabitTheme.colors.secondaryText
+                            )
+                            Text(
+                                text = stringResource(Res.string.streak_days, viewState.currentStreak),
+                                style = JetHabitTheme.typography.body,
+                                color = JetHabitTheme.colors.tintColor
+                            )
+                        }
+
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = stringResource(Res.string.longest_streak),
+                                style = JetHabitTheme.typography.caption,
+                                color = JetHabitTheme.colors.secondaryText
+                            )
+                            Text(
+                                text = stringResource(Res.string.streak_days, viewState.longestStreak),
+                                style = JetHabitTheme.typography.body,
+                                color = JetHabitTheme.colors.primaryText
+                            )
+                        }
+                    }
+
+                    if (viewState.lastCompletedDate != null) {
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = stringResource(Res.string.last_completed, viewState.lastCompletedDate),
+                            style = JetHabitTheme.typography.caption,
+                            color = JetHabitTheme.colors.secondaryText
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(24.dp))
+            }
+
             if (viewState.type == HabitType.TRACKER) {
                 Column(
                     modifier = Modifier

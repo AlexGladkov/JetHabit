@@ -72,7 +72,10 @@ class DetailViewModel(private val habitId: String) : BaseViewModel<DetailViewSta
                     daysToCheck = details.daysToCheck,
                     isGood = details.isHabitGood,
                     type = details.type,
-                    currentValue = currentValue
+                    currentValue = currentValue,
+                    currentStreak = details.currentStreak,
+                    longestStreak = details.longestStreak,
+                    lastCompletedDate = details.lastCompletedDate
                 )
             }
         }
