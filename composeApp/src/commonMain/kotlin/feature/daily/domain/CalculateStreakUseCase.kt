@@ -38,6 +38,7 @@ class CalculateStreakUseCase(
 
         var streak = 0
         var currentCheckDate = targetDate
+        var isFirstIteration = true
 
         // Start from the target date and go backwards
         while (true) {
@@ -49,9 +50,16 @@ class CalculateStreakUseCase(
                 if (completedDates.contains(currentCheckDate)) {
                     streak++
                 } else {
-                    // Scheduled day was missed - streak is broken
-                    break
+                    // If this is the target date (first iteration) and it's not completed yet,
+                    // skip it and continue counting backwards (the day isn't over yet)
+                    if (isFirstIteration) {
+                        // Don't break the streak, just skip today and continue
+                    } else {
+                        // Scheduled day was missed - streak is broken
+                        break
+                    }
                 }
+                isFirstIteration = false
             }
 
             // Move to previous day
