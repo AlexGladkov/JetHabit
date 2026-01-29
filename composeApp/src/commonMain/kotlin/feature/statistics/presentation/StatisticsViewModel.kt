@@ -20,7 +20,7 @@ class StatisticsViewModel : BaseViewModel<StatisticsViewState, StatisticsAction,
     private val habitDao = Inject.instance<HabitDao>()
     private val dailyDao = Inject.instance<DailyDao>()
     private val timeZone = TimeZone.currentSystemDefault()
-    private var currentWeekStart: LocalDate
+    private lateinit var currentWeekStart: LocalDate
 
     init {
         val now = Clock.System.now()

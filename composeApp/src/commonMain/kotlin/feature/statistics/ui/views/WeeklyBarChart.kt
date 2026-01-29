@@ -12,7 +12,6 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.unit.dp
 import ui.themes.JetHabitTheme
-import kotlin.math.max
 
 @Composable
 fun WeeklyBarChart(
