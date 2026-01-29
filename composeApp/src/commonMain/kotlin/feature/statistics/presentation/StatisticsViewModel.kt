@@ -6,9 +6,7 @@ import di.Inject
 import feature.daily.data.DailyDao
 import feature.habits.data.HabitDao
 import feature.habits.data.HabitType
-import feature.statistics.ui.models.StatisticsAction
-import feature.statistics.ui.models.StatisticsEvent
-import feature.statistics.ui.models.StatisticsViewState
+import feature.statistics.ui.models.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -22,15 +20,43 @@ class StatisticsViewModel : BaseViewModel<StatisticsViewState, StatisticsAction,
     private val habitDao = Inject.instance<HabitDao>()
     private val dailyDao = Inject.instance<DailyDao>()
     private val timeZone = TimeZone.currentSystemDefault()
+    private var currentWeekStart: LocalDate
 
     init {
+        val now = Clock.System.now()
+        val today = now.toLocalDateTime(timeZone).date
+        currentWeekStart = getWeekStart(today)
         loadHabitsStatistics()
+        loadWeeklyStatistics(currentWeekStart)
     }
 
     override fun obtainEvent(event: StatisticsEvent) {
         when (event) {
             StatisticsEvent.LoadStatistics -> loadHabitsStatistics()
+            StatisticsEvent.NextWeek -> navigateToNextWeek()
+            StatisticsEvent.PreviousWeek -> navigateToPreviousWeek()
+            is StatisticsEvent.SwitchTab -> switchTab(event.tab)
         }
+    }
+
+    private fun navigateToNextWeek() {
+        currentWeekStart = currentWeekStart.plus(7, DateTimeUnit.DAY)
+        loadWeeklyStatistics(currentWeekStart)
+    }
+
+    private fun navigateToPreviousWeek() {
+        currentWeekStart = currentWeekStart.minus(7, DateTimeUnit.DAY)
+        loadWeeklyStatistics(currentWeekStart)
+    }
+
+    private fun switchTab(tab: StatisticsTab) {
+        viewState = viewState.copy(activeTab = tab)
+    }
+
+    private fun getWeekStart(date: LocalDate): LocalDate {
+        // Get Monday of the current week (Monday = DayOfWeek.MONDAY which has ordinal 0)
+        val dayOfWeek = date.dayOfWeek.ordinal // Monday = 0, Sunday = 6
+        return date.minus(dayOfWeek, DateTimeUnit.DAY)
     }
 
     private fun loadHabitsStatistics() {
@@ -150,6 +176,110 @@ class StatisticsViewModel : BaseViewModel<StatisticsViewState, StatisticsAction,
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     viewState = viewState.copy(isLoading = false)
+                }
+            }
+        }
+    }
+
+    private fun loadWeeklyStatistics(weekStart: LocalDate) {
+        viewModelScope.launch(Dispatchers.Default) {
+            try {
+                val habits = habitDao.getAll()
+                val weekEnd = weekStart.plus(6, DateTimeUnit.DAY) // Sunday
+
+                // Filter only regular habits for weekly statistics
+                val regularHabits = habits.filter { it.type == HabitType.REGULAR }
+
+                if (regularHabits.isEmpty()) {
+                    withContext(Dispatchers.Main) {
+                        viewState = viewState.copy(weeklyData = null)
+                    }
+                    return@launch
+                }
+
+                val dailyCompletionCounts = MutableList(7) { 0 }
+                val dailyTotalCounts = MutableList(7) { 0 }
+                var totalCompleted = 0
+                var totalApplicable = 0
+
+                val habitStats = regularHabits.map { habit ->
+                    val cleanDaysToCheck = habit.daysToCheck.replace("[", "").replace("]", "")
+                    val daysToCheck = cleanDaysToCheck.split(",").map { it.trim().toInt() }
+
+                    val startDate = if (habit.startDate.isBlank()) {
+                        weekStart
+                    } else {
+                        LocalDate.parse(habit.startDate)
+                    }
+
+                    val endDate = if (habit.endDate.isBlank()) {
+                        weekEnd.plus(1, DateTimeUnit.YEAR) // Far future
+                    } else {
+                        LocalDate.parse(habit.endDate)
+                    }
+
+                    val dailyStatus = (0..6).map { dayOffset ->
+                        val date = weekStart.plus(dayOffset, DateTimeUnit.DAY)
+                        val dayOfWeek = date.dayOfWeek
+
+                        // Check if this day is within the habit's date range and is scheduled
+                        val isApplicable = date >= startDate &&
+                                          date <= endDate &&
+                                          daysToCheck.contains(dayOfWeek.ordinal)
+
+                        val isChecked = if (isApplicable) {
+                            dailyDao.isHabitChecked(habit.id, date.toString())
+                        } else {
+                            false
+                        }
+
+                        if (isApplicable) {
+                            dailyTotalCounts[dayOffset]++
+                            totalApplicable++
+                            if (isChecked) {
+                                dailyCompletionCounts[dayOffset]++
+                                totalCompleted++
+                            }
+                        }
+
+                        DayStatus(
+                            date = date,
+                            dayOfWeek = dayOfWeek,
+                            isChecked = isChecked,
+                            isApplicable = isApplicable
+                        )
+                    }
+
+                    WeeklyHabitStat(
+                        habitId = habit.id,
+                        habitTitle = habit.title,
+                        dailyStatus = dailyStatus
+                    )
+                }
+
+                val completionRate = if (totalApplicable > 0) {
+                    totalCompleted.toFloat() / totalApplicable
+                } else {
+                    0f
+                }
+
+                val weeklyData = WeeklyData(
+                    weekStart = weekStart,
+                    weekEnd = weekEnd,
+                    completedCount = totalCompleted,
+                    totalCount = totalApplicable,
+                    completionRate = completionRate,
+                    dailyCompletionCounts = dailyCompletionCounts,
+                    dailyTotalCounts = dailyTotalCounts,
+                    habitStats = habitStats
+                )
+
+                withContext(Dispatchers.Main) {
+                    viewState = viewState.copy(weeklyData = weeklyData)
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    viewState = viewState.copy(weeklyData = null)
                 }
             }
         }
