@@ -10,8 +10,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import feature.statistics.presentation.StatisticsViewModel
 import feature.statistics.ui.models.StatisticsEvent
+import feature.statistics.ui.models.StatisticsTab
 import feature.statistics.ui.views.StatisticsItem
 import feature.statistics.ui.views.StatisticsViewNoItems
+import feature.statistics.ui.views.WeeklyStatisticsView
 import org.jetbrains.compose.resources.stringResource
 import tech.mobiledeveloper.jethabit.resources.Res
 import tech.mobiledeveloper.jethabit.resources.title_statistics
@@ -42,6 +44,47 @@ fun StatisticsScreen() {
                 modifier = Modifier.padding(bottom = 16.dp)
             )
 
+            // Tab Row
+            TabRow(
+                selectedTabIndex = if (viewState.activeTab == StatisticsTab.WEEKLY) 0 else 1,
+                backgroundColor = JetHabitTheme.colors.primaryBackground,
+                contentColor = JetHabitTheme.colors.tintColor,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Tab(
+                    selected = viewState.activeTab == StatisticsTab.WEEKLY,
+                    onClick = { viewModel.obtainEvent(StatisticsEvent.SwitchTab(StatisticsTab.WEEKLY)) },
+                    text = {
+                        Text(
+                            text = "Weekly",
+                            style = JetHabitTheme.typography.toolbar,
+                            color = if (viewState.activeTab == StatisticsTab.WEEKLY) {
+                                JetHabitTheme.colors.tintColor
+                            } else {
+                                JetHabitTheme.colors.secondaryText
+                            }
+                        )
+                    }
+                )
+                Tab(
+                    selected = viewState.activeTab == StatisticsTab.ALL_TIME,
+                    onClick = { viewModel.obtainEvent(StatisticsEvent.SwitchTab(StatisticsTab.ALL_TIME)) },
+                    text = {
+                        Text(
+                            text = "All Time",
+                            style = JetHabitTheme.typography.toolbar,
+                            color = if (viewState.activeTab == StatisticsTab.ALL_TIME) {
+                                JetHabitTheme.colors.tintColor
+                            } else {
+                                JetHabitTheme.colors.secondaryText
+                            }
+                        )
+                    }
+                )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
             if (viewState.isLoading) {
                 Box(
                     modifier = Modifier.fillMaxSize(),
@@ -49,17 +92,34 @@ fun StatisticsScreen() {
                 ) {
                     CircularProgressIndicator(color = JetHabitTheme.colors.tintColor)
                 }
-            } else if (!viewState.hasData) {
-                StatisticsViewNoItems()
             } else {
-                LazyColumn {
-                    items(viewState.statistics) { stat ->
-                        StatisticsItem(
-                            title = stat.title,
-                            completionRate = stat.completionRate,
-                            trackedDays = stat.trackedDays
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
+                when (viewState.activeTab) {
+                    StatisticsTab.WEEKLY -> {
+                        if (!viewState.hasData || viewState.weeklyData == null) {
+                            StatisticsViewNoItems()
+                        } else {
+                            WeeklyStatisticsView(
+                                weeklyData = viewState.weeklyData,
+                                onPreviousWeek = { viewModel.obtainEvent(StatisticsEvent.PreviousWeek) },
+                                onNextWeek = { viewModel.obtainEvent(StatisticsEvent.NextWeek) }
+                            )
+                        }
+                    }
+                    StatisticsTab.ALL_TIME -> {
+                        if (!viewState.hasData) {
+                            StatisticsViewNoItems()
+                        } else {
+                            LazyColumn {
+                                items(viewState.statistics) { stat ->
+                                    StatisticsItem(
+                                        title = stat.title,
+                                        completionRate = stat.completionRate,
+                                        trackedDays = stat.trackedDays
+                                    )
+                                    Spacer(modifier = Modifier.height(8.dp))
+                                }
+                            }
+                        }
                     }
                 }
             }
