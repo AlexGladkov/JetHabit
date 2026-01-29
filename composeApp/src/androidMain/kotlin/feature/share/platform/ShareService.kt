@@ -75,10 +75,10 @@ actual class ShareService(private val context: Context) {
             cachePath.mkdirs()
 
             val file = File(cachePath, "share_${System.currentTimeMillis()}.png")
-            val fileOutputStream = FileOutputStream(file)
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream)
-            fileOutputStream.flush()
-            fileOutputStream.close()
+            FileOutputStream(file).use { fileOutputStream ->
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream)
+                fileOutputStream.flush()
+            }
 
             // Get URI using FileProvider
             val contentUri = FileProvider.getUriForFile(

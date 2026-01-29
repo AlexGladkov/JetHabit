@@ -32,7 +32,7 @@ class CalculateStreaksUseCase(
                 return 0
             }
 
-            // Parse the days to check (format: "[0,1,2,3,4,5,6]" where 0=Sunday, 6=Saturday)
+            // Parse the days to check (format: "[0,1,2,3,4,5,6]" where 0=Monday, 6=Sunday)
             val cleanDaysToCheck = habit.daysToCheck.replace("[", "").replace("]", "")
             val daysToCheck = cleanDaysToCheck
                 .split(",")
@@ -56,7 +56,7 @@ class CalculateStreaksUseCase(
 
             // Walk backwards from today, checking consecutive days
             while (currentDate >= startDate) {
-                // Get day of week (0 = Sunday, 6 = Saturday)
+                // Get day of week (0 = Monday, 6 = Sunday)
                 val dayOfWeek = currentDate.dayOfWeek.ordinal
 
                 // Only check days that are in the habit's daysToCheck
