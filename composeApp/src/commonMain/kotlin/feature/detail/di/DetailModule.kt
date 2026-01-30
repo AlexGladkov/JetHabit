@@ -3,18 +3,18 @@ package feature.detail.di
 import feature.detail.domain.DeleteHabitUseCase
 import feature.detail.domain.GetDetailInfoUseCase
 import feature.detail.domain.UpdateHabitUseCase
-import org.kodein.di.*
+import org.koin.dsl.module
 
-val detailModule = DI.Module("detailModule") {
-    bind<GetDetailInfoUseCase>() with provider {
-        GetDetailInfoUseCase(instance())
+val detailModule = module {
+    factory<GetDetailInfoUseCase> {
+        GetDetailInfoUseCase(get())
     }
-    
-    bind<DeleteHabitUseCase>() with provider {
-        DeleteHabitUseCase(instance())
+
+    factory<DeleteHabitUseCase> {
+        DeleteHabitUseCase(get())
     }
-    
-    bind<UpdateHabitUseCase>() with provider {
-        UpdateHabitUseCase(instance())
+
+    factory<UpdateHabitUseCase> {
+        UpdateHabitUseCase(get())
     }
 }

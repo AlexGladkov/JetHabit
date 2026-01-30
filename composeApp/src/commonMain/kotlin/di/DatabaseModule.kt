@@ -6,33 +6,31 @@ import feature.daily.data.DailyDao
 import feature.habits.data.HabitDao
 import feature.projects.data.ProjectDao
 import feature.tracker.data.TrackerDao
-import org.kodein.di.DI
-import org.kodein.di.bind
-import org.kodein.di.instance
-import org.kodein.di.singleton
+import org.koin.core.module.dsl.singleOf
+import org.koin.dsl.module
 
-fun databaseModule() = DI.Module("database") {
-    bind<AppDatabase>() with singleton {
-        instance<Any>("appDatabase") as AppDatabase
+val databaseModule = module {
+    single<AppDatabase> {
+        get(qualifier = org.koin.core.qualifier.named("appDatabase"))
     }
 
-    bind<HabitDao>() with singleton {
-        instance<AppDatabase>().getHabitDao()
+    single<HabitDao> {
+        get<AppDatabase>().getHabitDao()
     }
 
-    bind<TrackerDao>() with singleton {
-        instance<AppDatabase>().getTrackerDao()
+    single<TrackerDao> {
+        get<AppDatabase>().getTrackerDao()
     }
 
-    bind<DailyDao>() with singleton {
-        instance<AppDatabase>().getDailyDao()
+    single<DailyDao> {
+        get<AppDatabase>().getDailyDao()
     }
 
-    bind<UserProfileDao>() with singleton {
-        instance<AppDatabase>().getUserProfileDao()
+    single<UserProfileDao> {
+        get<AppDatabase>().getUserProfileDao()
     }
 
-    bind<ProjectDao>() with singleton {
-        instance<AppDatabase>().getProjectDao()
+    single<ProjectDao> {
+        get<AppDatabase>().getProjectDao()
     }
 } 

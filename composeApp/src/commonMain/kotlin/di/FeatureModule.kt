@@ -7,45 +7,42 @@ import feature.habits.domain.CreateHabitUseCase
 import feature.projects.di.projectModule
 import feature.settings.domain.ClearAllHabitsUseCase
 import feature.tracker.domain.UpdateTrackerValueUseCase
-import org.kodein.di.DI
-import org.kodein.di.bind
-import org.kodein.di.instance
-import org.kodein.di.singleton
+import org.koin.dsl.module
 
-fun featureModule() = DI.Module("feature") {
-    importAll(
+val featureModule = module {
+    includes(
         detailModule,
         projectModule
     )
-    
+
     // Use Cases
-    bind<GetHabitsForTodayUseCase>() with singleton { 
+    single<GetHabitsForTodayUseCase> {
         GetHabitsForTodayUseCase(
-            habitDao = instance(),
-            trackerDao = instance(),
-            dailyDao = instance()
+            habitDao = get(),
+            trackerDao = get(),
+            dailyDao = get()
         )
     }
-    bind<SwitchHabitUseCase>() with singleton { 
+    single<SwitchHabitUseCase> {
         SwitchHabitUseCase(
-            habitDao = instance(),
-            dailyDao = instance()
+            habitDao = get(),
+            dailyDao = get()
         )
     }
-    bind<CreateHabitUseCase>() with singleton { 
+    single<CreateHabitUseCase> {
         CreateHabitUseCase(
-            habitDao = instance()
+            habitDao = get()
         )
     }
-    bind<UpdateTrackerValueUseCase>() with singleton { 
+    single<UpdateTrackerValueUseCase> {
         UpdateTrackerValueUseCase(
-            trackerDao = instance()
+            trackerDao = get()
         )
     }
-    bind<ClearAllHabitsUseCase>() with singleton {
+    single<ClearAllHabitsUseCase> {
         ClearAllHabitsUseCase(
-            habitDao = instance(),
-            dailyDao = instance()
+            habitDao = get(),
+            dailyDao = get()
         )
     }
 }

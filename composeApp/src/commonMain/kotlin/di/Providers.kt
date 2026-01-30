@@ -1,5 +1,5 @@
 package di
 
-import org.kodein.di.DI
+import org.koin.core.module.Module
 
-expect fun DI.Builder.provideImagePicker() 
+expect fun Module.provideImagePicker() 

@@ -1,43 +1,41 @@
 package di
 
-import org.kodein.di.DI
-import org.kodein.di.DirectDI
-import org.kodein.di.bind
-import org.kodein.di.direct
-import org.kodein.di.instance
-import org.kodein.di.singleton
+import org.koin.core.Koin
+import org.koin.core.context.startKoin
+import org.koin.core.qualifier.named
+import org.koin.dsl.module
 
 object PlatformSDK {
-    private var _di: DirectDI? = null
-    val di: DirectDI
-        get() = requireNotNull(_di)
+    private var _koin: Koin? = null
+    val koin: Koin
+        get() = requireNotNull(_koin)
 
     fun init(
         configuration: PlatformConfiguration,
         appDatabase: Any? = null
     ) {
-        val configModule = DI.Module("config") {
-            bind<PlatformConfiguration>() with singleton { configuration }
+        val configModule = module {
+            single<PlatformConfiguration> { configuration }
             if (appDatabase != null) {
-                bind<Any>("appDatabase") with singleton { appDatabase }
+                single(qualifier = named("appDatabase")) { appDatabase }
             }
         }
 
-        val platformModule = DI.Module("platform") {
+        val platformModule = module {
             provideImagePicker()
         }
 
-        _di = DI {
-            importAll(
+        _koin = startKoin {
+            modules(
                 configModule,
                 platformModule,
-                databaseModule(),
-                featureModule()
+                databaseModule,
+                featureModule
             )
-        }.direct
+        }.koin
     }
 
     inline fun <reified T> instance(): T {
-        return di.instance()
+        return koin.get()
     }
 }

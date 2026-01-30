@@ -9,6 +9,7 @@ coroutines = "1.8.1"
 serialization = "1.6.3"
 ktor = "2.3.9"
 klock = "3.4.0"
+koin = "4.0.1"
 
 # Libraries
 room = "2.7.0-alpha03"
@@ -56,7 +57,10 @@ coil-multiplatform-compose = { module = "io.coil-kt.coil3:coil-compose", version
 #coil-multiplatform-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coil-multiplatform" }
 coil-multiplatform-network-ktor = { module = "io.coil-kt.coil3:coil-network-ktor", version.ref = "coil-multiplatform" }
 
-kodein-di = "org.kodein.di:kodein-di:7.20.2"
+koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
+koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin" }
+koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koin" }
+koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
 uuid = "app.softwork:kotlinx-uuid-core:0.0.25"
 
 compose-viewmodel = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose:2.8.0"

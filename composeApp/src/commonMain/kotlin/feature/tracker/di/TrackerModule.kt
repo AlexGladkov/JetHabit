@@ -3,15 +3,15 @@ package feature.tracker.di
 import core.database.AppDatabase
 import feature.tracker.data.TrackerDao
 import feature.tracker.domain.UpdateTrackerValueUseCase
-import org.kodein.di.*
+import org.koin.dsl.module
 
-val trackerModule = DI.Module("TrackerModule") {
-    bind<TrackerDao>() with singleton {
-        val appDatabase = instance<AppDatabase>()
+val trackerModule = module {
+    single<TrackerDao> {
+        val appDatabase = get<AppDatabase>()
         appDatabase.getTrackerDao()
     }
-    
-    bind<UpdateTrackerValueUseCase>() with provider {
-        UpdateTrackerValueUseCase(instance())
+
+    factory<UpdateTrackerValueUseCase> {
+        UpdateTrackerValueUseCase(get())
     }
 } 
