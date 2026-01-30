@@ -1,7 +1,9 @@
 package di
 
 import org.koin.core.Koin
+import org.koin.core.context.GlobalContext
 import org.koin.core.context.startKoin
+import org.koin.core.context.stopKoin
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
@@ -14,6 +16,11 @@ object PlatformSDK {
         configuration: PlatformConfiguration,
         appDatabase: Any? = null
     ) {
+        // Stop any existing Koin instance to allow reinitialization
+        if (GlobalContext.getOrNull() != null) {
+            stopKoin()
+        }
+
         val configModule = module {
             single<PlatformConfiguration> { configuration }
             if (appDatabase != null) {

@@ -6,7 +6,6 @@ import feature.daily.data.DailyDao
 import feature.habits.data.HabitDao
 import feature.projects.data.ProjectDao
 import feature.tracker.data.TrackerDao
-import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
 val databaseModule = module {

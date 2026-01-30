@@ -11,7 +11,7 @@ Adopted to full Compose Multiplatform and Kotlin Multiplatform
 - Presentation: KViewModel
 - Database: Room
 - Resources: LibRes
-- DI: Kodein
+- DI: Koin
 - UI: Compose Multiplatform
 
 ### Supported Platforms

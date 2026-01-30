@@ -22,9 +22,12 @@
 -keepnames class kotlinx.coroutines.internal.MainDispatcherFactory {}
 -keepnames class kotlinx.coroutines.CoroutineExceptionHandler {}
 
-# Keep Kodein
--keep class org.kodein.** { *; }
--keep @org.kodein.di.DI$Tag class *
+# Keep Koin
+-keep class org.koin.** { *; }
+-keep class org.koin.core.** { *; }
+-keepclassmembers class * {
+    public <init>(...);
+}
 
 # General Android rules
 -keepclassmembers class * implements android.os.Parcelable {

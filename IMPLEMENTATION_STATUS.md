@@ -81,7 +81,7 @@
 - Project deletion is handled safely (nullifies habit references before deletion)
 - All filtering is optional (null projectId shows all habits)
 - Color parsing is cross-platform compatible (no android.graphics.Color dependency)
-- Follows existing codebase patterns: BaseViewModel, sealed events/actions, DI via Kodein
+- Follows existing codebase patterns: BaseViewModel, sealed events/actions, DI via Koin
 
 ## Files Created (16)
 - core/database/migrations/Migration7to8.kt
