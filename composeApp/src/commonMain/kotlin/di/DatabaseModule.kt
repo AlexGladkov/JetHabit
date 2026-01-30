@@ -2,6 +2,8 @@ package di
 
 import core.database.AppDatabase
 import core.database.dao.UserProfileDao
+import core.database.dao.UserSettingsDao
+import data.features.settings.UserSettingsRepository
 import feature.daily.data.DailyDao
 import feature.habits.data.HabitDao
 import feature.projects.data.ProjectDao
@@ -34,5 +36,13 @@ fun databaseModule() = DI.Module("database") {
 
     bind<ProjectDao>() with singleton {
         instance<AppDatabase>().getProjectDao()
+    }
+
+    bind<UserSettingsDao>() with singleton {
+        instance<AppDatabase>().getUserSettingsDao()
+    }
+
+    bind<UserSettingsRepository>() with singleton {
+        UserSettingsRepository(instance())
     }
 } 

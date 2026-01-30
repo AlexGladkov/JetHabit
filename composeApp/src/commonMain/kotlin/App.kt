@@ -6,6 +6,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import data.features.settings.LocalSettingsEventBus
 import data.features.settings.SettingsEventBus
+import data.features.settings.UserSettingsRepository
+import di.Inject
 import navigation.LocalNavHost
 import screens.create.CreateHabitFlow
 import navigation.MainScreen
@@ -14,7 +16,8 @@ import themes.MainTheme
 
 @Composable
 fun App() {
-    val settingsEventBus = remember { SettingsEventBus() }
+    val repository = remember { Inject.instance<UserSettingsRepository>() }
+    val settingsEventBus = remember { SettingsEventBus(repository) }
     val currentSettings by settingsEventBus.currentSettings.collectAsState()
 
     MainTheme(
