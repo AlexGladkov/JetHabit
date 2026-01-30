@@ -35,11 +35,8 @@ class ProfileViewModel(
                 viewAction = ProfileAction.NavigateToProjects
             }
             ProfileEvent.LoadProfile -> loadProfile()
-            ProfileEvent.VkLoginClicked -> {
-                viewAction = ProfileAction.LaunchVkLogin
-            }
+            ProfileEvent.VkLoginClicked -> performVkLogin()
             ProfileEvent.LogoutClicked -> logout()
-            is ProfileEvent.LoginResult -> handleLoginResult(viewEvent.result)
         }
     }
 
@@ -59,19 +56,24 @@ class ProfileViewModel(
         }
     }
 
-    private fun handleLoginResult(result: AuthResult) {
+    private fun performVkLogin() {
         viewModelScope.launch {
-            when (result) {
-                is AuthResult.Success -> {
-                    // AuthRepository already saved the profile
-                    // Profile will be updated via flow in loadProfile
-                }
-                is AuthResult.Error -> {
-                    viewAction = ProfileAction.ShowError(result.message)
-                }
-                AuthResult.Cancelled -> {
-                    // User cancelled, do nothing
-                }
+            val result = authRepository.signIn()
+            handleLoginResult(result)
+        }
+    }
+
+    private fun handleLoginResult(result: AuthResult) {
+        when (result) {
+            is AuthResult.Success -> {
+                // AuthRepository already saved the profile
+                // Profile will be updated via flow in loadProfile
+            }
+            is AuthResult.Error -> {
+                viewAction = ProfileAction.ShowError(result.message)
+            }
+            AuthResult.Cancelled -> {
+                // User cancelled, do nothing
             }
         }
     }

@@ -35,35 +35,43 @@ actual class VkAuthProvider : AuthProvider {
                     val lastName = user.lastName ?: ""
                     val displayName = "$firstName $lastName".trim()
 
-                    continuation.resume(
-                        AuthResult.Success(
-                            userId = user.id.toString(),
-                            displayName = displayName.ifEmpty { "VK User" },
-                            email = user.email,
-                            avatarUrl = user.photo200
-                        )
-                    )
-                }
-
-                override fun onFail(error: NSError) {
-                    val errorDescription = error.localizedDescription
-
-                    // Check if user cancelled
-                    if (error.code == -1L) {
-                        continuation.resume(AuthResult.Cancelled)
-                    } else {
+                    if (continuation.isActive) {
                         continuation.resume(
-                            AuthResult.Error(errorDescription ?: "VK login failed")
+                            AuthResult.Success(
+                                userId = user.id.toString(),
+                                displayName = displayName.ifEmpty { "VK User" },
+                                email = user.email,
+                                avatarUrl = user.photo200
+                            )
                         )
                     }
                 }
 
+                override fun onFail(error: NSError) {
+                    if (continuation.isActive) {
+                        val errorDescription = error.localizedDescription
+
+                        // Check if user cancelled
+                        if (error.code == -1L) {
+                            continuation.resume(AuthResult.Cancelled)
+                        } else {
+                            continuation.resume(
+                                AuthResult.Error(errorDescription ?: "VK login failed")
+                            )
+                        }
+                    }
+                }
+
                 override fun onCancel() {
-                    continuation.resume(AuthResult.Cancelled)
+                    if (continuation.isActive) {
+                        continuation.resume(AuthResult.Cancelled)
+                    }
                 }
             })
         } catch (e: Exception) {
-            continuation.resume(AuthResult.Error(e.message ?: "Unknown error"))
+            if (continuation.isActive) {
+                continuation.resume(AuthResult.Error(e.message ?: "Unknown error"))
+            }
         }
     }
 

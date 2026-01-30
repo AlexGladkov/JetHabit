@@ -35,39 +35,45 @@ actual class VkAuthProvider(
                         // Extract user data from the token
                         val userData = accessToken.userData
 
-                        continuation.resume(
-                            AuthResult.Success(
-                                userId = userData.userId.toString(),
-                                displayName = "${userData.firstName} ${userData.lastName}".trim(),
-                                email = userData.email,
-                                avatarUrl = userData.photo200
+                        if (continuation.isActive) {
+                            continuation.resume(
+                                AuthResult.Success(
+                                    userId = userData.userId.toString(),
+                                    displayName = "${userData.firstName} ${userData.lastName}".trim(),
+                                    email = userData.email,
+                                    avatarUrl = userData.photo200
+                                )
                             )
-                        )
+                        }
                     }
 
                     override fun onFail(fail: VKIDAuthFail) {
-                        when (fail) {
-                            is VKIDAuthFail.Canceled -> {
-                                continuation.resume(AuthResult.Cancelled)
-                            }
-                            is VKIDAuthFail.Failed -> {
-                                continuation.resume(
-                                    AuthResult.Error(
-                                        fail.description ?: "VK login failed"
+                        if (continuation.isActive) {
+                            when (fail) {
+                                is VKIDAuthFail.Canceled -> {
+                                    continuation.resume(AuthResult.Cancelled)
+                                }
+                                is VKIDAuthFail.Failed -> {
+                                    continuation.resume(
+                                        AuthResult.Error(
+                                            fail.description ?: "VK login failed"
+                                        )
                                     )
-                                )
-                            }
-                            is VKIDAuthFail.NoBrowserAvailable -> {
-                                continuation.resume(
-                                    AuthResult.Error("No browser available for VK login")
-                                )
+                                }
+                                is VKIDAuthFail.NoBrowserAvailable -> {
+                                    continuation.resume(
+                                        AuthResult.Error("No browser available for VK login")
+                                    )
+                                }
                             }
                         }
                     }
                 }
             )
         } catch (e: Exception) {
-            continuation.resume(AuthResult.Error(e.message ?: "Unknown error"))
+            if (continuation.isActive) {
+                continuation.resume(AuthResult.Error(e.message ?: "Unknown error"))
+            }
         }
     }
 

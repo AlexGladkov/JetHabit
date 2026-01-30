@@ -17,15 +17,20 @@ import ui.themes.components.JetHabitButton
 @Composable
 internal fun ProfileView(
     viewState: ProfileViewState,
+    scaffoldState: ScaffoldState,
     eventHandler: (ProfileEvent) -> Unit
 ) {
-    Surface(
-        modifier = Modifier
-            .fillMaxWidth(),
-        color = JetHabitTheme.colors.primaryBackground
+    Scaffold(
+        scaffoldState = scaffoldState,
+        backgroundColor = JetHabitTheme.colors.primaryBackground
     ) {
-        Column {
-            AppHeader(title = "Profile")
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth(),
+            color = JetHabitTheme.colors.primaryBackground
+        ) {
+            Column {
+                AppHeader(title = "Profile")
 
             // Show VK login button if not logged in and profile is empty
             if (!viewState.isLoggedIn && viewState.isProfileEmpty()) {
@@ -97,6 +102,7 @@ internal fun ProfileView(
                 color = JetHabitTheme.colors.primaryBackground,
                 modifier = Modifier.padding(horizontal = 20.dp)
             )
+            }
         }
     }
 }

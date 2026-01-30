@@ -1,6 +1,5 @@
 package feature.profile.start.ui
 
-import androidx.compose.material.ScaffoldState
 import androidx.compose.material.SnackbarDuration
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
@@ -13,7 +12,6 @@ import androidx.navigation.NavController
 import di.Inject
 import feature.profile.start.presentation.ProfileViewModel
 import feature.profile.start.ui.models.ProfileAction
-import feature.profile.start.ui.models.ProfileEvent
 import feature.profile.start.ui.views.ProfileView
 import kotlinx.coroutines.launch
 import navigation.LocalNavHost
@@ -35,9 +33,11 @@ internal fun ProfileScreen(
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
 
-    ProfileView(viewState = viewState) {
-        viewModel.obtainEvent(it)
-    }
+    ProfileView(
+        viewState = viewState,
+        scaffoldState = scaffoldState,
+        eventHandler = { viewModel.obtainEvent(it) }
+    )
 
     when (viewAction) {
         ProfileAction.NavigateToEdit -> {
@@ -50,15 +50,6 @@ internal fun ProfileScreen(
         }
         ProfileAction.NavigateToProjects -> {
             navController.navigate("Projects")
-            viewModel.clearAction()
-        }
-        ProfileAction.LaunchVkLogin -> {
-            // Launch VK login flow
-            LaunchedEffect(Unit) {
-                val authRepository: core.auth.AuthRepository = Inject.instance()
-                val result = authRepository.signIn()
-                viewModel.obtainEvent(ProfileEvent.LoginResult(result))
-            }
             viewModel.clearAction()
         }
         is ProfileAction.ShowError -> {
