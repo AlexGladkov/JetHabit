@@ -1,6 +1,7 @@
 package feature.main
 
 import com.arkivanov.decompose.ComponentContext
+import com.arkivanov.decompose.childContext
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
@@ -66,13 +67,13 @@ class MainComponent(
 
     val statisticsComponent: StatisticsComponent =
         StatisticsComponent(
-            componentContext = componentContext,
+            componentContext = childContext("statistics"),
             di = di
         )
 
     val chatComponent: ChatComponent =
         ChatComponent(
-            componentContext = componentContext,
+            componentContext = childContext("chat"),
             di = di
         )
 

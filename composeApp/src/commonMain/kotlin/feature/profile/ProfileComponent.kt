@@ -1,7 +1,10 @@
 package feature.profile
 
 import com.arkivanov.decompose.ComponentContext
+import com.arkivanov.decompose.childContext
 import com.arkivanov.decompose.router.stack.StackNavigation
+import com.arkivanov.decompose.router.stack.pop
+import com.arkivanov.decompose.router.stack.push
 import feature.profile.edit.presentation.EditProfileComponent
 import feature.profile.start.presentation.ProfileStartComponent
 import feature.projects.presentation.ProjectListComponent
@@ -13,7 +16,7 @@ import org.kodein.di.DIAware
 class ProfileComponent(
     componentContext: ComponentContext,
     override val di: DI,
-    private val config: Config,
+    config: Config,
     private val navigation: StackNavigation<Config>
 ) : ComponentContext by componentContext, DIAware {
 
@@ -43,7 +46,7 @@ class ProfileComponent(
         return when (config) {
             is Config.Start -> Child.StartChild(
                 ProfileStartComponent(
-                    componentContext = this,
+                    componentContext = childContext("start"),
                     di = di,
                     onNavigateToEdit = {
                         navigation.push(Config.EditProfile)
@@ -58,7 +61,7 @@ class ProfileComponent(
             )
             is Config.Settings -> Child.SettingsChild(
                 SettingsComponent(
-                    componentContext = this,
+                    componentContext = childContext("settings"),
                     di = di,
                     onNavigateBack = {
                         navigation.pop()
@@ -67,7 +70,7 @@ class ProfileComponent(
             )
             is Config.EditProfile -> Child.EditProfileChild(
                 EditProfileComponent(
-                    componentContext = this,
+                    componentContext = childContext("edit_profile"),
                     di = di,
                     onNavigateBack = {
                         navigation.pop()
@@ -76,7 +79,7 @@ class ProfileComponent(
             )
             is Config.Projects -> Child.ProjectsChild(
                 ProjectListComponent(
-                    componentContext = this,
+                    componentContext = childContext("projects"),
                     di = di,
                     onNavigateBack = {
                         navigation.pop()

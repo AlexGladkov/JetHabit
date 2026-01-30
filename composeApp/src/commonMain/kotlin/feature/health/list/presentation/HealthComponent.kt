@@ -1,7 +1,10 @@
 package feature.health.list.presentation
 
 import com.arkivanov.decompose.ComponentContext
+import com.arkivanov.decompose.childContext
 import com.arkivanov.decompose.router.stack.StackNavigation
+import com.arkivanov.decompose.router.stack.pop
+import com.arkivanov.decompose.router.stack.push
 import feature.create.presentation.CreateHabitComponent
 import feature.health.track.presentation.TrackHabitComponent
 import kotlinx.serialization.Serializable
@@ -11,7 +14,7 @@ import org.kodein.di.DIAware
 class HealthComponent(
     componentContext: ComponentContext,
     override val di: DI,
-    private val config: Config,
+    config: Config,
     private val navigation: StackNavigation<Config>,
     private val onCreateHabit: () -> Unit
 ) : ComponentContext by componentContext, DIAware {
@@ -38,7 +41,7 @@ class HealthComponent(
         return when (config) {
             is Config.List -> Child.ListChild(
                 HealthListComponent(
-                    componentContext = this,
+                    componentContext = childContext("list"),
                     di = di,
                     onHabitSelected = { habitId ->
                         navigation.push(Config.Track(habitId))
@@ -50,7 +53,7 @@ class HealthComponent(
             )
             is Config.Track -> Child.TrackChild(
                 TrackHabitComponent(
-                    componentContext = this,
+                    componentContext = childContext("track_${config.habitId}"),
                     di = di,
                     habitId = config.habitId,
                     onNavigateBack = {
@@ -60,7 +63,7 @@ class HealthComponent(
             )
             is Config.Create -> Child.CreateChild(
                 CreateHabitComponent(
-                    componentContext = this,
+                    componentContext = childContext("create_${config.type}"),
                     di = di,
                     habitType = config.type,
                     onNavigateBack = {
