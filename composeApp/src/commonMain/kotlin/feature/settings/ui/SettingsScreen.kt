@@ -12,11 +12,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
+import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import data.features.settings.LocalSettingsEventBus
-import feature.settings.presentation.SettingsViewModel
-import feature.settings.presentation.models.SettingsAction
+import feature.settings.presentation.SettingsComponent
 import feature.settings.presentation.models.SettingsEvent
 import screens.daily.views.HabitCardItem
 import screens.daily.views.HabitCardItemModel
@@ -32,24 +30,14 @@ import ui.components.AppHeader
 @ExperimentalFoundationApi
 @Composable
 internal fun SettingsScreen(
-    navController: NavController,
-    viewModel: SettingsViewModel = viewModel { SettingsViewModel() }
+    component: SettingsComponent
 ) {
-    val viewState by viewModel.viewStates().collectAsState()
-    val viewAction by viewModel.viewActions().collectAsState(null)
+    val viewState by component.state.subscribeAsState()
 
     SettingsView(
         viewState = viewState,
-        eventHandler = viewModel::obtainEvent
+        eventHandler = component::onEvent
     )
-
-    when (viewAction) {
-        SettingsAction.NavigateBack -> {
-            navController.popBackStack()
-            viewModel.clearAction()
-        }
-        null -> { }
-    }
 }
 
 @Composable

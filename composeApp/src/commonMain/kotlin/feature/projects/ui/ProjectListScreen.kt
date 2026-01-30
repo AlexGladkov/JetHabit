@@ -3,33 +3,20 @@ package feature.projects.ui
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
-import feature.projects.presentation.ProjectListViewModel
-import feature.projects.presentation.models.ProjectListAction
+import com.arkivanov.decompose.extensions.compose.subscribeAsState
+import feature.projects.presentation.ProjectListComponent
 
 @ExperimentalMaterialApi
 @ExperimentalFoundationApi
 @Composable
 fun ProjectListScreen(
-    navController: NavController,
-    viewModel: ProjectListViewModel = viewModel { ProjectListViewModel() }
+    component: ProjectListComponent
 ) {
-    val viewState by viewModel.viewStates().collectAsState()
-    val viewAction by viewModel.viewActions().collectAsState(null)
+    val viewState by component.state.subscribeAsState()
 
     ProjectListView(
         viewState = viewState,
-        eventHandler = viewModel::obtainEvent
+        eventHandler = component::onEvent
     )
-
-    when (viewAction) {
-        ProjectListAction.NavigateBack -> {
-            navController.popBackStack()
-            viewModel.clearAction()
-        }
-        null -> {}
-    }
 }

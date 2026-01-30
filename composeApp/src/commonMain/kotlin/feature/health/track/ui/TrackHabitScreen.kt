@@ -8,9 +8,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import feature.health.track.presentation.TrackHabitViewModel
-import feature.health.track.presentation.models.TrackHabitAction
+import com.arkivanov.decompose.extensions.compose.subscribeAsState
+import feature.health.track.presentation.TrackHabitComponent
 import feature.health.track.presentation.models.TrackHabitEvent
 import kotlinx.datetime.*
 import org.jetbrains.compose.resources.stringResource
@@ -25,23 +24,10 @@ import ui.themes.components.JetHabitButton
 
 @Composable
 fun TrackHabitScreen(
-    habitId: String,
-    navController: NavController
+    component: TrackHabitComponent
 ) {
-    val viewModel = remember { TrackHabitViewModel(habitId) }
-    val viewState by viewModel.viewStates().collectAsState()
-    val viewAction by viewModel.viewActions().collectAsState(null)
+    val viewState by component.state.subscribeAsState()
     var showCalendar by remember { mutableStateOf(false) }
-
-    LaunchedEffect(viewAction) {
-        when (viewAction) {
-            TrackHabitAction.NavigateBack -> {
-                navController.popBackStack()
-                viewModel.clearAction()
-            }
-            null -> {}
-        }
-    }
 
     if (showCalendar) {
         AlertDialog(
@@ -54,7 +40,7 @@ fun TrackHabitScreen(
                     selectedColor = JetHabitTheme.colors.tintColor,
                     allowSameDate = true,
                     onDateSelected = { date ->
-                        viewModel.obtainEvent(TrackHabitEvent.DateSelected(date.toString()))
+                        component.onEvent(TrackHabitEvent.DateSelected(date.toString()))
                         showCalendar = false
                     }
                 )
@@ -85,11 +71,11 @@ fun TrackHabitScreen(
                 OutlinedTextField(
                     value = viewState.selectedDate,
                     onValueChange = { },
-                    label = { 
+                    label = {
                         Text(
                             text = stringResource(Res.string.tracker_date),
                             color = JetHabitTheme.colors.secondaryText
-                        ) 
+                        )
                     },
                     modifier = Modifier.fillMaxWidth(),
                     textStyle = JetHabitTheme.typography.body.copy(color = JetHabitTheme.colors.primaryText),
@@ -117,12 +103,12 @@ fun TrackHabitScreen(
 
                 OutlinedTextField(
                     value = viewState.newValue?.toString() ?: "",
-                    onValueChange = { viewModel.obtainEvent(TrackHabitEvent.NewValueChanged(it)) },
-                    label = { 
+                    onValueChange = { component.onEvent(TrackHabitEvent.NewValueChanged(it)) },
+                    label = {
                         Text(
                             text = stringResource(Res.string.tracker_new_value, viewState.measurement.toString()),
                             color = JetHabitTheme.colors.secondaryText
-                        ) 
+                        )
                     },
                     modifier = Modifier.fillMaxWidth(),
                     textStyle = JetHabitTheme.typography.body.copy(color = JetHabitTheme.colors.primaryText),
@@ -155,7 +141,7 @@ fun TrackHabitScreen(
                 modifier = Modifier.fillMaxWidth(),
                 backgroundColor = JetHabitTheme.colors.tintColor,
                 text = stringResource(Res.string.action_save),
-                onClick = { viewModel.obtainEvent(TrackHabitEvent.SaveClicked) }
+                onClick = { component.onEvent(TrackHabitEvent.SaveClicked) }
             )
         }
     }

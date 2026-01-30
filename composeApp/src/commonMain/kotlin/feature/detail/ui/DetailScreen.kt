@@ -3,16 +3,13 @@ package feature.detail.ui
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
-import feature.detail.presentation.DetailViewModel
+import com.arkivanov.decompose.extensions.compose.subscribeAsState
+import feature.detail.presentation.DetailComponent
 import feature.detail.presentation.models.DateSelectionState
-import feature.detail.presentation.models.DetailAction
 import feature.detail.presentation.models.DetailEvent
 import kotlinx.coroutines.launch
 import kotlinx.datetime.TimeZone
@@ -23,18 +20,15 @@ import kotlinx.datetime.*
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 internal fun DetailScreen(
-    habitId: String,
-    navController: NavController,
-    viewModel: DetailViewModel = viewModel { DetailViewModel(habitId) }
+    component: DetailComponent
 ) {
-    val viewState by viewModel.viewStates().collectAsState()
-    val viewAction by viewModel.viewActions().collectAsState(null)
+    val viewState by component.state.subscribeAsState()
     val coroutineScope = rememberCoroutineScope()
     val bottomSheetState = rememberModalBottomSheetState(
         initialValue = ModalBottomSheetValue.Hidden,
     )
 
-    DetailView(viewState, eventHandler = { viewModel.obtainEvent(it) })
+    DetailView(viewState, eventHandler = { component.onEvent(it) })
 
     when (viewState.dateSelectionState) {
         DateSelectionState.None ->
@@ -51,15 +45,6 @@ internal fun DetailScreen(
             coroutineScope.launch {
                 bottomSheetState.show()
             }
-    }
-
-    when (viewAction) {
-        DetailAction.CloseScreen -> navController.popBackStack()
-        DetailAction.DateError -> {
-            viewModel.clearAction()
-        }
-
-        null -> {}
     }
 
     ModalBottomSheetLayout(
@@ -80,7 +65,7 @@ internal fun DetailScreen(
                 dayOfWeekColor = JetHabitTheme.colors.errorColor,
                 textColor = JetHabitTheme.colors.primaryText,
                 onDateSelected = {
-                    viewModel.obtainEvent(DetailEvent.DateSelected(it))
+                    component.onEvent(DetailEvent.DateSelected(it))
                 }
             )
         },

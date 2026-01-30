@@ -8,8 +8,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import feature.statistics.presentation.StatisticsViewModel
-import feature.statistics.ui.models.StatisticsEvent
+import com.arkivanov.decompose.extensions.compose.subscribeAsState
+import feature.statistics.presentation.StatisticsComponent
 import feature.statistics.ui.views.StatisticsItem
 import feature.statistics.ui.views.StatisticsViewNoItems
 import org.jetbrains.compose.resources.stringResource
@@ -18,13 +18,10 @@ import tech.mobiledeveloper.jethabit.resources.title_statistics
 import ui.themes.JetHabitTheme
 
 @Composable
-fun StatisticsScreen() {
-    val viewModel = remember { StatisticsViewModel() }
-    val viewState by viewModel.viewStates().collectAsState()
-
-    LaunchedEffect(Unit) {
-        viewModel.obtainEvent(StatisticsEvent.LoadStatistics)
-    }
+fun StatisticsScreen(
+    component: StatisticsComponent
+) {
+    val viewState by component.state.subscribeAsState()
 
     Surface(
         modifier = Modifier.fillMaxSize(),

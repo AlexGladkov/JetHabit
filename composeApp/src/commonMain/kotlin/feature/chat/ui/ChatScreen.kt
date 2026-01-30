@@ -5,14 +5,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
-import feature.chat.presentation.ChatViewModel
+import com.arkivanov.decompose.extensions.compose.subscribeAsState
+import feature.chat.presentation.ChatComponent
 import feature.chat.presentation.models.ChatEvent
 import feature.chat.presentation.models.ChatMessage
 import org.jetbrains.compose.resources.stringResource
@@ -26,12 +24,11 @@ import ui.themes.components.JetHabitButton
 
 @Composable
 fun ChatScreen(
-    navController: NavController,
-    viewModel: ChatViewModel = viewModel { ChatViewModel() }
+    component: ChatComponent
 ) {
-    val viewState by viewModel.viewStates().collectAsState()
+    val viewState by component.state.subscribeAsState()
 
-    ChatView(viewState = viewState) { viewModel.obtainEvent(it) }
+    ChatView(viewState = viewState) { component.onEvent(it) }
 }
 
 @Composable

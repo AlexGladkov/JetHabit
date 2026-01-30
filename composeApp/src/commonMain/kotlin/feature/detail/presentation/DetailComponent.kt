@@ -1,13 +1,13 @@
 package feature.detail.presentation
 
-import androidx.lifecycle.viewModelScope
-import base.BaseViewModel
-import di.Inject
+import com.arkivanov.decompose.ComponentContext
+import com.arkivanov.decompose.value.MutableValue
+import com.arkivanov.decompose.value.Value
+import com.arkivanov.essenty.lifecycle.coroutines.coroutineScope
 import feature.detail.domain.DeleteHabitUseCase
 import feature.detail.domain.GetDetailInfoUseCase
 import feature.detail.domain.UpdateHabitUseCase
 import feature.detail.presentation.models.DateSelectionState
-import feature.detail.presentation.models.DetailAction
 import feature.detail.presentation.models.DetailEvent
 import feature.detail.presentation.models.DetailViewState
 import feature.habits.data.HabitType
@@ -17,29 +17,40 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.*
+import org.kodein.di.DI
+import org.kodein.di.DIAware
+import org.kodein.di.instance
 import utils.CalendarDays
 import java.util.UUID
 
-class DetailViewModel(private val habitId: String) : BaseViewModel<DetailViewState, DetailAction, DetailEvent>(
-    initialState = DetailViewState(habitId = habitId)
-) {
+class DetailComponent(
+    componentContext: ComponentContext,
+    override val di: DI,
+    private val habitId: String,
+    private val onNavigateBack: () -> Unit
+) : ComponentContext by componentContext, DIAware {
 
-    private val getDetailInfoUseCase = Inject.instance<GetDetailInfoUseCase>()
-    private val deleteHabitUseCase = Inject.instance<DeleteHabitUseCase>()
-    private val updateHabitUseCase = Inject.instance<UpdateHabitUseCase>()
-    private val trackerDao = Inject.instance<TrackerDao>()
+    private val getDetailInfoUseCase: GetDetailInfoUseCase by di.instance()
+    private val deleteHabitUseCase: DeleteHabitUseCase by di.instance()
+    private val updateHabitUseCase: UpdateHabitUseCase by di.instance()
+    private val trackerDao: TrackerDao by di.instance()
+
+    private val scope = coroutineScope(Dispatchers.Main)
+
+    private val _state = MutableValue(DetailViewState(habitId = habitId))
+    val state: Value<DetailViewState> = _state
 
     init {
         fetchDetailedInformation()
     }
 
-    override fun obtainEvent(viewEvent: DetailEvent) {
+    fun onEvent(viewEvent: DetailEvent) {
         when (viewEvent) {
-            DetailEvent.CloseScreen -> viewAction = DetailAction.CloseScreen
+            DetailEvent.CloseScreen -> onNavigateBack()
             DetailEvent.DeleteItem -> deleteItem()
             DetailEvent.SaveChanges -> applyChanges()
-            DetailEvent.StartDateClicked -> viewState = viewState.copy(dateSelectionState = DateSelectionState.Start)
-            DetailEvent.EndDateClicked -> viewState = viewState.copy(dateSelectionState = DateSelectionState.End)
+            DetailEvent.StartDateClicked -> _state.value = _state.value.copy(dateSelectionState = DateSelectionState.Start)
+            DetailEvent.EndDateClicked -> _state.value = _state.value.copy(dateSelectionState = DateSelectionState.End)
             is DetailEvent.DateSelected -> selectDate(viewEvent.value)
             is DetailEvent.NewValueChanged -> parseTrackerValue(viewEvent.value)
         }
@@ -52,18 +63,18 @@ class DetailViewModel(private val habitId: String) : BaseViewModel<DetailViewSta
             value.toDoubleOrNull()
         }
 
-        viewState = viewState.copy(newValue = newValue)
+        _state.value = _state.value.copy(newValue = newValue)
     }
 
     private fun fetchDetailedInformation() {
-        viewModelScope.launch(Dispatchers.Default) {
+        scope.launch(Dispatchers.Default) {
             val details = getDetailInfoUseCase.execute(habitId)
             val currentValue = if (details.type == HabitType.TRACKER) {
                 trackerDao.getLatestValueFor(habitId)?.value
             } else null
 
             withContext(Dispatchers.Main) {
-                viewState = viewState.copy(
+                _state.value = _state.value.copy(
                     itemTitle = details.habitTitle,
                     startDate = details.startDate,
                     endDate = details.endDate,
@@ -79,58 +90,58 @@ class DetailViewModel(private val habitId: String) : BaseViewModel<DetailViewSta
     }
 
     private fun deleteItem() {
-        viewModelScope.launch(Dispatchers.Default) {
+        scope.launch(Dispatchers.Default) {
             withContext(Dispatchers.Main) {
-                viewState = viewState.copy(isDeleting = true)
+                _state.value = _state.value.copy(isDeleting = true)
             }
 
             try {
-                deleteHabitUseCase.execute(viewState.habitId)
+                deleteHabitUseCase.execute(_state.value.habitId)
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    viewState = viewState.copy(isDeleting = true)
+                    _state.value = _state.value.copy(isDeleting = true)
                 }
             }
 
             withContext(Dispatchers.Main) {
-                viewAction = DetailAction.CloseScreen
+                onNavigateBack()
             }
         }
     }
 
     private fun selectDate(value: LocalDate) {
-        when (viewState.dateSelectionState) {
+        when (_state.value.dateSelectionState) {
             DateSelectionState.None -> {}
             DateSelectionState.Start -> {
-                viewState = viewState.copy(start = value, startDate = CalendarDays.Custom(value.toString()))
+                _state.value = _state.value.copy(start = value, startDate = CalendarDays.Custom(value.toString()))
             }
 
-            DateSelectionState.End -> viewState =
-                viewState.copy(end = value, endDate = CalendarDays.Custom(value.toString()))
+            DateSelectionState.End -> _state.value =
+                _state.value.copy(end = value, endDate = CalendarDays.Custom(value.toString()))
         }
 
-        viewState = viewState.copy(dateSelectionState = DateSelectionState.None)
+        _state.value = _state.value.copy(dateSelectionState = DateSelectionState.None)
     }
 
     private fun applyChanges() {
-        viewModelScope.launch(Dispatchers.Default) {
+        scope.launch(Dispatchers.Default) {
             try {
                 updateHabitUseCase.execute(
-                    habitId = viewState.habitId,
-                    habitTitle = viewState.itemTitle,
-                    startDate = viewState.start,
-                    endDate = viewState.end,
-                    daysToCheck = viewState.daysToCheck.joinToString(","),
-                    isGood = viewState.isGood
+                    habitId = _state.value.habitId,
+                    habitTitle = _state.value.itemTitle,
+                    startDate = _state.value.start,
+                    endDate = _state.value.end,
+                    daysToCheck = _state.value.daysToCheck.joinToString(","),
+                    isGood = _state.value.isGood
                 )
 
                 // Update tracker value if changed
-                val currentNewValue = viewState.newValue
-                if (viewState.type == HabitType.TRACKER && currentNewValue != null) {
+                val currentNewValue = _state.value.newValue
+                if (_state.value.type == HabitType.TRACKER && currentNewValue != null) {
                     trackerDao.insert(
                         TrackerEntity(
                             id = UUID.randomUUID().toString(),
-                            habitId = viewState.habitId,
+                            habitId = _state.value.habitId,
                             timestamp = Clock.System.now().toString(),
                             value = currentNewValue
                         )
@@ -138,7 +149,7 @@ class DetailViewModel(private val habitId: String) : BaseViewModel<DetailViewSta
                 }
 
                 withContext(Dispatchers.Main) {
-                    viewAction = DetailAction.CloseScreen
+                    onNavigateBack()
                 }
             } catch (e: IllegalStateException) {
                 println(e.message)

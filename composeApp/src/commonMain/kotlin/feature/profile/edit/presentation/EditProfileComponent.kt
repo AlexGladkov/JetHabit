@@ -1,49 +1,60 @@
 package feature.profile.edit.presentation
 
-import androidx.lifecycle.viewModelScope
-import base.BaseViewModel
+import com.arkivanov.decompose.ComponentContext
+import com.arkivanov.decompose.value.MutableValue
+import com.arkivanov.decompose.value.Value
+import com.arkivanov.essenty.lifecycle.coroutines.coroutineScope
 import core.database.dao.UserProfileDao
 import core.database.entity.UserProfile
 import core.utils.isValidEmail
 import feature.profile.edit.ui.models.EditProfileEvent
-import feature.profile.edit.ui.models.EditProfileAction
 import feature.profile.edit.ui.models.EditProfileViewState
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.kodein.di.DI
+import org.kodein.di.DIAware
+import org.kodein.di.instance
 
-class EditProfileViewModel(
-    private val userProfileDao: UserProfileDao
-) : BaseViewModel<EditProfileViewState, EditProfileAction, EditProfileEvent>(
-    initialState = EditProfileViewState()
-) {
+class EditProfileComponent(
+    componentContext: ComponentContext,
+    override val di: DI,
+    private val onNavigateBack: () -> Unit
+) : ComponentContext by componentContext, DIAware {
+
+    private val userProfileDao: UserProfileDao by di.instance()
+
+    private val scope = coroutineScope(Dispatchers.Main)
+
+    private val _state = MutableValue(EditProfileViewState())
+    val state: Value<EditProfileViewState> = _state
+
     init {
         loadProfile()
     }
 
-    override fun obtainEvent(event: EditProfileEvent) {
+    fun onEvent(event: EditProfileEvent) {
         when (event) {
             is EditProfileEvent.NameChanged -> {
-                viewState = viewState.copy(name = event.name)
+                _state.value = _state.value.copy(name = event.name)
             }
             is EditProfileEvent.EmailChanged -> {
-                viewState = viewState.copy(
+                _state.value = _state.value.copy(
                     email = event.email,
                     isEmailValid = event.email.isValidEmail()
                 )
             }
             EditProfileEvent.SaveClicked -> saveProfile()
-            EditProfileEvent.BackClicked -> {
-                viewAction = EditProfileAction.NavigateBack
-            }
+            EditProfileEvent.BackClicked -> onNavigateBack()
             EditProfileEvent.LoadProfile -> loadProfile()
         }
     }
 
     private fun loadProfile() {
-        viewModelScope.launch {
-            viewState = viewState.copy(isLoading = true)
+        scope.launch {
+            _state.value = _state.value.copy(isLoading = true)
             userProfileDao.getUserProfile().collect { profile ->
                 profile?.let {
-                    viewState = viewState.copy(
+                    _state.value = _state.value.copy(
                         name = it.name,
                         email = it.email,
                         isEmailValid = it.email.isValidEmail(),
@@ -55,14 +66,14 @@ class EditProfileViewModel(
     }
 
     private fun saveProfile() {
-        val currentState = viewState
+        val currentState = _state.value
         if (!currentState.isEmailValid) {
-            viewState = viewState.copy(showEmailError = true)
+            _state.value = _state.value.copy(showEmailError = true)
             return
         }
 
-        viewModelScope.launch {
-            viewState = viewState.copy(isSaving = true)
+        scope.launch {
+            _state.value = _state.value.copy(isSaving = true)
             userProfileDao.insertOrUpdateProfile(
                 UserProfile(
                     name = currentState.name,
@@ -71,8 +82,8 @@ class EditProfileViewModel(
                     avatarUri = null   // TODO: Add avatar handling
                 )
             )
-            viewState = viewState.copy(isSaving = false)
-            viewAction = EditProfileAction.NavigateBack
+            _state.value = _state.value.copy(isSaving = false)
+            onNavigateBack()
         }
     }
-} 
+}

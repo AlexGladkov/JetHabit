@@ -21,11 +21,10 @@ import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-import feature.health.list.presentation.HealthViewModel
+import com.arkivanov.decompose.extensions.compose.subscribeAsState
+import feature.health.list.presentation.HealthListComponent
 import feature.health.list.presentation.models.TrackerHabitItem
 import feature.health.list.ui.views.HealthViewNoItems
-import navigation.HealthScreens
 import ui.themes.JetHabitTheme
 import org.jetbrains.compose.resources.stringResource
 import tech.mobiledeveloper.jethabit.resources.Res
@@ -34,10 +33,9 @@ import kotlinx.datetime.LocalDate
 
 @Composable
 fun HealthScreen(
-    navController: NavController
+    component: HealthListComponent
 ) {
-    val viewModel = remember { HealthViewModel() }
-    val viewState by viewModel.viewStates().collectAsState()
+    val viewState by component.state.subscribeAsState()
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -48,7 +46,7 @@ fun HealthScreen(
         ) {
             if (viewState.habits.isEmpty()) {
                 HealthViewNoItems(
-                    onTrackClick = { navController.navigate("${HealthScreens.Create.name}?type=tracker") }
+                    onTrackClick = { component.onCreateClick() }
                 )
             } else {
                 Text(
@@ -63,8 +61,8 @@ fun HealthScreen(
                     items(viewState.habits) { habit ->
                         TrackerHabitCard(
                             habit = habit,
-                            onTrackClick = { 
-                                navController.navigate("${HealthScreens.Track.name}/${habit.id}")
+                            onTrackClick = {
+                                component.onHabitClick(habit.id)
                             }
                         )
                     }
