@@ -15,7 +15,7 @@ class SettingsEventBus(
     private val repository: UserSettingsRepository? = null
 ) {
 
-    private val scope = CoroutineScope(Dispatchers.Main)
+    private val scope = CoroutineScope(Dispatchers.Default)
 
     private val _currentSettings: MutableStateFlow<SettingsBundle> = MutableStateFlow(
         SettingsBundle(
@@ -41,7 +41,6 @@ class SettingsEventBus(
     }
 
     fun updateDarkMode(isDarkMode: Boolean) {
-        println("New value $isDarkMode")
         _currentSettings.value = _currentSettings.value.copy(isDarkMode = isDarkMode)
         persistSettings()
     }

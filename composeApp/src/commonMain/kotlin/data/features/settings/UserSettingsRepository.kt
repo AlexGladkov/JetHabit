@@ -29,10 +29,10 @@ class UserSettingsRepository(
     private fun UserSettings.toSettingsBundle(): SettingsBundle {
         return SettingsBundle(
             isDarkMode = isDarkMode,
-            style = JetHabitStyle.valueOf(style),
-            textSize = JetHabitSize.valueOf(textSize),
-            paddingSize = JetHabitSize.valueOf(paddingSize),
-            cornerStyle = JetHabitCorners.valueOf(cornerStyle)
+            style = runCatching { JetHabitStyle.valueOf(style) }.getOrDefault(JetHabitStyle.Orange),
+            textSize = runCatching { JetHabitSize.valueOf(textSize) }.getOrDefault(JetHabitSize.Medium),
+            paddingSize = runCatching { JetHabitSize.valueOf(paddingSize) }.getOrDefault(JetHabitSize.Medium),
+            cornerStyle = runCatching { JetHabitCorners.valueOf(cornerStyle) }.getOrDefault(JetHabitCorners.Rounded)
         )
     }
 
