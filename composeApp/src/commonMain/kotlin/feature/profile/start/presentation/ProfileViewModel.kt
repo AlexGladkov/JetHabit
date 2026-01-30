@@ -2,6 +2,8 @@ package feature.profile.start.presentation
 
 import androidx.lifecycle.viewModelScope
 import base.BaseViewModel
+import core.auth.AuthRepository
+import core.auth.AuthResult
 import core.database.dao.UserProfileDao
 import core.platform.ImagePicker
 import feature.profile.start.ui.models.ProfileEvent
@@ -11,7 +13,8 @@ import kotlinx.coroutines.launch
 
 class ProfileViewModel(
     private val imagePicker: ImagePicker,
-    private val userProfileDao: UserProfileDao
+    private val userProfileDao: UserProfileDao,
+    private val authRepository: AuthRepository
 ) : BaseViewModel<ProfileViewState, ProfileAction, ProfileEvent>(ProfileViewState()) {
 
     init {
@@ -32,6 +35,11 @@ class ProfileViewModel(
                 viewAction = ProfileAction.NavigateToProjects
             }
             ProfileEvent.LoadProfile -> loadProfile()
+            ProfileEvent.VkLoginClicked -> {
+                viewAction = ProfileAction.LaunchVkLogin
+            }
+            ProfileEvent.LogoutClicked -> logout()
+            is ProfileEvent.LoginResult -> handleLoginResult(viewEvent.result)
         }
     }
 
@@ -43,8 +51,38 @@ class ProfileViewModel(
                     name = profile?.name.orEmpty(),
                     email = profile?.email.orEmpty(),
                     avatarUrl = profile?.avatarUri,
-                    isLoading = false
+                    isLoading = false,
+                    isLoggedIn = profile?.authProvider != null,
+                    authProvider = profile?.authProvider
                 )
+            }
+        }
+    }
+
+    private fun handleLoginResult(result: AuthResult) {
+        viewModelScope.launch {
+            when (result) {
+                is AuthResult.Success -> {
+                    // AuthRepository already saved the profile
+                    // Profile will be updated via flow in loadProfile
+                }
+                is AuthResult.Error -> {
+                    viewAction = ProfileAction.ShowError(result.message)
+                }
+                AuthResult.Cancelled -> {
+                    // User cancelled, do nothing
+                }
+            }
+        }
+    }
+
+    private fun logout() {
+        viewModelScope.launch {
+            try {
+                authRepository.signOut()
+                // Profile will be updated via flow in loadProfile
+            } catch (e: Exception) {
+                viewAction = ProfileAction.ShowError(e.message ?: "Logout failed")
             }
         }
     }

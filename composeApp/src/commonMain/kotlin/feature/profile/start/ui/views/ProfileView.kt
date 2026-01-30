@@ -27,6 +27,23 @@ internal fun ProfileView(
         Column {
             AppHeader(title = "Profile")
 
+            // Show VK login button if not logged in and profile is empty
+            if (!viewState.isLoggedIn && viewState.isProfileEmpty()) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    VkLoginButton(
+                        onClick = { eventHandler(ProfileEvent.VkLoginClicked) },
+                        modifier = Modifier.padding(bottom = 16.dp)
+                    )
+
+                    Text(
+                        text = "Or complete your profile manually",
+                        style = JetHabitTheme.typography.caption,
+                        color = JetHabitTheme.colors.secondaryText,
+                        modifier = Modifier.padding(vertical = 8.dp)
+                    )
+                }
+            }
+
             UserHeader(viewState = viewState)
 
             JetHabitButton(
@@ -37,6 +54,18 @@ internal fun ProfileView(
                     eventHandler.invoke(ProfileEvent.EditProfileClicked)
                 }
             )
+
+            // Show logout button if logged in via auth provider
+            if (viewState.isLoggedIn && viewState.authProvider != null) {
+                JetHabitButton(
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp).fillMaxWidth(),
+                    text = "Logout",
+                    backgroundColor = JetHabitTheme.colors.errorColor,
+                    onClick = {
+                        eventHandler.invoke(ProfileEvent.LogoutClicked)
+                    }
+                )
+            }
 
             MenuItem(
                 icon = {
