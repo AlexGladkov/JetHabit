@@ -9,6 +9,12 @@ import kotlin.js.Promise
 actual class ShareService {
     actual suspend fun shareImage(imageBytes: ByteArray, text: String) {
         try {
+            // If no image bytes, just share text
+            if (imageBytes.isEmpty()) {
+                shareText(text)
+                return
+            }
+
             // Convert ByteArray to Uint8Array
             val uint8Array = Uint8Array(imageBytes.size)
             imageBytes.forEachIndexed { index, byte ->
@@ -21,20 +27,21 @@ actual class ShareService {
             // Try using Web Share API if available
             val navigator = window.navigator.asDynamic()
             if (navigator.share != undefined && navigator.canShare != undefined) {
-                val shareData = js("{}")
-                shareData.text = text
-                shareData.files = arrayOf(
-                    js("new File([blob], 'streak.png', { type: 'image/png' })").also {
-                        it.asDynamic().blob = blob
-                    }
-                )
+                try {
+                    val file = js("new File([blob], 'streak.png', { type: 'image/png' })")
+                    val shareData = js("{}")
+                    shareData.text = text
+                    shareData.files = arrayOf(file)
 
-                if (navigator.canShare(shareData)) {
-                    (navigator.share(shareData) as Promise<Unit>).catch { error ->
-                        console.error("Error sharing:", error)
-                        fallbackToClipboard(text)
+                    if (navigator.canShare(shareData)) {
+                        (navigator.share(shareData) as Promise<Unit>).catch { error ->
+                            console.error("Error sharing:", error)
+                            fallbackToClipboard(text)
+                        }
+                        return
                     }
-                    return
+                } catch (e: dynamic) {
+                    console.error("Web Share API error:", e)
                 }
             }
 
@@ -42,6 +49,26 @@ actual class ShareService {
             fallbackToClipboard(text)
         } catch (e: Exception) {
             console.error("Share failed:", e.message ?: "Unknown error")
+            fallbackToClipboard(text)
+        }
+    }
+
+    private fun shareText(text: String) {
+        try {
+            val navigator = window.navigator.asDynamic()
+            if (navigator.share != undefined) {
+                val shareData = js("{}")
+                shareData.text = text
+
+                (navigator.share(shareData) as Promise<Unit>).catch { error ->
+                    console.error("Error sharing text:", error)
+                    fallbackToClipboard(text)
+                }
+            } else {
+                fallbackToClipboard(text)
+            }
+        } catch (e: Exception) {
+            console.error("Share text failed:", e.message ?: "Unknown error")
             fallbackToClipboard(text)
         }
     }

@@ -45,6 +45,7 @@ class DetailViewModel(private val habitId: String) : BaseViewModel<DetailViewSta
             is DetailEvent.DateSelected -> selectDate(viewEvent.value)
             is DetailEvent.NewValueChanged -> parseTrackerValue(viewEvent.value)
             DetailEvent.ShareClicked -> calculateStreakForShare()
+            DetailEvent.ShareDismissed -> viewState = viewState.copy(isSharing = false)
         }
     }
 

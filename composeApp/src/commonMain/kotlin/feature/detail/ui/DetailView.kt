@@ -219,8 +219,7 @@ internal fun DetailView(
                 completionRate = viewState.completionRate,
                 isGoodHabit = viewState.isGood,
                 onDismiss = {
-                    // Reset sharing state by triggering a refresh
-                    eventHandler.invoke(DetailEvent.CloseScreen)
+                    eventHandler.invoke(DetailEvent.ShareDismissed)
                 }
             )
         }

@@ -17,24 +17,37 @@ actual class ShareService {
     }
 
     actual suspend fun shareImage(imageBytes: ByteArray, text: String) {
-        val nsData = imageBytes.usePinned { pinned ->
-            NSData.create(
-                bytes = pinned.addressOf(0),
-                length = imageBytes.size.toULong()
+        try {
+            val itemsToShare = if (imageBytes.isEmpty()) {
+                // Share text only
+                listOf(text)
+            } else {
+                // Share image and text
+                val nsData = imageBytes.usePinned { pinned ->
+                    NSData.create(
+                        bytes = pinned.addressOf(0),
+                        length = imageBytes.size.toULong()
+                    )
+                }
+                listOf(text, nsData)
+            }
+
+            val activityViewController = UIActivityViewController(
+                activityItems = itemsToShare,
+                applicationActivities = null
             )
+
+            currentViewController?.presentViewController(
+                activityViewController,
+                animated = true,
+                completion = null
+            ) ?: run {
+                // Log error if no view controller is set
+                println("Error: ShareService - No view controller set. Call setViewController first.")
+            }
+        } catch (e: Exception) {
+            println("Error sharing on iOS: ${e.message}")
+            e.printStackTrace()
         }
-
-        val itemsToShare = listOf(text, nsData)
-
-        val activityViewController = UIActivityViewController(
-            activityItems = itemsToShare,
-            applicationActivities = null
-        )
-
-        currentViewController?.presentViewController(
-            activityViewController,
-            animated = true,
-            completion = null
-        )
     }
 }

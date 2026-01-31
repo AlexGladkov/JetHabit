@@ -49,10 +49,34 @@ class CalculateStreakUseCase(
         if (!checkedDates.contains(today)) {
             // Find the most recent checked date
             val mostRecentChecked = checkedDates.maxOrNull()
-            if (mostRecentChecked == null || mostRecentChecked < today.minus(1, DateTimeUnit.DAY)) {
-                // If no recent check or gap exists, streak is broken
+
+            // Check if today should be tracked
+            val todayDayOfWeek = today.dayOfWeek.ordinal
+            val shouldTrackToday = daysToCheck.isEmpty() || daysToCheck.contains(todayDayOfWeek)
+
+            if (mostRecentChecked == null) {
                 return 0
             }
+
+            // If today should be tracked but isn't checked, streak is broken
+            if (shouldTrackToday) {
+                return 0
+            }
+
+            // If today shouldn't be tracked, check if there's a gap from the last tracked day
+            if (mostRecentChecked < today.minus(1, DateTimeUnit.DAY)) {
+                // Find the last day that should have been tracked
+                var checkDate = today.minus(1, DateTimeUnit.DAY)
+                while (checkDate > mostRecentChecked) {
+                    val checkDayOfWeek = checkDate.dayOfWeek.ordinal
+                    if (daysToCheck.isEmpty() || daysToCheck.contains(checkDayOfWeek)) {
+                        // Found a tracked day between mostRecentChecked and today that wasn't checked
+                        return 0
+                    }
+                    checkDate = checkDate.minus(1, DateTimeUnit.DAY)
+                }
+            }
+
             currentDate = mostRecentChecked
         }
 
