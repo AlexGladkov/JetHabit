@@ -10,4 +10,5 @@ sealed class DetailEvent {
     data object EndDateClicked : DetailEvent()
     data class DateSelected(val value: LocalDate) : DetailEvent()
     data class NewValueChanged(val value: String?) : DetailEvent()
+    data object ShareClicked : DetailEvent()
 }

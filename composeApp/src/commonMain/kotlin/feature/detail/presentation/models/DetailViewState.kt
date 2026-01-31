@@ -21,5 +21,8 @@ data class DetailViewState(
     val dateSelectionState: DateSelectionState = DateSelectionState.None,
     val type: HabitType = HabitType.REGULAR,
     val currentValue: Double? = null,
-    val newValue: Double? = null
+    val newValue: Double? = null,
+    val streakCount: Int = 0,
+    val completionRate: Int = 0,
+    val isSharing: Boolean = false
 )
