@@ -1,5 +1,7 @@
 package feature.tracker.domain
 
+import di.Inject
+import feature.feed.domain.RecordStreakEventUseCase
 import feature.tracker.data.TrackerDao
 import feature.tracker.data.TrackerEntity
 import kotlinx.datetime.LocalDate
@@ -18,5 +20,13 @@ class UpdateTrackerValueUseCase(
                 value = value
             )
         )
+
+        // Record streak event in activity feed
+        try {
+            val recordStreakEventUseCase = Inject.instance<RecordStreakEventUseCase>()
+            recordStreakEventUseCase.execute(habitId, date, true)
+        } catch (e: Exception) {
+            // Silently fail if activity feed is not available
+        }
     }
 } 
