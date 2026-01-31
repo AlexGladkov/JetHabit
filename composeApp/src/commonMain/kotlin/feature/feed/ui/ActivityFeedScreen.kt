@@ -20,6 +20,9 @@ import feature.feed.presentation.ActivityFeedViewModel
 import feature.feed.presentation.models.ActivityFeedAction
 import feature.feed.presentation.models.ActivityFeedEvent
 import navigation.DailyScreens
+import org.jetbrains.compose.resources.stringResource
+import tech.mobiledeveloper.jethabit.resources.Res
+import tech.mobiledeveloper.jethabit.resources.title_activity_feed
 import ui.themes.JetHabitTheme
 
 @Composable
@@ -47,7 +50,7 @@ fun ActivityFeedScreen(
                         top = JetHabitTheme.shapes.padding + 8.dp,
                         bottom = JetHabitTheme.shapes.padding + 8.dp
                     ),
-                text = "Activity Feed",
+                text = stringResource(Res.string.title_activity_feed),
                 style = JetHabitTheme.typography.heading,
                 color = JetHabitTheme.colors.primaryText
             )
@@ -123,10 +126,5 @@ fun ActivityFeedScreen(
             viewModel.clearAction()
         }
         null -> {}
-    }
-
-    // Load feed on launch
-    LaunchedEffect(Unit) {
-        viewModel.obtainEvent(ActivityFeedEvent.LoadFeed)
     }
 }

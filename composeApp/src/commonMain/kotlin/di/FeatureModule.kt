@@ -28,10 +28,11 @@ fun featureModule() = DI.Module("feature") {
             dailyDao = instance()
         )
     }
-    bind<SwitchHabitUseCase>() with singleton { 
+    bind<SwitchHabitUseCase>() with singleton {
         SwitchHabitUseCase(
             habitDao = instance(),
-            dailyDao = instance()
+            dailyDao = instance(),
+            recordStreakEventUseCase = instance()
         )
     }
     bind<CreateHabitUseCase>() with singleton { 
@@ -39,9 +40,10 @@ fun featureModule() = DI.Module("feature") {
             habitDao = instance()
         )
     }
-    bind<UpdateTrackerValueUseCase>() with singleton { 
+    bind<UpdateTrackerValueUseCase>() with singleton {
         UpdateTrackerValueUseCase(
-            trackerDao = instance()
+            trackerDao = instance(),
+            recordStreakEventUseCase = instance()
         )
     }
     bind<ClearAllHabitsUseCase>() with singleton {

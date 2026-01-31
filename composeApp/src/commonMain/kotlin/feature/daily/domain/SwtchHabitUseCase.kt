@@ -1,6 +1,5 @@
 package feature.daily.domain
 
-import di.Inject
 import feature.daily.data.DailyDao
 import feature.daily.data.DailyEntity
 import feature.feed.domain.RecordStreakEventUseCase
@@ -11,7 +10,8 @@ import kotlinx.uuid.generateUUID
 
 class SwitchHabitUseCase(
     private val dailyDao: DailyDao,
-    private val habitDao: HabitDao
+    private val habitDao: HabitDao,
+    private val recordStreakEventUseCase: RecordStreakEventUseCase
 ) {
 
     suspend fun execute(checked: Boolean, habitId: String, date: LocalDate) {
@@ -34,7 +34,6 @@ class SwitchHabitUseCase(
 
         // Record streak event in activity feed
         try {
-            val recordStreakEventUseCase = Inject.instance<RecordStreakEventUseCase>()
             recordStreakEventUseCase.execute(habitId, date, checked)
         } catch (e: Exception) {
             // Silently fail if activity feed is not available
