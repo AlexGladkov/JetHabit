@@ -29,6 +29,14 @@ actual class ShareImage {
                 val cachePath = File(context.cacheDir, "images")
                 cachePath.mkdirs()
 
+                // Clean up old streak images (keep only files from last 24 hours)
+                val oneDayAgo = System.currentTimeMillis() - 24 * 60 * 60 * 1000
+                cachePath.listFiles()?.forEach { oldFile ->
+                    if (oldFile.name.startsWith("streak_") && oldFile.lastModified() < oneDayAgo) {
+                        oldFile.delete()
+                    }
+                }
+
                 val file = File(cachePath, "streak_${System.currentTimeMillis()}.png")
                 FileOutputStream(file).use { out ->
                     androidBitmap.compress(Bitmap.CompressFormat.PNG, 100, out)

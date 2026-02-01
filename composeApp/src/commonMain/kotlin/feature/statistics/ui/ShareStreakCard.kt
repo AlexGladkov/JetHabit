@@ -38,45 +38,51 @@ fun ShareStreakCard(
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxSize()
         ) {
-            // Habit title
-            Text(
-                text = streakData.habitTitle,
-                style = JetHabitTheme.typography.heading.copy(
-                    fontSize = 48.sp,
-                    fontWeight = FontWeight.Bold
-                ),
-                color = JetHabitTheme.colors.primaryText,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.padding(bottom = 32.dp)
-            )
+            Spacer(modifier = Modifier.weight(0.5f))
 
-            // Streak count
-            Text(
-                text = "${streakData.streakCount}",
-                style = JetHabitTheme.typography.heading.copy(
-                    fontSize = 120.sp,
-                    fontWeight = FontWeight.Bold
-                ),
-                color = JetHabitTheme.colors.tintColor,
-                modifier = Modifier.padding(bottom = 16.dp)
-            )
+            // Main content area
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.weight(2f)
+            ) {
+                // Habit title
+                Text(
+                    text = streakData.habitTitle,
+                    style = JetHabitTheme.typography.heading.copy(
+                        fontSize = 48.sp,
+                        fontWeight = FontWeight.Bold
+                    ),
+                    color = JetHabitTheme.colors.primaryText,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.padding(bottom = 32.dp)
+                )
 
-            // "days" label
-            Text(
-                text = if (streakData.streakCount == 1) "day" else "days",
-                style = JetHabitTheme.typography.body.copy(
-                    fontSize = 36.sp,
-                    fontWeight = FontWeight.Medium
-                ),
-                color = JetHabitTheme.colors.secondaryText,
-                modifier = Modifier.padding(bottom = 48.dp)
-            )
+                // Streak count
+                Text(
+                    text = "${streakData.streakCount}",
+                    style = JetHabitTheme.typography.heading.copy(
+                        fontSize = 120.sp,
+                        fontWeight = FontWeight.Bold
+                    ),
+                    color = JetHabitTheme.colors.tintColor,
+                    modifier = Modifier.padding(bottom = 16.dp)
+                )
 
-            Spacer(modifier = Modifier.weight(1f))
+                // "days" label
+                Text(
+                    text = if (streakData.streakCount == 1) "day" else "days",
+                    style = JetHabitTheme.typography.body.copy(
+                        fontSize = 36.sp,
+                        fontWeight = FontWeight.Medium
+                    ),
+                    color = JetHabitTheme.colors.secondaryText
+                )
+            }
+
+            Spacer(modifier = Modifier.weight(0.5f))
 
             // Branding
             Text(

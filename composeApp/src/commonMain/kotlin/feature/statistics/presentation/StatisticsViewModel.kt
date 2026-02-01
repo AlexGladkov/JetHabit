@@ -143,7 +143,7 @@ class StatisticsViewModel : BaseViewModel<StatisticsViewState, StatisticsAction,
                                 id = habit.id,
                                 title = habit.title,
                                 trackedDays = trackedDays,
-                                completionRate = trackedCount.toFloat() / 30f,
+                                completionRate = if (trackedDays.isNotEmpty()) trackedCount.toFloat() / trackedDays.size else 0f,
                                 currentStreak = calculateCurrentStreak(trackedDays, today)
                             )
                         }

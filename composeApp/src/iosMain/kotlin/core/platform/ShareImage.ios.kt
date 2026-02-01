@@ -55,7 +55,9 @@ actual class ShareImage {
     @OptIn(ExperimentalForeignApi::class)
     private fun ImageBitmap.toUIImage(): UIImage? {
         return try {
-            // Convert to skikoImage then to UIImage
+            // TODO: This implementation is incomplete and will likely return null
+            // Need to properly extract pixel data from ImageBitmap and draw into CGContext
+            // Current line below doesn't convert - it just returns the same ImageBitmap type
             val skikoImage = this.toComposeImageBitmap()
 
             // Create a bitmap context and draw the image
@@ -81,7 +83,8 @@ actual class ShareImage {
                 )
 
                 if (context != null) {
-                    // Draw would happen here, for now create from data
+                    // TODO: Need to actually draw the bitmap data into the context here
+                    // Currently creates an empty image
                     val cgImage = CGBitmapContextCreateImage(context)
                     if (cgImage != null) {
                         UIImage.imageWithCGImage(cgImage)

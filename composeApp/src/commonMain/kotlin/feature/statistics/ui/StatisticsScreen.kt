@@ -36,9 +36,9 @@ fun StatisticsScreen() {
         viewModel.obtainEvent(StatisticsEvent.LoadStatistics)
     }
 
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = JetHabitTheme.colors.primaryBackground
+    Scaffold(
+        scaffoldState = scaffoldState,
+        backgroundColor = JetHabitTheme.colors.primaryBackground
     ) {
         Column(
             modifier = Modifier
