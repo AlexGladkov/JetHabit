@@ -33,6 +33,29 @@ class StatisticsViewModel : BaseViewModel<StatisticsViewState, StatisticsAction,
         }
     }
 
+    /**
+     * Calculate current streak counting backwards from today.
+     * Streak is strict: if today is not checked, streak is 0.
+     */
+    private fun calculateCurrentStreak(trackedDays: List<TrackedDay>, today: LocalDate): Int {
+        var streak = 0
+        var currentDate = today
+
+        while (true) {
+            val dateStr = currentDate.toString()
+            val trackedDay = trackedDays.find { it.date == dateStr }
+
+            if (trackedDay != null && trackedDay.isChecked) {
+                streak++
+                currentDate = currentDate.minus(1, DateTimeUnit.DAY)
+            } else {
+                break
+            }
+        }
+
+        return streak
+    }
+
     private fun loadHabitsStatistics() {
         viewModelScope.launch(Dispatchers.Default) {
             withContext(Dispatchers.Main) {
@@ -90,7 +113,8 @@ class StatisticsViewModel : BaseViewModel<StatisticsViewState, StatisticsAction,
                                 id = habit.id,
                                 title = habit.title,
                                 trackedDays = trackedDays,
-                                completionRate = if (totalDays > 0) trackedCount.toFloat() / totalDays else 0f
+                                completionRate = if (totalDays > 0) trackedCount.toFloat() / totalDays else 0f,
+                                currentStreak = calculateCurrentStreak(trackedDays, today)
                             )
                         }
                         HabitType.TRACKER -> {
@@ -119,7 +143,8 @@ class StatisticsViewModel : BaseViewModel<StatisticsViewState, StatisticsAction,
                                 id = habit.id,
                                 title = habit.title,
                                 trackedDays = trackedDays,
-                                completionRate = trackedCount.toFloat() / 30f
+                                completionRate = trackedCount.toFloat() / 30f,
+                                currentStreak = calculateCurrentStreak(trackedDays, today)
                             )
                         }
                     }
