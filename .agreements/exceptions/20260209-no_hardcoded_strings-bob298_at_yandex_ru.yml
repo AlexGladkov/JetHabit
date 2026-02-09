@@ -1,0 +1,8 @@
+id: 20260209-no_hardcoded_strings-bob298_at_yandex_ru
+rule_id: no_hardcoded_strings
+paths:
+    - composeApp/src/androidTest/**/*.kt
+reason: Test files use hardcoded strings for assertions
+created_by: bob298@yandex.ru
+created_at: 2026-02-09T08:59:55.642241Z
+expires_at: 2026-12-31T00:00:00Z

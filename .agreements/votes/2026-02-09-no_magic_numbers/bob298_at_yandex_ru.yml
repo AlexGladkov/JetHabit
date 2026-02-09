@@ -1,0 +1,5 @@
+proposal_id: 2026-02-09-no_magic_numbers
+voter_email: bob298@yandex.ru
+decision: "yes"
+comment: Good rule, magic numbers make code unreadable
+voted_at: 2026-02-09T09:57:23.524521Z

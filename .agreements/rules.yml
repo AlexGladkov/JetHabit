@@ -1,0 +1,37 @@
+rules:
+  - id: no_android_imports_in_common
+    description: Common/shared module must not import Android-specific APIs
+    type: imports_forbidden
+    config:
+      from_globs: ["shared/**"]
+      forbid_globs: ["android/**"]
+    severity: error
+
+  - id: no_hardcoded_strings
+    description: Forbid hardcoded user-facing strings in Compose UI code
+    type: diff_pattern_forbidden
+    config:
+      forbidden_regexes:
+        - 'Text\(\s*"[A-Z]'
+      only_in_paths: ["**/*.kt"]
+    severity: warning
+
+  - id: no_force_unwrap
+    description: Forbid force-unwrap (!!) in Kotlin code
+    type: diff_pattern_forbidden
+    config:
+      forbidden_regexes:
+        - '!!'
+      only_in_paths: ["**/*.kt"]
+    severity: warning
+
+  - id: no_magic_numbers
+    description: Forbid magic numbers and hardcoded constants in business logic
+    type: diff_pattern_forbidden
+    config:
+      forbidden_regexes:
+        - '=\s*\d{2,}'
+        - 'delay\(\d{2,}'
+        - 'sleep\(\d{2,}'
+      only_in_paths: ["shared/**/*.kt", "composeApp/**/*.kt"]
+    severity: warning

@@ -1,0 +1,5 @@
+proposal_id: 2026-02-09-no_hardcoded_strings
+voter_email: architect@jethabit.dev
+decision: yes
+comment: Agreed, test files are a valid exception
+voted_at: "2026-02-09T09:00:00Z"

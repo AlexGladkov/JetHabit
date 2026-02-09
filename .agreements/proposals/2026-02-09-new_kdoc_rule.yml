@@ -1,0 +1,11 @@
+id: 2026-02-09-new_kdoc_rule
+rule_id: new_kdoc_rule
+proposal_type: add
+change:
+    description: Add rule to require KDoc for public APIs
+    details: All public classes and functions should have KDoc
+reason: Improve code documentation standards
+impact: Public API changes will require documentation
+created_by: bob298@yandex.ru
+created_at: 2026-02-09T08:59:25.873889Z
+status: withdrawn

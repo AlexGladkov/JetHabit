@@ -1,0 +1,11 @@
+id: 2026-02-09-no_hardcoded_strings
+rule_id: no_hardcoded_strings
+proposal_type: modify
+change:
+    description: Exclude test files from hardcoded string check
+    details: Add androidTest and test paths to exclusion
+reason: Test files use hardcoded strings for UI assertions
+impact: Only affects test code, production rules unchanged
+created_by: bob298@yandex.ru
+created_at: 2026-02-09T08:56:54.258Z
+status: accepted

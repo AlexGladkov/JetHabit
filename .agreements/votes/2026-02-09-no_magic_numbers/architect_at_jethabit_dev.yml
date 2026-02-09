@@ -1,0 +1,5 @@
+proposal_id: 2026-02-09-no_magic_numbers
+voter_email: architect@jethabit.dev
+decision: "yes"
+comment: Agree, constants should be named
+voted_at: 2026-02-09T09:57:32.717739Z

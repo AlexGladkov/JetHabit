@@ -1,0 +1,30 @@
+governance:
+  voters:
+    - role: maintainers
+    - role: architects
+  quorum:
+    type: majority
+    threshold: 0
+  forbid_self_approval: false
+  allow_vote_change: true
+  proposal_ttl_days: 30
+  per_rule_overrides: {}
+  exceptions:
+    require_approval: false
+identity:
+  allowed_domains: []
+  require_signed_commits: false
+roles:
+  maintainers:
+    members:
+      - email: bob298@yandex.ru
+  architects:
+    members:
+      - email: architect@jethabit.dev
+llm:
+  provider: claude
+  endpoint: ""
+  model: claude-sonnet-4-5-20250929
+  prompts:
+    check_system: ""
+    propose_system: ""
