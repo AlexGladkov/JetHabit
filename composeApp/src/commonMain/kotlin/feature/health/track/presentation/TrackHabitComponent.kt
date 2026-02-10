@@ -1,10 +1,10 @@
 package feature.health.track.presentation
 
-import androidx.lifecycle.viewModelScope
-import base.BaseViewModel
-import di.Inject
+import com.arkivanov.decompose.ComponentContext
+import com.arkivanov.decompose.value.MutableValue
+import com.arkivanov.decompose.value.Value
+import com.arkivanov.essenty.lifecycle.coroutines.coroutineScope
 import feature.habits.data.HabitDao
-import feature.health.track.presentation.models.TrackHabitAction
 import feature.health.track.presentation.models.TrackHabitEvent
 import feature.health.track.presentation.models.TrackHabitViewState
 import feature.tracker.data.TrackerDao
@@ -15,44 +15,56 @@ import kotlinx.coroutines.withContext
 import kotlinx.datetime.*
 import kotlinx.uuid.UUID
 import kotlinx.uuid.generateUUID
+import org.kodein.di.DI
+import org.kodein.di.DIAware
+import org.kodein.di.instance
 import tech.mobiledeveloper.jethabit.resources.Res
 import tech.mobiledeveloper.jethabit.resources.error_empty_value
 import tech.mobiledeveloper.jethabit.resources.error_value_exists
 
-class TrackHabitViewModel(
-    private val habitId: String
-) : BaseViewModel<TrackHabitViewState, TrackHabitAction, TrackHabitEvent>(
-    initialState = TrackHabitViewState(
-        selectedDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date.toString()
+class TrackHabitComponent(
+    componentContext: ComponentContext,
+    override val di: DI,
+    private val habitId: String,
+    private val onNavigateBack: () -> Unit
+) : ComponentContext by componentContext, DIAware {
+
+    private val habitDao: HabitDao by di.instance()
+    private val trackerDao: TrackerDao by di.instance()
+
+    private val scope = coroutineScope(Dispatchers.Main)
+
+    private val _state = MutableValue(
+        TrackHabitViewState(
+            selectedDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date.toString()
+        )
     )
-) {
-    private val habitDao = Inject.instance<HabitDao>()
-    private val trackerDao = Inject.instance<TrackerDao>()
+    val state: Value<TrackHabitViewState> = _state
 
     init {
         loadHabitDetails()
     }
 
-    override fun obtainEvent(viewEvent: TrackHabitEvent) {
+    fun onEvent(viewEvent: TrackHabitEvent) {
         when (viewEvent) {
             is TrackHabitEvent.NewValueChanged -> parseNewValue(viewEvent.value)
-            is TrackHabitEvent.DateSelected -> viewState = viewState.copy(selectedDate = viewEvent.date.toString())
+            is TrackHabitEvent.DateSelected -> _state.value = _state.value.copy(selectedDate = viewEvent.date.toString())
             TrackHabitEvent.SaveClicked -> saveNewValue()
-            TrackHabitEvent.CloseClicked -> viewAction = TrackHabitAction.NavigateBack
+            TrackHabitEvent.CloseClicked -> onNavigateBack()
         }
     }
 
     private fun loadHabitDetails() {
-        viewModelScope.launch(Dispatchers.Default) {
+        scope.launch(Dispatchers.Default) {
             withContext(Dispatchers.Main) {
-                viewState = viewState.copy(isLoading = true)
+                _state.value = _state.value.copy(isLoading = true)
             }
 
             try {
                 val habit = habitDao.getAll().first { it.id == habitId }
 
                 withContext(Dispatchers.Main) {
-                    viewState = viewState.copy(
+                    _state.value = _state.value.copy(
                         title = habit.title,
                         measurement = habit.measurement,
                         isLoading = false
@@ -60,7 +72,7 @@ class TrackHabitViewModel(
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    viewState = viewState.copy(isLoading = false)
+                    _state.value = _state.value.copy(isLoading = false)
                 }
             }
         }
@@ -72,28 +84,28 @@ class TrackHabitViewModel(
         } else {
             value.toDoubleOrNull()
         }
-        viewState = viewState.copy(
+        _state.value = _state.value.copy(
             newValue = newValue,
             error = null
         )
     }
 
     private fun saveNewValue() {
-        val currentValue = viewState.newValue
-        
+        val currentValue = _state.value.newValue
+
         if (currentValue == null) {
-            viewState = viewState.copy(error = Res.string.error_empty_value)
+            _state.value = _state.value.copy(error = Res.string.error_empty_value)
             return
         }
 
-        viewModelScope.launch(Dispatchers.Default) {
+        scope.launch(Dispatchers.Default) {
             // Check if entry for this date already exists
             val existingEntry = trackerDao.getAll()
-                .firstOrNull { it.habitId == habitId && it.timestamp == viewState.selectedDate }
+                .firstOrNull { it.habitId == habitId && it.timestamp == _state.value.selectedDate }
 
             if (existingEntry != null) {
                 withContext(Dispatchers.Main) {
-                    viewState = viewState.copy(error = Res.string.error_value_exists)
+                    _state.value = _state.value.copy(error = Res.string.error_value_exists)
                 }
                 return@launch
             }
@@ -102,14 +114,14 @@ class TrackHabitViewModel(
                 TrackerEntity(
                     id = UUID.generateUUID().toString(),
                     habitId = habitId,
-                    timestamp = viewState.selectedDate,
+                    timestamp = _state.value.selectedDate,
                     value = currentValue
                 )
             )
-            
+
             withContext(Dispatchers.Main) {
-                viewAction = TrackHabitAction.NavigateBack
+                onNavigateBack()
             }
         }
     }
-} 
+}

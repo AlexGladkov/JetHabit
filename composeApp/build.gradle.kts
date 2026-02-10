@@ -89,8 +89,10 @@ kotlin {
 
             implementation(libs.kotlinx.serialization.json)
 
-            implementation(libs.compose.navigation)
-            implementation(libs.compose.viewmodel)
+            implementation(libs.decompose.core)
+            implementation(libs.decompose.compose)
+            implementation(libs.essenty.lifecycle)
+            implementation(libs.essenty.lifecycle.coroutines)
 
             implementation(libs.room.runtime)
             implementation(libs.room.sqlite)

@@ -1,34 +1,44 @@
 package feature.projects.presentation
 
-import androidx.lifecycle.viewModelScope
-import base.BaseViewModel
-import di.Inject
+import com.arkivanov.decompose.ComponentContext
+import com.arkivanov.decompose.value.MutableValue
+import com.arkivanov.decompose.value.Value
+import com.arkivanov.essenty.lifecycle.coroutines.coroutineScope
 import feature.projects.domain.CreateProjectUseCase
 import feature.projects.domain.DeleteProjectUseCase
 import feature.projects.domain.GetAllProjectsUseCase
 import feature.projects.domain.UpdateProjectUseCase
-import feature.projects.presentation.models.ProjectListAction
 import feature.projects.presentation.models.ProjectListEvent
 import feature.projects.presentation.models.ProjectListState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.kodein.di.DI
+import org.kodein.di.DIAware
+import org.kodein.di.instance
 
-class ProjectListViewModel : BaseViewModel<ProjectListState, ProjectListAction, ProjectListEvent>(
-    initialState = ProjectListState()
-) {
+class ProjectListComponent(
+    componentContext: ComponentContext,
+    override val di: DI,
+    private val onNavigateBack: () -> Unit
+) : ComponentContext by componentContext, DIAware {
 
-    private val getAllProjectsUseCase = Inject.instance<GetAllProjectsUseCase>()
-    private val createProjectUseCase = Inject.instance<CreateProjectUseCase>()
-    private val updateProjectUseCase = Inject.instance<UpdateProjectUseCase>()
-    private val deleteProjectUseCase = Inject.instance<DeleteProjectUseCase>()
+    private val getAllProjectsUseCase: GetAllProjectsUseCase by di.instance()
+    private val createProjectUseCase: CreateProjectUseCase by di.instance()
+    private val updateProjectUseCase: UpdateProjectUseCase by di.instance()
+    private val deleteProjectUseCase: DeleteProjectUseCase by di.instance()
+
+    private val scope = coroutineScope(Dispatchers.Main)
+
+    private val _state = MutableValue(ProjectListState())
+    val state: Value<ProjectListState> = _state
 
     init {
         loadProjects()
     }
 
-    override fun obtainEvent(viewEvent: ProjectListEvent) {
+    fun onEvent(viewEvent: ProjectListEvent) {
         when (viewEvent) {
-            ProjectListEvent.BackClicked -> viewAction = ProjectListAction.NavigateBack
+            ProjectListEvent.BackClicked -> onNavigateBack()
             ProjectListEvent.AddProjectClicked -> openDialogForCreate()
             is ProjectListEvent.ProjectClicked -> openDialogForEdit(viewEvent.projectId)
             is ProjectListEvent.CreateProject -> createProject(viewEvent.title, viewEvent.colorHex)
@@ -39,28 +49,28 @@ class ProjectListViewModel : BaseViewModel<ProjectListState, ProjectListAction, 
     }
 
     private fun loadProjects() {
-        viewModelScope.launch(Dispatchers.Default) {
-            viewState = viewState.copy(isLoading = true)
+        scope.launch(Dispatchers.Default) {
+            _state.value = _state.value.copy(isLoading = true)
             val projects = getAllProjectsUseCase.execute()
-            viewState = viewState.copy(projects = projects, isLoading = false)
+            _state.value = _state.value.copy(projects = projects, isLoading = false)
         }
     }
 
     private fun openDialogForCreate() {
-        viewState = viewState.copy(showEditDialog = true, editingProject = null)
+        _state.value = _state.value.copy(showEditDialog = true, editingProject = null)
     }
 
     private fun openDialogForEdit(projectId: String) {
-        val project = viewState.projects.find { it.id == projectId }
-        viewState = viewState.copy(showEditDialog = true, editingProject = project)
+        val project = _state.value.projects.find { it.id == projectId }
+        _state.value = _state.value.copy(showEditDialog = true, editingProject = project)
     }
 
     private fun closeDialog() {
-        viewState = viewState.copy(showEditDialog = false, editingProject = null)
+        _state.value = _state.value.copy(showEditDialog = false, editingProject = null)
     }
 
     private fun createProject(title: String, colorHex: String) {
-        viewModelScope.launch(Dispatchers.Default) {
+        scope.launch(Dispatchers.Default) {
             createProjectUseCase.execute(title, colorHex)
             loadProjects()
             closeDialog()
@@ -68,7 +78,7 @@ class ProjectListViewModel : BaseViewModel<ProjectListState, ProjectListAction, 
     }
 
     private fun updateProject(id: String, title: String, colorHex: String) {
-        viewModelScope.launch(Dispatchers.Default) {
+        scope.launch(Dispatchers.Default) {
             updateProjectUseCase.execute(id, title, colorHex)
             loadProjects()
             closeDialog()
@@ -76,7 +86,7 @@ class ProjectListViewModel : BaseViewModel<ProjectListState, ProjectListAction, 
     }
 
     private fun deleteProject(projectId: String) {
-        viewModelScope.launch(Dispatchers.Default) {
+        scope.launch(Dispatchers.Default) {
             deleteProjectUseCase.execute(projectId)
             loadProjects()
             closeDialog()

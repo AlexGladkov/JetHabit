@@ -5,6 +5,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import coil3.SingletonPlatformContext
+import com.arkivanov.decompose.DefaultComponentContext
+import com.arkivanov.essenty.lifecycle.LifecycleRegistry
 import core.database.getDatabaseBuilder
 import core.database.getRoomDatabase
 import data.features.settings.LocalSettingsEventBus
@@ -13,6 +15,7 @@ import di.LocalPlatform
 import di.Platform
 import di.PlatformConfiguration
 import di.PlatformSDK
+import root.RootComponent
 import themes.MainTheme
 import core.di.initializeCoil
 
@@ -24,7 +27,7 @@ fun main() {
             onCloseRequest = ::exitApplication,
             title = "JetHabit"
         ) {
-            App()
+            MainView()
         }
     }
 }
@@ -33,6 +36,14 @@ fun main() {
 fun MainView() {
     val appDatabase = remember { getRoomDatabase(getDatabaseBuilder()) }
     PlatformSDK.init(PlatformConfiguration(), appDatabase = appDatabase)
+
+    val lifecycle = remember { LifecycleRegistry() }
+    val rootComponent = remember {
+        RootComponent(
+            componentContext = DefaultComponentContext(lifecycle),
+            di = PlatformSDK.di
+        )
+    }
 
     val settingsEventBus = remember { SettingsEventBus() }
     val currentSettings = settingsEventBus.currentSettings.collectAsState().value
@@ -48,7 +59,7 @@ fun MainView() {
             LocalPlatform provides Platform.Desktop,
             LocalSettingsEventBus provides settingsEventBus
         ) {
-            App()
+            App(rootComponent)
         }
     }
 }

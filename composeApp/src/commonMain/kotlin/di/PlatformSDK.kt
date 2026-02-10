@@ -8,9 +8,14 @@ import org.kodein.di.instance
 import org.kodein.di.singleton
 
 object PlatformSDK {
-    private var _di: DirectDI? = null
-    val di: DirectDI
+    private var _di: DI? = null
+    private var _directDI: DirectDI? = null
+
+    val di: DI
         get() = requireNotNull(_di)
+
+    val directDI: DirectDI
+        get() = requireNotNull(_directDI)
 
     fun init(
         configuration: PlatformConfiguration,
@@ -27,17 +32,20 @@ object PlatformSDK {
             provideImagePicker()
         }
 
-        _di = DI {
+        val kodeinDI = DI {
             importAll(
                 configModule,
                 platformModule,
                 databaseModule(),
                 featureModule()
             )
-        }.direct
+        }
+
+        _di = kodeinDI
+        _directDI = kodeinDI.direct
     }
 
     inline fun <reified T> instance(): T {
-        return di.instance()
+        return directDI.instance()
     }
 }

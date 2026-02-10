@@ -2,12 +2,12 @@ package feature.daily.di
 
 import core.database.AppDatabase
 import data.features.daily.DailyRepository
-import di.Inject.instance
 import feature.daily.data.DailyDao
 import feature.daily.domain.GetHabitsForTodayUseCase
 import feature.daily.domain.SwitchHabitUseCase
 import org.kodein.di.DI
 import org.kodein.di.bind
+import org.kodein.di.instance
 import org.kodein.di.provider
 import org.kodein.di.singleton
 

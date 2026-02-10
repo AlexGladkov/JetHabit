@@ -1,37 +1,17 @@
 package feature.profile.edit.ui
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
-import di.Inject
-import feature.profile.edit.presentation.EditProfileViewModel
-import feature.profile.edit.ui.models.EditProfileAction
-import feature.profile.edit.ui.models.EditProfileEvent
+import com.arkivanov.decompose.extensions.compose.subscribeAsState
+import feature.profile.edit.presentation.EditProfileComponent
 
 @Composable
 internal fun EditProfileScreen(
-    navController: NavController,
-    viewModel: EditProfileViewModel = viewModel { EditProfileViewModel(Inject.instance()) }
+    component: EditProfileComponent
 ) {
-    val viewState by viewModel.viewStates().collectAsState()
-    val viewAction by viewModel.viewActions().collectAsState(null)
+    val viewState by component.state.subscribeAsState()
 
     EditProfileView(viewState = viewState) {
-        viewModel.obtainEvent(it)
-    }
-
-    when (viewAction) {
-        EditProfileAction.NavigateBack -> {
-            navController.popBackStack()
-            viewModel.clearAction()
-        }
-        null -> {}
-    }
-
-    LaunchedEffect(Unit) {
-        viewModel.obtainEvent(EditProfileEvent.LoadProfile)
+        component.onEvent(it)
     }
 } 

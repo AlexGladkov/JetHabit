@@ -1,6 +1,5 @@
 package screens.splash
 
-import AppScreens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,13 +13,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import di.LocalPlatform
 import ui.themes.JetHabitTheme
 
 @Composable
 internal fun SplashScreen(
-    navigationController: NavHostController
+    component: feature.splash.SplashComponent
 ) {
     val platform = LocalPlatform.current
 
@@ -50,6 +48,6 @@ internal fun SplashScreen(
     }
 
     LaunchedEffect(key1 = Unit, block = {
-        navigationController.navigate(AppScreens.Main.title)
+        component.onFinished()
     })
 }

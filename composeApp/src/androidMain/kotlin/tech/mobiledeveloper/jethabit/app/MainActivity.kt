@@ -6,12 +6,15 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.CompositionLocalProvider
+import com.arkivanov.decompose.defaultComponentContext
 import core.database.getDatabaseBuilder
 import core.platform.AndroidImagePicker
 import di.LocalPlatform
 import di.Platform
 import di.PlatformConfiguration
 import di.PlatformSDK
+import root.RootComponent
+import root.RootContent
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,11 +66,16 @@ class MainActivity : AppCompatActivity() {
             appDatabase = appDatabase
         )
 
+        val rootComponent = RootComponent(
+            componentContext = defaultComponentContext(),
+            di = PlatformSDK.di
+        )
+
         setContent {
             CompositionLocalProvider(
                 LocalPlatform provides Platform.Android
             ) {
-                App()
+                App(rootComponent)
             }
         }
     }

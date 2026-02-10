@@ -1,42 +1,52 @@
 package feature.statistics.presentation
 
-import androidx.lifecycle.viewModelScope
-import base.BaseViewModel
-import di.Inject
+import com.arkivanov.decompose.ComponentContext
+import com.arkivanov.decompose.value.MutableValue
+import com.arkivanov.decompose.value.Value
+import com.arkivanov.essenty.lifecycle.coroutines.coroutineScope
 import feature.daily.data.DailyDao
 import feature.habits.data.HabitDao
 import feature.habits.data.HabitType
-import feature.statistics.ui.models.StatisticsAction
 import feature.statistics.ui.models.StatisticsEvent
 import feature.statistics.ui.models.StatisticsViewState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.*
+import org.kodein.di.DI
+import org.kodein.di.DIAware
+import org.kodein.di.instance
 import screens.stats.models.HabitStatistics
 import screens.stats.models.TrackedDay
 
-class StatisticsViewModel : BaseViewModel<StatisticsViewState, StatisticsAction, StatisticsEvent>(
-    initialState = StatisticsViewState()
-) {
-    private val habitDao = Inject.instance<HabitDao>()
-    private val dailyDao = Inject.instance<DailyDao>()
+class StatisticsComponent(
+    componentContext: ComponentContext,
+    override val di: DI
+) : ComponentContext by componentContext, DIAware {
+
+    private val habitDao: HabitDao by di.instance()
+    private val dailyDao: DailyDao by di.instance()
     private val timeZone = TimeZone.currentSystemDefault()
+
+    private val scope = coroutineScope(Dispatchers.Main)
+
+    private val _state = MutableValue(StatisticsViewState())
+    val state: Value<StatisticsViewState> = _state
 
     init {
         loadHabitsStatistics()
     }
 
-    override fun obtainEvent(event: StatisticsEvent) {
+    fun onEvent(event: StatisticsEvent) {
         when (event) {
             StatisticsEvent.LoadStatistics -> loadHabitsStatistics()
         }
     }
 
     private fun loadHabitsStatistics() {
-        viewModelScope.launch(Dispatchers.Default) {
+        scope.launch(Dispatchers.Default) {
             withContext(Dispatchers.Main) {
-                viewState = viewState.copy(isLoading = true)
+                _state.value = _state.value.copy(isLoading = true)
             }
 
             try {
@@ -53,7 +63,7 @@ class StatisticsViewModel : BaseViewModel<StatisticsViewState, StatisticsAction,
                             } else {
                                 LocalDate.parse(habit.startDate)
                             }
-                            
+
                             val endDate = if (habit.endDate.isBlank()) {
                                 today.plus(30, DateTimeUnit.DAY)
                             } else {
@@ -74,7 +84,7 @@ class StatisticsViewModel : BaseViewModel<StatisticsViewState, StatisticsAction,
                                     val isChecked = dailyDao.isHabitChecked(habit.id, currentDate.toString())
                                     val wasEverChecked = dailyDao.wasDateEverChecked(habit.id, currentDate.toString())
                                     if (isChecked) trackedCount++
-                                    
+
                                     trackedDays.add(
                                         TrackedDay(
                                             date = currentDate.toString(),
@@ -104,7 +114,7 @@ class StatisticsViewModel : BaseViewModel<StatisticsViewState, StatisticsAction,
                                 val isChecked = dailyDao.isHabitChecked(habit.id, currentDate.toString())
                                 val wasEverChecked = dailyDao.wasDateEverChecked(habit.id, currentDate.toString())
                                 if (isChecked) trackedCount++
-                                
+
                                 trackedDays.add(
                                     TrackedDay(
                                         date = currentDate.toString(),
@@ -132,7 +142,7 @@ class StatisticsViewModel : BaseViewModel<StatisticsViewState, StatisticsAction,
                 // 2. If there are regular habits, show statistics, otherwise show empty screen
                 if (hasRegularHabits) {
                     withContext(Dispatchers.Main) {
-                        viewState = viewState.copy(
+                        _state.value = _state.value.copy(
                             hasData = true,
                             statistics = habitStats,
                             isLoading = false
@@ -140,7 +150,7 @@ class StatisticsViewModel : BaseViewModel<StatisticsViewState, StatisticsAction,
                     }
                 } else {
                     withContext(Dispatchers.Main) {
-                        viewState = viewState.copy(
+                        _state.value = _state.value.copy(
                             hasData = false,
                             statistics = emptyList(),
                             isLoading = false
@@ -149,9 +159,9 @@ class StatisticsViewModel : BaseViewModel<StatisticsViewState, StatisticsAction,
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    viewState = viewState.copy(isLoading = false)
+                    _state.value = _state.value.copy(isLoading = false)
                 }
             }
         }
     }
-} 
+}
