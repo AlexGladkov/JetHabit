@@ -3,8 +3,12 @@ package feature.statistics.ui.views
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,6 +23,8 @@ fun StatisticsItem(
     title: String,
     completionRate: Float,
     trackedDays: List<TrackedDay>,
+    currentStreak: Int = 0,
+    onShareClick: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     Surface(
@@ -29,12 +35,54 @@ fun StatisticsItem(
         Column(
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
         ) {
-            Text(
-                text = title,
-                style = JetHabitTheme.typography.toolbar,
-                color = JetHabitTheme.colors.primaryText
-            )
-            
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = title,
+                    style = JetHabitTheme.typography.toolbar,
+                    color = JetHabitTheme.colors.primaryText,
+                    modifier = Modifier.weight(1f)
+                )
+
+                if (currentStreak > 0 && onShareClick != null) {
+                    IconButton(
+                        onClick = onShareClick,
+                        modifier = Modifier.size(32.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Share,
+                            contentDescription = "Share streak",
+                            tint = JetHabitTheme.colors.tintColor
+                        )
+                    }
+                }
+            }
+
+            if (currentStreak > 0) {
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "Current Streak",
+                        style = JetHabitTheme.typography.body,
+                        color = JetHabitTheme.colors.secondaryText
+                    )
+
+                    Text(
+                        text = "$currentStreak ${if (currentStreak == 1) "day" else "days"}",
+                        style = JetHabitTheme.typography.toolbar,
+                        color = JetHabitTheme.colors.tintColor
+                    )
+                }
+            }
+
             Spacer(modifier = Modifier.height(12.dp))
             
             Row(
