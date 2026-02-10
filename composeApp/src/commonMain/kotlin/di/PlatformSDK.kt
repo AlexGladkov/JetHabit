@@ -32,6 +32,7 @@ object PlatformSDK {
                 configModule,
                 platformModule,
                 databaseModule(),
+                authModule,
                 featureModule()
             )
         }.direct

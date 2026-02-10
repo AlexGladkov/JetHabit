@@ -4,4 +4,5 @@ sealed class ProfileAction {
     data object NavigateToEdit : ProfileAction()
     data object NavigateToSettings : ProfileAction()
     data object NavigateToProjects : ProfileAction()
+    data class ShowError(val message: String) : ProfileAction()
 } 

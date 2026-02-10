@@ -10,5 +10,7 @@ data class UserProfile(
     val name: String,
     val email: String,
     val phoneNumber: String,
-    val avatarUri: String?
+    val avatarUri: String?,
+    val vkId: String? = null,
+    val authProvider: String? = null
 ) 

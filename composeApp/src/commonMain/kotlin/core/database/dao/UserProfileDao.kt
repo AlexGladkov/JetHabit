@@ -17,4 +17,7 @@ interface UserProfileDao {
 
     @Query("UPDATE user_profile SET avatarUri = :uri WHERE id = 1")
     suspend fun updateAvatar(uri: String?)
+
+    @Query("DELETE FROM user_profile WHERE id = 1")
+    suspend fun clearProfile()
 } 
