@@ -7,17 +7,22 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import core.platform.ShareService
+import di.Inject
 import di.LocalPlatform
 import di.Platform
 import feature.detail.presentation.models.DetailEvent
 import feature.detail.presentation.models.DetailViewState
 import feature.habits.data.HabitType
+import feature.share.ui.StreakCard
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import tech.mobiledeveloper.jethabit.resources.*
 import ui.themes.JetHabitTheme
@@ -75,6 +80,14 @@ internal fun DetailView(
                         )
                     }
                 }
+
+                Icon(
+                    modifier = Modifier.clickable { eventHandler.invoke(DetailEvent.ShareClicked) }
+                        .size(56.dp).padding(16.dp),
+                    imageVector = Icons.Filled.Share,
+                    contentDescription = "Share Streak",
+                    tint = JetHabitTheme.colors.controlColor
+                )
 
                 Icon(
                     modifier = Modifier.clickable { eventHandler.invoke(DetailEvent.DeleteItem) }
@@ -196,6 +209,49 @@ internal fun DetailView(
                     color = Color.White
                 )
             }
+        }
+
+        // Share dialog
+        if (viewState.isSharing) {
+            ShareDialog(
+                habitTitle = viewState.itemTitle,
+                streakCount = viewState.streakCount,
+                completionRate = viewState.completionRate,
+                isGoodHabit = viewState.isGood,
+                onDismiss = {
+                    eventHandler.invoke(DetailEvent.ShareDismissed)
+                }
+            )
+        }
+    }
+}
+
+@Composable
+private fun ShareDialog(
+    habitTitle: String,
+    streakCount: Int,
+    completionRate: Int,
+    isGoodHabit: Boolean,
+    onDismiss: () -> Unit
+) {
+    val scope = rememberCoroutineScope()
+    val shareService = Inject.instance<ShareService>()
+
+    LaunchedEffect(Unit) {
+        scope.launch {
+            // For now, we'll share text. Image generation will require platform-specific implementation
+            val shareText = buildString {
+                append("🔥 I've kept up my '$habitTitle' habit for $streakCount ")
+                append(if (streakCount == 1) "day" else "days")
+                append(" straight!\n")
+                append("Completion rate: $completionRate%\n")
+                append("#JetHabit")
+            }
+
+            // TODO: Implement actual image generation
+            // For now, just share text
+            shareService.shareImage(ByteArray(0), shareText)
+            onDismiss()
         }
     }
 }

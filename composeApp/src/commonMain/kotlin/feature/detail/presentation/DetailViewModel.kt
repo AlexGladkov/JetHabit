@@ -3,6 +3,7 @@ package feature.detail.presentation
 import androidx.lifecycle.viewModelScope
 import base.BaseViewModel
 import di.Inject
+import feature.detail.domain.CalculateStreakUseCase
 import feature.detail.domain.DeleteHabitUseCase
 import feature.detail.domain.GetDetailInfoUseCase
 import feature.detail.domain.UpdateHabitUseCase
@@ -27,6 +28,7 @@ class DetailViewModel(private val habitId: String) : BaseViewModel<DetailViewSta
     private val getDetailInfoUseCase = Inject.instance<GetDetailInfoUseCase>()
     private val deleteHabitUseCase = Inject.instance<DeleteHabitUseCase>()
     private val updateHabitUseCase = Inject.instance<UpdateHabitUseCase>()
+    private val calculateStreakUseCase = Inject.instance<CalculateStreakUseCase>()
     private val trackerDao = Inject.instance<TrackerDao>()
 
     init {
@@ -42,6 +44,8 @@ class DetailViewModel(private val habitId: String) : BaseViewModel<DetailViewSta
             DetailEvent.EndDateClicked -> viewState = viewState.copy(dateSelectionState = DateSelectionState.End)
             is DetailEvent.DateSelected -> selectDate(viewEvent.value)
             is DetailEvent.NewValueChanged -> parseTrackerValue(viewEvent.value)
+            DetailEvent.ShareClicked -> calculateStreakForShare()
+            DetailEvent.ShareDismissed -> viewState = viewState.copy(isSharing = false)
         }
     }
 
@@ -62,6 +66,10 @@ class DetailViewModel(private val habitId: String) : BaseViewModel<DetailViewSta
                 trackerDao.getLatestValueFor(habitId)?.value
             } else null
 
+            // Calculate streak and completion rate
+            val streakCount = calculateStreakUseCase.execute(habitId)
+            val completionRate = calculateStreakUseCase.calculateCompletionRate(habitId)
+
             withContext(Dispatchers.Main) {
                 viewState = viewState.copy(
                     itemTitle = details.habitTitle,
@@ -72,7 +80,24 @@ class DetailViewModel(private val habitId: String) : BaseViewModel<DetailViewSta
                     daysToCheck = details.daysToCheck,
                     isGood = details.isHabitGood,
                     type = details.type,
-                    currentValue = currentValue
+                    currentValue = currentValue,
+                    streakCount = streakCount,
+                    completionRate = completionRate
+                )
+            }
+        }
+    }
+
+    private fun calculateStreakForShare() {
+        viewModelScope.launch(Dispatchers.Default) {
+            val streakCount = calculateStreakUseCase.execute(habitId)
+            val completionRate = calculateStreakUseCase.calculateCompletionRate(habitId)
+
+            withContext(Dispatchers.Main) {
+                viewState = viewState.copy(
+                    streakCount = streakCount,
+                    completionRate = completionRate,
+                    isSharing = true
                 )
             }
         }
