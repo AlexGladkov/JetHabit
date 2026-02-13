@@ -17,6 +17,7 @@
     <string name="title_settings">Settings</string>
     <string name="title_profile">Profile</string>
     <string name="title_statistics">Statistics</string>
+    <string name="title_activity_feed">Activity Feed</string>
     <string name="chat_title">AI Chat</string>
     <string name="chat_message_hint">Enter message</string>
     <string name="chat_api_key_hint">OpenAI API Key</string>

@@ -14,6 +14,8 @@ import feature.projects.data.ProjectDao
 import feature.projects.data.ProjectEntity
 import feature.tracker.data.TrackerDao
 import feature.tracker.data.TrackerEntity
+import feature.feed.data.ActivityFeedDao
+import feature.feed.data.ActivityFeedEntity
 
 @Database(
     entities = [
@@ -21,9 +23,10 @@ import feature.tracker.data.TrackerEntity
         DailyEntity::class,
         TrackerEntity::class,
         UserProfile::class,
-        ProjectEntity::class
+        ProjectEntity::class,
+        ActivityFeedEntity::class
     ],
-    version = 8
+    version = 9
 )
 abstract class AppDatabase: RoomDatabase() {
     abstract fun getHabitDao(): HabitDao
@@ -31,6 +34,7 @@ abstract class AppDatabase: RoomDatabase() {
     abstract fun getTrackerDao(): TrackerDao
     abstract fun getUserProfileDao(): UserProfileDao
     abstract fun getProjectDao(): ProjectDao
+    abstract fun getActivityFeedDao(): ActivityFeedDao
 }
 
 internal const val dbFileName = "jethabit.db"

@@ -5,6 +5,7 @@ import feature.daily.domain.SwitchHabitUseCase
 import feature.detail.di.detailModule
 import feature.habits.domain.CreateHabitUseCase
 import feature.projects.di.projectModule
+import feature.feed.di.feedModule
 import feature.settings.domain.ClearAllHabitsUseCase
 import feature.tracker.domain.UpdateTrackerValueUseCase
 import org.kodein.di.DI
@@ -15,7 +16,8 @@ import org.kodein.di.singleton
 fun featureModule() = DI.Module("feature") {
     importAll(
         detailModule,
-        projectModule
+        projectModule,
+        feedModule
     )
     
     // Use Cases
@@ -26,10 +28,11 @@ fun featureModule() = DI.Module("feature") {
             dailyDao = instance()
         )
     }
-    bind<SwitchHabitUseCase>() with singleton { 
+    bind<SwitchHabitUseCase>() with singleton {
         SwitchHabitUseCase(
             habitDao = instance(),
-            dailyDao = instance()
+            dailyDao = instance(),
+            recordStreakEventUseCase = instance()
         )
     }
     bind<CreateHabitUseCase>() with singleton { 
@@ -37,9 +40,10 @@ fun featureModule() = DI.Module("feature") {
             habitDao = instance()
         )
     }
-    bind<UpdateTrackerValueUseCase>() with singleton { 
+    bind<UpdateTrackerValueUseCase>() with singleton {
         UpdateTrackerValueUseCase(
-            trackerDao = instance()
+            trackerDao = instance(),
+            recordStreakEventUseCase = instance()
         )
     }
     bind<ClearAllHabitsUseCase>() with singleton {

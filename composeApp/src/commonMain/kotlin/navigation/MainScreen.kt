@@ -18,6 +18,7 @@ import feature.detail.ui.DetailScreen
 import feature.health.list.ui.HealthScreen
 import feature.health.track.ui.TrackHabitScreen
 import feature.chat.ui.ChatScreen
+import feature.feed.ui.ActivityFeedScreen
 import screens.settings.SettingsScreen
 import feature.statistics.ui.StatisticsScreen
 import feature.create.ui.ComposeScreen
@@ -35,6 +36,10 @@ enum class HealthScreens {
     Start, Track, Create
 }
 
+enum class ActivityFeedScreens {
+    Start
+}
+
 enum class ChatScreens {
     Start
 }
@@ -47,6 +52,7 @@ fun MainScreen() {
     val navController = rememberNavController()
     val items = listOf(
         AppScreens.Daily,
+        AppScreens.ActivityFeed,
         AppScreens.Health,
         AppScreens.Statistics,
         AppScreens.Chat,
@@ -65,6 +71,9 @@ fun MainScreen() {
                     val habitId = backStackEntry.arguments?.getString("habitId").orEmpty()
                     DetailScreen(habitId = habitId, navController = navController)
                 }
+            }
+            navigation(startDestination = ActivityFeedScreens.Start.name, route = AppScreens.ActivityFeed.title) {
+                composable(ActivityFeedScreens.Start.name) { ActivityFeedScreen(navController) }
             }
             navigation(startDestination = HealthScreens.Start.name, route = AppScreens.Health.title) {
                 composable(HealthScreens.Start.name) { HealthScreen(navController) }
