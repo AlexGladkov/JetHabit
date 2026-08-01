@@ -108,14 +108,17 @@ fun MainScreen() {
         BottomNavigation(
             modifier = Modifier
                 .align(Alignment.BottomStart)
-                .testTag("BottomNavigation"),
+                .testTag(AppTestTags.BottomNavigation),
             backgroundColor = JetHabitTheme.colors.secondaryBackground
         ) {
             val navBackStackEntry by navController.currentBackStackEntryAsState()
             val currentDestination = navBackStackEntry?.destination
 
             items.forEach { screen ->
+                val title = stringResource(screen.titleRes)
+
                 BottomNavigationItem(
+                    modifier = Modifier.testTag(AppTestTags.bottomNavigationItem(screen.title)),
                     icon = {
                         Icon(
                             screen.icon,
@@ -126,14 +129,14 @@ fun MainScreen() {
                             contentDescription = null
                         )
                     },
-                    label = { 
+                    label = {
                         Text(
-                            stringResource(screen.titleRes), 
+                            title,
                             color = if (currentDestination?.hierarchy?.any { it.route == screen.title } == true)
                                 JetHabitTheme.colors.tintColor
                             else
                                 JetHabitTheme.colors.primaryText
-                        ) 
+                        )
                     },
                     selected = currentDestination?.hierarchy?.any { it.route == screen.title } == true,
                     onClick = {

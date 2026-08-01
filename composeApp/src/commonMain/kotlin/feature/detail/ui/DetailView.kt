@@ -1,5 +1,6 @@
 package feature.detail.ui
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
@@ -18,6 +19,7 @@ import di.Platform
 import feature.detail.presentation.models.DetailEvent
 import feature.detail.presentation.models.DetailViewState
 import feature.habits.data.HabitType
+import feature.projects.data.ProjectEntity
 import org.jetbrains.compose.resources.stringResource
 import tech.mobiledeveloper.jethabit.resources.*
 import ui.themes.JetHabitTheme
@@ -158,6 +160,13 @@ internal fun DetailView(
                 Spacer(modifier = Modifier.height(24.dp))
             }
 
+            ProjectPicker(
+                projects = viewState.projects,
+                selectedProjectId = viewState.projectId,
+                enabled = !viewState.isDeleting,
+                onProjectSelected = { projectId -> eventHandler.invoke(DetailEvent.ProjectChanged(projectId)) }
+            )
+
             if (viewState.type == HabitType.REGULAR) {
                 JetMenu(
                     title = stringResource(Res.string.title_start_date),
@@ -195,6 +204,88 @@ internal fun DetailView(
                     style = JetHabitTheme.typography.body,
                     color = Color.White
                 )
+            }
+        }
+    }
+}
+
+@Composable
+private fun ProjectPicker(
+    projects: List<ProjectEntity>,
+    selectedProjectId: String?,
+    enabled: Boolean,
+    onProjectSelected: (String?) -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+    val selectedProject = projects.firstOrNull { project -> project.id == selectedProjectId }
+
+    Column(
+        modifier = Modifier.padding(
+            horizontal = JetHabitTheme.shapes.padding,
+            vertical = JetHabitTheme.shapes.padding
+        )
+    ) {
+        Text(
+            text = stringResource(Res.string.compose_project),
+            style = JetHabitTheme.typography.body,
+            color = JetHabitTheme.colors.primaryText
+        )
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp)
+        ) {
+            OutlinedButton(
+                onClick = { expanded = true },
+                enabled = enabled,
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.outlinedButtonColors(
+                    backgroundColor = Color.Transparent
+                )
+            ) {
+                Text(
+                    text = selectedProject?.title ?: stringResource(Res.string.compose_project_none),
+                    color = JetHabitTheme.colors.primaryText
+                )
+            }
+
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(JetHabitTheme.colors.primaryBackground)
+            ) {
+                DropdownMenuItem(
+                    onClick = {
+                        onProjectSelected(null)
+                        expanded = false
+                    },
+                    modifier = Modifier.background(JetHabitTheme.colors.primaryBackground)
+                ) {
+                    Text(
+                        text = stringResource(Res.string.compose_project_none),
+                        color = JetHabitTheme.colors.primaryText,
+                        style = JetHabitTheme.typography.body
+                    )
+                }
+
+                projects.forEach { project ->
+                    DropdownMenuItem(
+                        onClick = {
+                            onProjectSelected(project.id)
+                            expanded = false
+                        },
+                        modifier = Modifier.background(JetHabitTheme.colors.primaryBackground)
+                    ) {
+                        Text(
+                            text = project.title,
+                            color = JetHabitTheme.colors.primaryText,
+                            style = JetHabitTheme.typography.body
+                        )
+                    }
+                }
             }
         }
     }

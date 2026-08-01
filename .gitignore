@@ -7,3 +7,17 @@ iosApp/JetHabit.xcodeproj/*
 shared/shared.podspec
 build
 .gradle
+.kotlin/
+.DS_Store
+.idea/
+# Local signing keys and secret material (never commit)
+release.keystore
+*.keystore
+*.jks
+*.p12
+*.pfx
+*.pem
+*.key
+*.mobileprovision
+*.env
+.env.*

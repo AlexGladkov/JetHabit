@@ -36,7 +36,7 @@ class DailyViewModel : BaseViewModel<DailyViewState, DailyAction, DailyEvent>(
 
     override fun obtainEvent(viewEvent: DailyEvent) {
         when (viewEvent) {
-            DailyEvent.CloseAction -> TODO()
+            DailyEvent.CloseAction -> Unit
             DailyEvent.NextDayClicked -> performNextClick()
             is DailyEvent.HabitClicked -> viewAction = DailyAction.OpenDetail(viewEvent.habitId)
             DailyEvent.PreviousDayClicked -> performPreviousClick()
@@ -96,12 +96,8 @@ class DailyViewModel : BaseViewModel<DailyViewState, DailyAction, DailyEvent>(
                 // Update database first
                 switchHabitUseCase.execute(newValue, habitId, currentDate.current())
                 
-                // Then update UI with the latest state from database
-                val habits = getHabitsForTodayUseCase.execute(currentDate.current())
-                    .map { it.mapToHabitCardItemModel() }
-                
                 withContext(Dispatchers.Main) {
-                    viewState = viewState.copy(habits = habits)
+                    fetchHabitFor(currentDate.current())
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {

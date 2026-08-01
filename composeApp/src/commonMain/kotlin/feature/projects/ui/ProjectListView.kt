@@ -24,7 +24,8 @@ fun ProjectListView(
         topBar = {
             AppHeader(
                 title = "My Projects",
-                onBackClick = { eventHandler(ProjectListEvent.BackClicked) }
+                isBackButtonAvailable = true,
+                backClicked = { eventHandler(ProjectListEvent.BackClicked) }
             )
         },
         floatingActionButton = {

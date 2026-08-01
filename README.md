@@ -1,10 +1,10 @@
-# Jet Habit
+# JetHabit
 
-This is Demo repository for Jetpack Compose features demonstration
-Feel free to make issues, forks and pull requests
+JetHabit is a Compose Multiplatform and Kotlin Multiplatform habit-tracking application.
+Feel free to make issues, forks and pull requests.
 
-Adopted to full Compose Multiplatform and Kotlin Multiplatform
-**WARNING!** Compose Multiplatform doesn't work for Web until Compose Multiplatform bugs fixed
+Adapted to full Compose Multiplatform and Kotlin Multiplatform.
+**WARNING!** Compose Multiplatform doesn't work for Web until Compose Multiplatform bugs are fixed
 
 ### Tech Stack:
 - Navigation. Odyssey

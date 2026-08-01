@@ -3,3 +3,16 @@ target 'JetHabit' do
   platform :ios, '14.1'
   pod 'composeApp', :path => '../composeApp'
 end
+
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    next unless target.name == 'composeApp'
+
+    target.shell_script_build_phases.each do |phase|
+      next unless phase.name.include?('Build composeApp')
+      next if phase.shell_script.include?('/usr/libexec/java_home -v 21')
+
+      phase.shell_script = "export JAVA_HOME=\"$(/usr/libexec/java_home -v 21)\"\n" + phase.shell_script
+    end
+  end
+end

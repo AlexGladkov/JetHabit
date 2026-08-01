@@ -41,7 +41,7 @@ internal fun ProfileView(
             MenuItem(
                 icon = {
                     Icon(
-                        imageVector = Icons.Default.Folder,
+                        imageVector = Icons.Default.List,
                         contentDescription = null,
                         tint = JetHabitTheme.colors.primaryText
                     )

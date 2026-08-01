@@ -6,6 +6,7 @@ import di.Inject
 import feature.daily.data.DailyDao
 import feature.habits.data.HabitDao
 import feature.habits.data.HabitType
+import feature.projects.domain.GetAllProjectsUseCase
 import feature.statistics.ui.models.StatisticsAction
 import feature.statistics.ui.models.StatisticsEvent
 import feature.statistics.ui.models.StatisticsViewState
@@ -21,6 +22,7 @@ class StatisticsViewModel : BaseViewModel<StatisticsViewState, StatisticsAction,
 ) {
     private val habitDao = Inject.instance<HabitDao>()
     private val dailyDao = Inject.instance<DailyDao>()
+    private val getAllProjectsUseCase = Inject.instance<GetAllProjectsUseCase>()
     private val timeZone = TimeZone.currentSystemDefault()
 
     init {
@@ -30,6 +32,13 @@ class StatisticsViewModel : BaseViewModel<StatisticsViewState, StatisticsAction,
     override fun obtainEvent(event: StatisticsEvent) {
         when (event) {
             StatisticsEvent.LoadStatistics -> loadHabitsStatistics()
+            is StatisticsEvent.ProjectSelected -> {
+                viewState = viewState.copy(
+                    selectedProjectId = event.projectId,
+                    isUncategorizedSelected = event.isUncategorizedSelected
+                )
+                loadHabitsStatistics()
+            }
         }
     }
 
@@ -40,7 +49,16 @@ class StatisticsViewModel : BaseViewModel<StatisticsViewState, StatisticsAction,
             }
 
             try {
-                val habits = habitDao.getAll()
+                val projects = getAllProjectsUseCase.execute()
+                val projectIds = projects.map { project -> project.id }.toSet()
+                val selectedProjectId = viewState.selectedProjectId?.takeIf { id -> id in projectIds }
+                val habits = habitDao.getAll().filter { habit ->
+                    when {
+                        viewState.isUncategorizedSelected -> habit.projectId == null || habit.projectId !in projectIds
+                        selectedProjectId != null -> habit.projectId == selectedProjectId
+                        else -> true
+                    }
+                }
                 val now = Clock.System.now()
                 val today = now.toLocalDateTime(timeZone).date
 
@@ -135,6 +153,8 @@ class StatisticsViewModel : BaseViewModel<StatisticsViewState, StatisticsAction,
                         viewState = viewState.copy(
                             hasData = true,
                             statistics = habitStats,
+                            projects = projects,
+                            selectedProjectId = selectedProjectId,
                             isLoading = false
                         )
                     }
@@ -143,6 +163,8 @@ class StatisticsViewModel : BaseViewModel<StatisticsViewState, StatisticsAction,
                         viewState = viewState.copy(
                             hasData = false,
                             statistics = emptyList(),
+                            projects = projects,
+                            selectedProjectId = selectedProjectId,
                             isLoading = false
                         )
                     }

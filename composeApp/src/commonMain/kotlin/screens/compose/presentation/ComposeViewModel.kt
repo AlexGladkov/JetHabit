@@ -26,12 +26,13 @@ class ComposeViewModel: BaseViewModel<ComposeViewState, ComposeAction, ComposeEv
             ComposeEvent.SaveClicked -> createNewHabit()
             ComposeEvent.ClearClicked -> viewState = viewState.copy(habitTitle = "")
             ComposeEvent.CloseClicked -> viewAction = ComposeAction.CloseScreen
-            is ComposeEvent.EndDateSelected -> TODO()
-            ComposeEvent.HideEndDatePicker -> TODO()
-            ComposeEvent.HideStartDatePicker -> TODO()
-            ComposeEvent.ShowEndDatePicker -> TODO()
-            ComposeEvent.ShowStartDatePicker -> TODO()
-            is ComposeEvent.StartDateSelected -> TODO()
+            is ComposeEvent.EndDateSelected -> Unit
+            ComposeEvent.HideEndDatePicker -> Unit
+            ComposeEvent.HideStartDatePicker -> Unit
+            ComposeEvent.ShowEndDatePicker -> Unit
+            ComposeEvent.ShowStartDatePicker -> Unit
+            is ComposeEvent.StartDateSelected -> Unit
+            is ComposeEvent.ProjectSelected -> Unit
         }
     }
 

@@ -2,10 +2,14 @@ package feature.daily.ui
 
 import PreviewApp
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
+import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
@@ -17,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import feature.daily.ui.models.DailyViewState
+import feature.projects.data.ProjectEntity
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import feature.daily.ui.models.DailyEvent
 import org.jetbrains.compose.resources.stringResource
@@ -24,6 +29,7 @@ import feature.daily.ui.views.DailyViewNoItems
 import screens.daily.views.HabitCardItem
 import tech.mobiledeveloper.jethabit.resources.Res
 import tech.mobiledeveloper.jethabit.resources.daily_previous_day
+import tech.mobiledeveloper.jethabit.resources.daily_project_all
 import ui.themes.JetHabitTheme
 import utils.Weekday
 import utils.title
@@ -83,6 +89,14 @@ fun DailyView(
                     }
                 }
 
+                ProjectFilterRow(
+                    projects = viewState.projects,
+                    selectedProjectId = viewState.selectedProjectId,
+                    onProjectSelected = { projectId ->
+                        eventHandler.invoke(DailyEvent.ProjectFilterSelected(projectId))
+                    }
+                )
+
                 if (viewState.habits.isEmpty()) {
                     DailyViewNoItems {
                         eventHandler.invoke(DailyEvent.ComposeAction)
@@ -125,6 +139,59 @@ fun DailyView(
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun ProjectFilterRow(
+    projects: List<ProjectEntity>,
+    selectedProjectId: String?,
+    onProjectSelected: (String?) -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .horizontalScroll(rememberScrollState())
+            .padding(
+                start = JetHabitTheme.shapes.padding,
+                end = JetHabitTheme.shapes.padding,
+                bottom = JetHabitTheme.shapes.padding
+            ),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        ProjectFilterChip(
+            title = stringResource(Res.string.daily_project_all),
+            isSelected = selectedProjectId == null,
+            onClick = { onProjectSelected(null) }
+        )
+
+        projects.forEach { project ->
+            ProjectFilterChip(
+                title = project.title,
+                isSelected = selectedProjectId == project.id,
+                onClick = { onProjectSelected(project.id) }
+            )
+        }
+    }
+}
+
+@Composable
+private fun ProjectFilterChip(
+    title: String,
+    isSelected: Boolean,
+    onClick: () -> Unit
+) {
+    OutlinedButton(
+        onClick = onClick,
+        colors = ButtonDefaults.outlinedButtonColors(
+            backgroundColor = if (isSelected) JetHabitTheme.colors.tintColor else Color.Transparent
+        )
+    ) {
+        Text(
+            text = title,
+            color = if (isSelected) Color.White else JetHabitTheme.colors.primaryText,
+            style = JetHabitTheme.typography.body
+        )
     }
 }
 

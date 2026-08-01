@@ -5,7 +5,7 @@ Pod::Spec.new do |spec|
     spec.source                   = { :http=> ''}
     spec.authors                  = ''
     spec.license                  = ''
-    spec.summary                  = 'PlayZone iOS SDK'
+    spec.summary                  = 'JetHabit'
     spec.vendored_frameworks      = 'build/cocoapods/framework/SharedSDK.framework'
     spec.libraries                = 'c++'
     spec.ios.deployment_target    = '14.0'

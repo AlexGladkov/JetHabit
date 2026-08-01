@@ -1,6 +1,7 @@
 package feature.detail.presentation.models
 
 import feature.habits.data.HabitType
+import feature.projects.data.ProjectEntity
 import utils.CalendarDays
 import kotlinx.datetime.LocalDate
 
@@ -21,5 +22,7 @@ data class DetailViewState(
     val dateSelectionState: DateSelectionState = DateSelectionState.None,
     val type: HabitType = HabitType.REGULAR,
     val currentValue: Double? = null,
-    val newValue: Double? = null
+    val newValue: Double? = null,
+    val projects: List<ProjectEntity> = emptyList(),
+    val projectId: String? = null
 )

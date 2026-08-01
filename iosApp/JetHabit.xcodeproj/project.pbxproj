@@ -110,6 +110,7 @@
 				7555FF79242A565900829871 /* Resources */,
 				9964867F0862B4D9FB6ABFC7 /* Frameworks */,
 				66A857DDC26F5914DF656EC2 /* [CP] Embed Pods Frameworks */,
+				CB085572C8821B76B5A71F45 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -179,6 +180,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-JetHabit/Pods-JetHabit-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		CB085572C8821B76B5A71F45 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-JetHabit/Pods-JetHabit-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-JetHabit/Pods-JetHabit-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-JetHabit/Pods-JetHabit-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		E8D673591E7196AEA2EA10E2 /* [CP] Check Pods Manifest.lock */ = {

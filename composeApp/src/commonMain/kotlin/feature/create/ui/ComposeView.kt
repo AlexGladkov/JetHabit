@@ -26,6 +26,7 @@ import androidx.compose.runtime.setValue
 import feature.create.presentation.models.ComposeEvent
 import feature.create.presentation.models.ComposeViewState
 import feature.habits.data.Measurement
+import feature.projects.data.ProjectEntity
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -142,6 +143,19 @@ fun ComposeView(
                                     }
                                 }
                             }
+                        }
+                    }
+
+                    item {
+                        if (viewState.projects.isNotEmpty()) {
+                            ProjectPicker(
+                                projects = viewState.projects,
+                                selectedProjectId = viewState.selectedProjectId,
+                                enabled = !viewState.isSending,
+                                onProjectSelected = { projectId ->
+                                    eventHandler.invoke(ComposeEvent.ProjectSelected(projectId))
+                                }
+                            )
                         }
                     }
 
@@ -386,6 +400,88 @@ fun ComposeView(
                         }
                     }
                 })
+        }
+    }
+}
+
+@Composable
+private fun ProjectPicker(
+    projects: List<ProjectEntity>,
+    selectedProjectId: String?,
+    enabled: Boolean,
+    onProjectSelected: (String?) -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+    val selectedProject = projects.firstOrNull { project -> project.id == selectedProjectId }
+
+    Column(
+        modifier = Modifier.padding(
+            horizontal = JetHabitTheme.shapes.padding,
+            vertical = JetHabitTheme.shapes.padding
+        )
+    ) {
+        Text(
+            text = stringResource(Res.string.compose_project),
+            style = JetHabitTheme.typography.body,
+            color = JetHabitTheme.colors.primaryText
+        )
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp)
+        ) {
+            OutlinedButton(
+                onClick = { expanded = true },
+                enabled = enabled,
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.outlinedButtonColors(
+                    backgroundColor = Color.Transparent
+                )
+            ) {
+                Text(
+                    text = selectedProject?.title ?: stringResource(Res.string.compose_project_none),
+                    color = JetHabitTheme.colors.primaryText
+                )
+            }
+
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(JetHabitTheme.colors.primaryBackground)
+            ) {
+                DropdownMenuItem(
+                    onClick = {
+                        onProjectSelected(null)
+                        expanded = false
+                    },
+                    modifier = Modifier.background(JetHabitTheme.colors.primaryBackground)
+                ) {
+                    Text(
+                        text = stringResource(Res.string.compose_project_none),
+                        color = JetHabitTheme.colors.primaryText,
+                        style = JetHabitTheme.typography.body
+                    )
+                }
+
+                projects.forEach { project ->
+                    DropdownMenuItem(
+                        onClick = {
+                            onProjectSelected(project.id)
+                            expanded = false
+                        },
+                        modifier = Modifier.background(JetHabitTheme.colors.primaryBackground)
+                    ) {
+                        Text(
+                            text = project.title,
+                            color = JetHabitTheme.colors.primaryText,
+                            style = JetHabitTheme.typography.body
+                        )
+                    }
+                }
+            }
         }
     }
 }

@@ -1,18 +1,24 @@
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.window.ComposeUIViewController
 import data.features.settings.SettingsEventBus
+import di.LocalPlatform
+import di.Platform
 import di.PlatformConfiguration
 import di.PlatformSDK
 import platform.UIKit.UIViewController
 import themes.MainTheme
 import coil3.PlatformContext
-import coil3.SingletonPlatformContext
+import core.database.getDatabaseBuilder
+import core.database.getRoomDatabase
 import core.di.initializeCoil
 
-fun MainViewController(): UIViewController =
-    ComposeUIViewController {
-        PlatformSDK.init(PlatformConfiguration())
+fun MainViewController(): UIViewController {
+    val appDatabase = getRoomDatabase(getDatabaseBuilder())
+    PlatformSDK.init(PlatformConfiguration(), appDatabase = appDatabase)
+
+    return ComposeUIViewController {
         val settingsEventBus = remember { SettingsEventBus() }
         val currentSettings = settingsEventBus.currentSettings.collectAsState().value
 
@@ -23,10 +29,13 @@ fun MainViewController(): UIViewController =
             textSize = currentSettings.textSize,
             paddingSize = currentSettings.paddingSize
         ) {
-            App()
+            CompositionLocalProvider(LocalPlatform provides Platform.iOS) {
+                App()
+            }
         }
     }
+}
 
 fun initializeIOSApp() {
-    initializeCoil(SingletonPlatformContext)
+    initializeCoil(PlatformContext.INSTANCE)
 }

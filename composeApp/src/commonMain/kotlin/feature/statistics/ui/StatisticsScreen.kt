@@ -15,6 +15,7 @@ import feature.statistics.ui.views.StatisticsViewNoItems
 import org.jetbrains.compose.resources.stringResource
 import tech.mobiledeveloper.jethabit.resources.Res
 import tech.mobiledeveloper.jethabit.resources.title_statistics
+import ui.components.ProjectChipBar
 import ui.themes.JetHabitTheme
 
 @Composable
@@ -40,6 +41,23 @@ fun StatisticsScreen() {
                 style = JetHabitTheme.typography.heading,
                 color = JetHabitTheme.colors.primaryText,
                 modifier = Modifier.padding(bottom = 16.dp)
+            )
+
+            ProjectChipBar(
+                projects = viewState.projects,
+                selectedProjectId = viewState.selectedProjectId,
+                isUncategorizedSelected = viewState.isUncategorizedSelected,
+                onAllSelected = {
+                    viewModel.obtainEvent(StatisticsEvent.ProjectSelected(projectId = null))
+                },
+                onUncategorizedSelected = {
+                    viewModel.obtainEvent(
+                        StatisticsEvent.ProjectSelected(projectId = null, isUncategorizedSelected = true)
+                    )
+                },
+                onProjectSelected = { projectId ->
+                    viewModel.obtainEvent(StatisticsEvent.ProjectSelected(projectId = projectId))
+                }
             )
 
             if (viewState.isLoading) {

@@ -17,7 +17,7 @@ version = "1.0"
 
 kotlin {
     cocoapods {
-        summary = "PlayZone iOS SDK"
+        summary = "JetHabit"
         homepage = "https://google.com"
         ios.deploymentTarget = "14.0"
 
@@ -113,14 +113,21 @@ kotlin {
             implementation(libs.klock.jvm)
         }
 
-        jsMain.dependencies {
-            implementation(compose.html.core)
-            implementation(npm("sql.js", "1.6.2"))
-            implementation(devNpm("copy-webpack-plugin", "9.1.0"))
-        }
+//        JS target is disabled while Room is incompatible with it.
+//        jsMain.dependencies {
+//            implementation(compose.html.core)
+//            implementation(npm("sql.js", "1.6.2"))
+//            implementation(devNpm("copy-webpack-plugin", "9.1.0"))
+//        }
 
-        iosMain.dependencies {
-            implementation(libs.coil.multiplatform.network.ktor)
+        iosMain {
+            // Room 2.7.0-alpha03 + KSP 2.0 does not wire common KSP output into
+            // Kotlin/Native compilations, so iOS cannot see generated instantiateImpl().
+            // Keep this as a Gradle-only bridge until Room is migrated to ConstructedBy.
+            kotlin.srcDir(layout.buildDirectory.dir("generated/ksp/metadata/commonMain/kotlin"))
+            dependencies {
+                implementation(libs.coil.multiplatform.network.ktor)
+            }
         }
 
         commonTest.dependencies {
@@ -135,8 +142,9 @@ android {
     
     signingConfigs {
         create("release") {
-            // These will be set from environment variables or local.properties
-            storeFile = file(System.getenv("KEYSTORE_FILE") ?: "release.keystore")
+            val keystoreFile = System.getenv("KEYSTORE_FILE")
+            storeFile = keystoreFile?.let { file(it) }
+                ?: layout.buildDirectory.file("missing-release-keystore").get().asFile
             storePassword = System.getenv("KEYSTORE_PASSWORD") ?: ""
             keyAlias = System.getenv("KEY_ALIAS") ?: ""
             keyPassword = System.getenv("KEY_PASSWORD") ?: ""
@@ -226,6 +234,32 @@ dependencies {
     add("kspJvm", libs.room.compiler)
 }
 
+tasks.matching { it.name.startsWith("compileKotlinIos") }.configureEach {
+    dependsOn("kspCommonMainKotlinMetadata")
+}
+
 room {
     schemaDirectory("$projectDir/schemas")
+}
+
+val releaseSigningEnvironment = listOf(
+    "KEYSTORE_FILE",
+    "KEYSTORE_PASSWORD",
+    "KEY_ALIAS",
+    "KEY_PASSWORD",
+)
+
+gradle.taskGraph.whenReady {
+    if (allTasks.any { it.path == ":composeApp:assembleRelease" }) {
+        val missing = releaseSigningEnvironment.filter { System.getenv(it).isNullOrBlank() }
+        require(missing.isEmpty()) {
+            "Release signing requires environment variables: ${missing.joinToString()}. " +
+                "KEYSTORE_FILE must point to an explicit keystore path; root release.keystore is not used by default."
+        }
+
+        val keystoreFile = file(System.getenv("KEYSTORE_FILE")!!)
+        require(keystoreFile.isFile) {
+            "Release signing KEYSTORE_FILE does not exist or is not a file: ${keystoreFile.absolutePath}"
+        }
+    }
 }

@@ -8,6 +8,7 @@ import feature.habits.data.HabitType
 import feature.health.list.presentation.models.HealthEvent
 import feature.health.list.presentation.models.HealthViewState
 import feature.health.list.presentation.models.TrackerHabitItem
+import feature.projects.domain.GetAllProjectsUseCase
 import feature.tracker.data.TrackerDao
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -17,6 +18,7 @@ class HealthViewModel : BaseViewModel<HealthViewState, Nothing, HealthEvent>(
     initialState = HealthViewState()
 ) {
     private val habitDao = Inject.instance<HabitDao>()
+    private val getAllProjectsUseCase = Inject.instance<GetAllProjectsUseCase>()
     private val trackerDao = Inject.instance<TrackerDao>()
 
     init {
@@ -24,7 +26,15 @@ class HealthViewModel : BaseViewModel<HealthViewState, Nothing, HealthEvent>(
     }
 
     override fun obtainEvent(viewEvent: HealthEvent) {
-        // No events to handle currently
+        when (viewEvent) {
+            is HealthEvent.ProjectSelected -> {
+                viewState = viewState.copy(
+                    selectedProjectId = viewEvent.projectId,
+                    isUncategorizedSelected = viewEvent.isUncategorizedSelected
+                )
+                loadTrackerHabits()
+            }
+        }
     }
 
     private fun loadTrackerHabits() {
@@ -34,7 +44,20 @@ class HealthViewModel : BaseViewModel<HealthViewState, Nothing, HealthEvent>(
             }
 
             try {
-                val habits = habitDao.getAll().filter { it.type == HabitType.TRACKER }
+                val projects = getAllProjectsUseCase.execute()
+                val projectIds = projects.map { project -> project.id }.toSet()
+                val selectedProjectId = viewState.selectedProjectId?.takeIf { id -> id in projectIds }
+                val habits = habitDao.getAll()
+                    .filter { it.type == HabitType.TRACKER }
+                    .filter { habit ->
+                        when {
+                            viewState.isUncategorizedSelected -> {
+                                habit.projectId == null || habit.projectId !in projectIds
+                            }
+                            selectedProjectId != null -> habit.projectId == selectedProjectId
+                            else -> true
+                        }
+                    }
                 val trackerHabits = habits.map { habit ->
                     val history = trackerDao.getAllForHabit(habit.id)
                     TrackerHabitItem(
@@ -50,6 +73,8 @@ class HealthViewModel : BaseViewModel<HealthViewState, Nothing, HealthEvent>(
                 withContext(Dispatchers.Main) {
                     viewState = viewState.copy(
                         habits = trackerHabits,
+                        projects = projects,
+                        selectedProjectId = selectedProjectId,
                         isLoading = false
                     )
                 }

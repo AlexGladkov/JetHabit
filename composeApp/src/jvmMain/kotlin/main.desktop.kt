@@ -4,7 +4,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
-import coil3.SingletonPlatformContext
+import coil3.PlatformContext
 import core.database.getDatabaseBuilder
 import core.database.getRoomDatabase
 import data.features.settings.LocalSettingsEventBus
@@ -17,14 +17,14 @@ import themes.MainTheme
 import core.di.initializeCoil
 
 fun main() {
-    initializeCoil(SingletonPlatformContext)
-    
+    initializeCoil(PlatformContext.INSTANCE)
+
     application {
         Window(
             onCloseRequest = ::exitApplication,
             title = "JetHabit"
         ) {
-            App()
+            MainView()
         }
     }
 }

@@ -23,14 +23,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import feature.health.list.presentation.HealthViewModel
+import feature.health.list.presentation.models.HealthEvent
 import feature.health.list.presentation.models.TrackerHabitItem
 import feature.health.list.ui.views.HealthViewNoItems
 import navigation.HealthScreens
+import ui.components.ProjectChipBar
 import ui.themes.JetHabitTheme
 import org.jetbrains.compose.resources.stringResource
 import tech.mobiledeveloper.jethabit.resources.Res
 import tech.mobiledeveloper.jethabit.resources.health_title
 import kotlinx.datetime.LocalDate
+import kotlin.math.roundToInt
 
 @Composable
 fun HealthScreen(
@@ -46,19 +49,34 @@ fun HealthScreen(
         Column(
             modifier = Modifier.fillMaxSize().padding(JetHabitTheme.shapes.padding)
         ) {
+            Text(
+                text = stringResource(Res.string.health_title),
+                style = JetHabitTheme.typography.heading,
+                color = JetHabitTheme.colors.primaryText
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            ProjectChipBar(
+                projects = viewState.projects,
+                selectedProjectId = viewState.selectedProjectId,
+                isUncategorizedSelected = viewState.isUncategorizedSelected,
+                onAllSelected = {
+                    viewModel.obtainEvent(HealthEvent.ProjectSelected(projectId = null))
+                },
+                onUncategorizedSelected = {
+                    viewModel.obtainEvent(HealthEvent.ProjectSelected(projectId = null, isUncategorizedSelected = true))
+                },
+                onProjectSelected = { projectId ->
+                    viewModel.obtainEvent(HealthEvent.ProjectSelected(projectId = projectId))
+                }
+            )
+
             if (viewState.habits.isEmpty()) {
                 HealthViewNoItems(
                     onTrackClick = { navController.navigate("${HealthScreens.Create.name}?type=tracker") }
                 )
             } else {
-                Text(
-                    text = stringResource(Res.string.health_title),
-                    style = JetHabitTheme.typography.heading,
-                    color = JetHabitTheme.colors.primaryText
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
                 LazyColumn {
                     items(viewState.habits) { habit ->
                         TrackerHabitCard(
@@ -173,13 +191,13 @@ private fun TrackerGraph(
         // Draw min and max y-axis labels
         drawText(
             textMeasurer = textMeasurer,
-            text = String.format("%.0f", maxValue),
+            text = maxValue.roundToInt().toString(),
             style = textStyle,
             topLeft = Offset(0f, topPadding)
         )
         drawText(
             textMeasurer = textMeasurer,
-            text = String.format("%.0f", minValue),
+            text = minValue.roundToInt().toString(),
             style = textStyle,
             topLeft = Offset(0f, height - bottomPadding - 8f)
         )
