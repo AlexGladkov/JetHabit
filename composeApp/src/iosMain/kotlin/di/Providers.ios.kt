@@ -8,4 +8,4 @@ import org.kodein.di.singleton
 
 actual fun DI.Builder.provideImagePicker() {
     bind<ImagePicker>() with singleton { IOSImagePicker() }
-} 
+}
