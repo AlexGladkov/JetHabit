@@ -7,5 +7,7 @@ data class ProfileViewState(
     val name: String = "",
     val email: String = "",
     val avatarUrl: String? = null,
-    val isLoading: Boolean = false
+    val isLoading: Boolean = false,
+    val isLoggedIn: Boolean = false,
+    val authProvider: String? = null
 ) 

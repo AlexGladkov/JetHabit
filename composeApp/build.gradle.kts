@@ -26,6 +26,11 @@ kotlin {
             transitiveExport = false
             baseName = "SharedSDK"
         }
+
+        // VK ID SDK for iOS
+        pod("VKID") {
+            version = "2.1.0"
+        }
     }
 
     jvmToolchain(21)
@@ -103,6 +108,9 @@ kotlin {
         androidMain.dependencies {
             implementation(libs.androidx.appcompat)
             implementation(libs.androidx.activity.compose)
+
+            // VK ID SDK
+            implementation("com.vk.id:onetap-compose:2.1.0")
         }
 
         jvmMain.dependencies {
