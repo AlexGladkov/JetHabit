@@ -25,6 +25,7 @@ object PlatformSDK {
 
         val platformModule = DI.Module("platform") {
             provideImagePicker()
+            provideShareService()
         }
 
         _di = DI {
