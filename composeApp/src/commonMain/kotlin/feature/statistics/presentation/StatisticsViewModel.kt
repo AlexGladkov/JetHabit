@@ -4,6 +4,8 @@ import androidx.lifecycle.viewModelScope
 import base.BaseViewModel
 import di.Inject
 import feature.daily.data.DailyDao
+import feature.daily.domain.HeatmapDayDetails
+import feature.daily.domain.WeeklyHeatmapFormatter
 import feature.habits.data.HabitDao
 import feature.habits.data.HabitType
 import feature.projects.domain.GetAllProjectsUseCase
@@ -39,7 +41,28 @@ class StatisticsViewModel : BaseViewModel<StatisticsViewState, StatisticsAction,
                 )
                 loadHabitsStatistics()
             }
+            // E7: habit heatmap events
+            is StatisticsEvent.DayCellClicked -> onDayCellClicked(event.cellIndex)
+            StatisticsEvent.DayDetailsDismissed -> {
+                viewState = viewState.copy(selectedDayDetails = null)
+            }
         }
+    }
+
+    // E7: map a row-major cell index of the 7x12 grid to the day details dialog model.
+    private fun onDayCellClicked(cellIndex: Int) {
+        val heatmap = viewState.heatmap ?: return
+        val row = cellIndex / heatmap.weeks
+        val column = cellIndex % heatmap.weeks
+        val endDate = heatmap.endDate
+        val gridStart = endDate
+            .minus((heatmap.weeks - 1) * 7, DateTimeUnit.DAY)
+            .minus(endDate.dayOfWeek.ordinal, DateTimeUnit.DAY)
+        val date = gridStart.plus(row + column * 7, DateTimeUnit.DAY)
+        viewState = viewState.copy(
+            selectedDayDetails = heatmap.dayDetails[date]
+                ?: HeatmapDayDetails(date = date, entries = emptyList())
+        )
     }
 
     private fun loadHabitsStatistics() {
@@ -148,6 +171,11 @@ class StatisticsViewModel : BaseViewModel<StatisticsViewState, StatisticsAction,
                 val hasRegularHabits = habits.any { it.type == HabitType.REGULAR }
 
                 // 2. If there are regular habits, show statistics, otherwise show empty screen
+                val heatmap = WeeklyHeatmapFormatter(
+                    dailyDao = dailyDao,
+                    dateProvider = { today }
+                ).build(habits = habits)
+
                 if (hasRegularHabits) {
                     withContext(Dispatchers.Main) {
                         viewState = viewState.copy(
@@ -155,6 +183,7 @@ class StatisticsViewModel : BaseViewModel<StatisticsViewState, StatisticsAction,
                             statistics = habitStats,
                             projects = projects,
                             selectedProjectId = selectedProjectId,
+                            heatmap = heatmap,
                             isLoading = false
                         )
                     }
@@ -165,6 +194,7 @@ class StatisticsViewModel : BaseViewModel<StatisticsViewState, StatisticsAction,
                             statistics = emptyList(),
                             projects = projects,
                             selectedProjectId = selectedProjectId,
+                            heatmap = heatmap,
                             isLoading = false
                         )
                     }

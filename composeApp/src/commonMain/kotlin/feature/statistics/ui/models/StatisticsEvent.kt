@@ -7,4 +7,8 @@ sealed interface StatisticsEvent {
         val projectId: String?,
         val isUncategorizedSelected: Boolean = false
     ) : StatisticsEvent
+
+    // E7: habit heatmap events
+    data class DayCellClicked(val cellIndex: Int) : StatisticsEvent
+    data object DayDetailsDismissed : StatisticsEvent
 }
