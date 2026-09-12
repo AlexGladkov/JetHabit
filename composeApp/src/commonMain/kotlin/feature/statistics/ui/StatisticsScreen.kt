@@ -10,6 +10,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import feature.statistics.presentation.StatisticsViewModel
 import feature.statistics.ui.models.StatisticsEvent
+import feature.statistics.ui.views.DayDetailsDialog
+import feature.statistics.ui.views.HeatmapSection
 import feature.statistics.ui.views.StatisticsItem
 import feature.statistics.ui.views.StatisticsViewNoItems
 import org.jetbrains.compose.resources.stringResource
@@ -71,6 +73,16 @@ fun StatisticsScreen() {
                 StatisticsViewNoItems()
             } else {
                 LazyColumn {
+                    // E7: heatmap is the first section of the statistics list.
+                    item {
+                        HeatmapSection(
+                            heatmap = viewState.heatmap,
+                            onDayCellClicked = { cellIndex ->
+                                viewModel.obtainEvent(StatisticsEvent.DayCellClicked(cellIndex))
+                            }
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                    }
                     items(viewState.statistics) { stat ->
                         StatisticsItem(
                             title = stat.title,
@@ -82,5 +94,14 @@ fun StatisticsScreen() {
                 }
             }
         }
+    }
+
+    viewState.selectedDayDetails?.let { details ->
+        DayDetailsDialog(
+            details = details,
+            onDismiss = {
+                viewModel.obtainEvent(StatisticsEvent.DayDetailsDismissed)
+            }
+        )
     }
 } 
