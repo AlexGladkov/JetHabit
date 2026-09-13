@@ -8,5 +8,6 @@ data class DailyEntity(
     @PrimaryKey val id: String,
     val habitId: String,
     val timestamp: String,
-    val isChecked: Boolean
+    val isChecked: Boolean,
+    val completedAtEpochMs: Long? = null
 )

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 9,
-    "identityHash": "73654b57b20f1e8d0fc9360e02fbeb94",
+    "identityHash": "f2d9ef9ef38af4ec960798b5fcf0f1da",
     "entities": [
       {
         "tableName": "HabitEntity",
@@ -219,7 +219,7 @@
       },
       {
         "tableName": "ReminderEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`habitId` TEXT NOT NULL, `hour` INTEGER NOT NULL, `minute` INTEGER NOT NULL, `daysMask` INTEGER NOT NULL, `timeZoneId` TEXT NOT NULL, `adaptiveEnabled` INTEGER NOT NULL, `anchor` INTEGER, PRIMARY KEY(`habitId`), FOREIGN KEY(`habitId`) REFERENCES `HabitEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`habitId` TEXT NOT NULL, `hour` INTEGER NOT NULL, `minute` INTEGER NOT NULL, `daysMask` INTEGER NOT NULL, `timeZoneId` TEXT NOT NULL, `adaptiveEnabled` INTEGER NOT NULL, `anchor` INTEGER, PRIMARY KEY(`habitId`))",
         "fields": [
           {
             "fieldPath": "habitId",
@@ -268,36 +268,12 @@
           "columnNames": [
             "habitId"
           ]
-        },
-        "indices": [
-          {
-            "name": "index_ReminderEntity_habitId",
-            "unique": false,
-            "columnNames": [
-              "habitId"
-            ],
-            "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_ReminderEntity_habitId` ON `${TABLE_NAME}` (`habitId`)"
-          }
-        ],
-        "foreignKeys": [
-          {
-            "table": "HabitEntity",
-            "onDelete": "CASCADE",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "habitId"
-            ],
-            "referencedColumns": [
-              "id"
-            ]
-          }
-        ]
+        }
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '73654b57b20f1e8d0fc9360e02fbeb94')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f2d9ef9ef38af4ec960798b5fcf0f1da')"
     ]
   }
 }
