@@ -11,6 +11,7 @@ plugins {
     alias(libs.plugins.cocoapods)
     alias(libs.plugins.room)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.serialization)
 }
 
 version = "1.0"
