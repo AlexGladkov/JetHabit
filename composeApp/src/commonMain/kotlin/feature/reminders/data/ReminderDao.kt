@@ -20,4 +20,10 @@ interface ReminderDao {
 
     @Query("SELECT * FROM ReminderEntity WHERE habitId = :habitId")
     fun getByHabitId(habitId: String): Flow<ReminderEntity?>
+
+    @Query("SELECT * FROM ReminderEntity WHERE habitId = :habitId LIMIT 1")
+    suspend fun getSnapshot(habitId: String): ReminderEntity?
+
+    @Query("UPDATE ReminderEntity SET anchor = :newAnchor WHERE habitId = :habitId AND adaptiveEnabled = 1 AND (anchor IS NULL OR anchor < :newAnchor)")
+    suspend fun advanceAnchorIfNewer(habitId: String, newAnchor: Long): Int
 }

@@ -5,7 +5,6 @@ import data.features.daily.DailyRepository
 import di.Inject.instance
 import feature.daily.data.DailyDao
 import feature.daily.domain.GetHabitsForTodayUseCase
-import feature.daily.domain.SwitchHabitUseCase
 import org.kodein.di.DI
 import org.kodein.di.bind
 import org.kodein.di.provider
@@ -21,10 +20,6 @@ val dailyModule = DI.Module("DailyModule") {
         GetHabitsForTodayUseCase(instance(), instance(), instance())
     }
     
-    bind<SwitchHabitUseCase>() with provider {
-        SwitchHabitUseCase(instance(), instance())
-    }
-
     bind<DailyRepository>() with provider {
         DailyRepository()
     }

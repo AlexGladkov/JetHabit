@@ -25,6 +25,7 @@ object PlatformSDK {
 
         val platformModule = DI.Module("platform") {
             provideImagePicker()
+            provideReminderScheduler()
         }
 
         _di = DI {

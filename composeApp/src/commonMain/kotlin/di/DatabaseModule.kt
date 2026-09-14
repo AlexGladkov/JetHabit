@@ -5,6 +5,7 @@ import core.database.dao.UserProfileDao
 import feature.daily.data.DailyDao
 import feature.habits.data.HabitDao
 import feature.projects.data.ProjectDao
+import feature.reminders.data.ReminderDao
 import feature.tracker.data.TrackerDao
 import org.kodein.di.DI
 import org.kodein.di.bind
@@ -34,5 +35,9 @@ fun databaseModule() = DI.Module("database") {
 
     bind<ProjectDao>() with singleton {
         instance<AppDatabase>().getProjectDao()
+    }
+
+    bind<ReminderDao>() with singleton {
+        instance<AppDatabase>().getReminderDao()
     }
 } 

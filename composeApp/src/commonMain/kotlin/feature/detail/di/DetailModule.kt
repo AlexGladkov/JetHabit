@@ -11,7 +11,7 @@ val detailModule = DI.Module("detailModule") {
     }
     
     bind<DeleteHabitUseCase>() with provider {
-        DeleteHabitUseCase(instance())
+        DeleteHabitUseCase(instance(), instance())
     }
     
     bind<UpdateHabitUseCase>() with provider {
