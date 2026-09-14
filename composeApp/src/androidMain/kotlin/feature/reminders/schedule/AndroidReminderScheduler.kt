@@ -16,45 +16,92 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import feature.reminders.domain.schedule.ReminderScheduleResult
 import feature.reminders.domain.schedule.ReminderScheduler
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlinx.datetime.Instant
 import java.security.MessageDigest
 
-class AndroidReminderScheduler(context: Context) : ReminderScheduler {
-    private val appContext = context.applicationContext
-    private val alarms = appContext.getSystemService(AlarmManager::class.java)
+internal data class ReminderAlarm(val reminderId: String, val triggerAt: Long, val intent: Intent)
 
-    override suspend fun schedule(reminderId: String, triggerAt: Instant): ReminderScheduleResult {
-        if (reminderId.isBlank()) return ReminderScheduleResult.Invalid("reminderId must not be blank")
-        val triggerMillis = triggerAt.toEpochMilliseconds()
-        if (triggerMillis <= System.currentTimeMillis()) {
-            cancel(reminderId)
-            return ReminderScheduleResult.Invalid("triggerAt must be in the future")
-        }
-        if (!notificationsAllowed(appContext)) {
-            cancel(reminderId)
-            return ReminderScheduleResult.PermissionDenied
-        }
-        return runCatching {
-            createChannel(appContext)
-            appContext.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit()
-                .putLong(storageKey(reminderId), triggerMillis)
-                .putString(idKey(reminderId), reminderId)
-                .apply()
-            alarms.setAndAllowWhileIdle(
-                AlarmManager.RTC_WAKEUP,
-                triggerMillis,
-                pendingIntent(appContext, reminderId, triggerMillis)
-            )
-            ReminderScheduleResult.Scheduled
-        }.getOrElse { ReminderScheduleResult.Failed(it.message ?: it::class.simpleName.orEmpty()) }
+internal fun interface AlarmInstaller {
+    fun install(alarm: ReminderAlarm)
+}
+
+internal class AndroidAlarmInstaller(private val context: Context) : AlarmInstaller {
+    override fun install(alarm: ReminderAlarm) {
+        context.getSystemService(AlarmManager::class.java).setAndAllowWhileIdle(
+            AlarmManager.RTC_WAKEUP,
+            alarm.triggerAt,
+            AndroidReminderScheduler.pendingIntent(context, alarm.intent)
+        )
     }
 
-    override suspend fun cancel(reminderId: String): ReminderScheduleResult {
-        if (reminderId.isBlank()) return ReminderScheduleResult.Invalid("reminderId must not be blank")
-        alarms.cancel(pendingIntent(appContext, reminderId))
-        appContext.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit()
-            .remove(storageKey(reminderId)).remove(idKey(reminderId)).apply()
-        return ReminderScheduleResult.Cancelled
+    fun cancel(intent: Intent) {
+        context.getSystemService(AlarmManager::class.java)
+            .cancel(AndroidReminderScheduler.pendingIntent(context, intent))
+    }
+}
+
+class AndroidReminderScheduler internal constructor(
+    context: Context,
+    private val alarmInstaller: AlarmInstaller,
+    private val permissionCheck: (Context) -> Boolean,
+    private val now: () -> Long
+) : ReminderScheduler {
+    constructor(context: Context) : this(
+        context.applicationContext,
+        AndroidAlarmInstaller(context.applicationContext),
+        AndroidReminderScheduler::notificationsAllowed,
+        System::currentTimeMillis
+    )
+
+    private val appContext = context.applicationContext
+
+    override suspend fun schedule(reminderId: String, triggerAt: Instant): ReminderScheduleResult = withContext(Dispatchers.IO) {
+        if (reminderId.isBlank()) return@withContext ReminderScheduleResult.Invalid("reminderId must not be blank")
+        val triggerMillis = triggerAt.toEpochMilliseconds()
+        if (triggerMillis <= now()) {
+            cancelInternal(reminderId)
+            return@withContext ReminderScheduleResult.Invalid("triggerAt must be in the future")
+        }
+        if (!permissionCheck(appContext)) {
+            cancelInternal(reminderId)
+            return@withContext ReminderScheduleResult.PermissionDenied
+        }
+
+        try {
+            createChannel(appContext)
+            if (!putRecord(appContext, reminderId, triggerMillis)) {
+                return@withContext ReminderScheduleResult.Failed("Unable to persist reminder")
+            }
+            try {
+                alarmInstaller.install(alarm(appContext, reminderId, triggerMillis))
+            } catch (error: Exception) {
+                removeRecord(appContext, reminderId)
+                return@withContext ReminderScheduleResult.Failed(error.message ?: error::class.simpleName.orEmpty())
+            }
+            ReminderScheduleResult.Scheduled
+        } catch (error: Exception) {
+            removeRecord(appContext, reminderId)
+            ReminderScheduleResult.Failed(error.message ?: error::class.simpleName.orEmpty())
+        }
+    }
+
+    override suspend fun cancel(reminderId: String): ReminderScheduleResult = withContext(Dispatchers.IO) {
+        if (reminderId.isBlank()) return@withContext ReminderScheduleResult.Invalid("reminderId must not be blank")
+        cancelInternal(reminderId)
+        ReminderScheduleResult.Cancelled
+    }
+
+    private fun cancelInternal(reminderId: String) {
+        removeRecord(appContext, reminderId)
+        runCatching {
+            val intent = deliveryIntent(appContext, reminderId, null)
+            (alarmInstaller as? AndroidAlarmInstaller)?.cancel(intent)
+                ?: appContext.getSystemService(AlarmManager::class.java).cancel(pendingIntent(appContext, intent))
+        }
     }
 
     companion object {
@@ -62,22 +109,37 @@ class AndroidReminderScheduler(context: Context) : ReminderScheduler {
         internal const val CHANNEL_ID = "habit_reminders"
         internal const val EXTRA_ID = "reminder_id"
         internal const val EXTRA_TRIGGER_AT = "trigger_at"
+        internal const val URI_SCHEME = "jethabit"
 
         internal fun digest(id: String): String = MessageDigest.getInstance("SHA-256")
             .digest(id.encodeToByteArray()).joinToString("") { "%02x".format(it) }
         internal fun storageKey(id: String) = "at.${digest(id)}"
         internal fun idKey(id: String) = "id.${digest(id)}"
-        internal fun pendingIntent(context: Context, id: String, triggerAt: Long? = null): PendingIntent {
-            val intent = Intent(context, ReminderDeliveryReceiver::class.java).apply {
-                data = Uri.parse("jethabit://reminder/${digest(id)}")
+
+        internal fun deliveryIntent(context: Context, id: String, triggerAt: Long?): Intent =
+            Intent(context, ReminderDeliveryReceiver::class.java).apply {
+                data = Uri.parse("$URI_SCHEME://reminder/${digest(id)}")
                 putExtra(EXTRA_ID, id)
                 triggerAt?.let { putExtra(EXTRA_TRIGGER_AT, it) }
             }
-            return PendingIntent.getBroadcast(
-                context, 0, intent,
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-            )
-        }
+
+        internal fun alarm(context: Context, id: String, triggerAt: Long) =
+            ReminderAlarm(id, triggerAt, deliveryIntent(context, id, triggerAt))
+
+        internal fun pendingIntent(context: Context, intent: Intent): PendingIntent = PendingIntent.getBroadcast(
+            context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        internal fun pendingIntent(context: Context, id: String, triggerAt: Long? = null): PendingIntent =
+            pendingIntent(context, deliveryIntent(context, id, triggerAt))
+
+        internal fun putRecord(context: Context, id: String, at: Long): Boolean =
+            context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit()
+                .putLong(storageKey(id), at).putString(idKey(id), id).commit()
+
+        internal fun removeRecord(context: Context, id: String): Boolean =
+            context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit()
+                .remove(storageKey(id)).remove(idKey(id)).commit()
 
         internal fun notificationsAllowed(context: Context): Boolean =
             (Build.VERSION.SDK_INT < 33 || ContextCompat.checkSelfPermission(
@@ -94,17 +156,21 @@ class AndroidReminderScheduler(context: Context) : ReminderScheduler {
     }
 }
 
-class ReminderDeliveryReceiver : BroadcastReceiver() {
-    override fun onReceive(context: Context, intent: Intent) {
+internal object ReminderDeliveryCoordinator {
+    fun deliver(context: Context, intent: Intent) {
         val id = intent.getStringExtra(AndroidReminderScheduler.EXTRA_ID) ?: return
         val prefs = context.getSharedPreferences(AndroidReminderScheduler.PREFS, Context.MODE_PRIVATE)
-        val key = AndroidReminderScheduler.storageKey(id)
-        val expectedAt = prefs.getLong(key, -1L)
+        val expectedAt = prefs.getLong(AndroidReminderScheduler.storageKey(id), -1L)
         if (expectedAt < 0L ||
+            prefs.getString(AndroidReminderScheduler.idKey(id), null) != id ||
             intent.getLongExtra(AndroidReminderScheduler.EXTRA_TRIGGER_AT, -1L) != expectedAt ||
+            intent.data?.scheme != AndroidReminderScheduler.URI_SCHEME ||
+            intent.data?.host != "reminder" ||
             intent.data?.lastPathSegment != AndroidReminderScheduler.digest(id)
         ) return
-        prefs.edit().remove(key).remove(AndroidReminderScheduler.idKey(id)).apply()
+
+        // Durable consumption is the authorization boundary; a stale/replayed alarm is inert.
+        if (!AndroidReminderScheduler.removeRecord(context, id)) return
         if (!AndroidReminderScheduler.notificationsAllowed(context)) return
         AndroidReminderScheduler.createChannel(context)
         val notification = NotificationCompat.Builder(context, AndroidReminderScheduler.CHANNEL_ID)
@@ -117,25 +183,51 @@ class ReminderDeliveryReceiver : BroadcastReceiver() {
     }
 }
 
+class ReminderDeliveryReceiver : BroadcastReceiver() {
+    override fun onReceive(context: Context, intent: Intent) = ReminderDeliveryCoordinator.deliver(context, intent)
+}
+
+internal object ReminderRecoveryCoordinator {
+    fun reconcile(context: Context, installer: AlarmInstaller, now: Long) {
+        val prefs = context.getSharedPreferences(AndroidReminderScheduler.PREFS, Context.MODE_PRIVATE)
+        val all = prefs.all
+        val digests = all.keys.mapNotNull { key ->
+            when {
+                key.startsWith("id.") -> key.removePrefix("id.")
+                key.startsWith("at.") -> key.removePrefix("at.")
+                else -> null
+            }
+        }.toSet()
+
+        for (digest in digests) {
+            val idKey = "id.$digest"
+            val atKey = "at.$digest"
+            val id = all[idKey] as? String
+            val at = all[atKey] as? Long
+            if (id == null || at == null || AndroidReminderScheduler.digest(id) != digest || at <= now) {
+                prefs.edit().remove(idKey).remove(atKey).commit()
+                continue
+            }
+            runCatching { installer.install(AndroidReminderScheduler.alarm(context, id, at)) }
+            // A valid record is retained when reinstallation fails so a later reconciliation can retry it.
+        }
+    }
+}
+
 class ReminderBootReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action != Intent.ACTION_BOOT_COMPLETED && intent.action != Intent.ACTION_MY_PACKAGE_REPLACED) return
         val pending = goAsync()
-        try {
-            val prefs = context.getSharedPreferences(AndroidReminderScheduler.PREFS, Context.MODE_PRIVATE)
-            val now = System.currentTimeMillis()
-            prefs.all.filterKeys { it.startsWith("id.") }.values.filterIsInstance<String>().forEach { id ->
-                val at = prefs.getLong(AndroidReminderScheduler.storageKey(id), -1L)
-                if (at > now) {
-                    context.getSystemService(AlarmManager::class.java).setAndAllowWhileIdle(
-                        AlarmManager.RTC_WAKEUP, at, AndroidReminderScheduler.pendingIntent(context, id, at)
-                    )
-                } else {
-                    prefs.edit().remove(AndroidReminderScheduler.storageKey(id)).remove(AndroidReminderScheduler.idKey(id)).apply()
-                }
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                ReminderRecoveryCoordinator.reconcile(
+                    context.applicationContext,
+                    AndroidAlarmInstaller(context.applicationContext),
+                    System.currentTimeMillis()
+                )
+            } finally {
+                pending.finish()
             }
-        } finally {
-            pending.finish()
         }
     }
 }
