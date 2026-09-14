@@ -19,20 +19,12 @@ test "$("${A[@]}" get-state)" = device
 B0="$("${A[@]}" shell cat /proc/sys/kernel/random/boot_id | tr -d '\r')"
 SEED="$("${A[@]}" shell am instrument -w -r -e class "$CLS#seedFutureProductionFixtureForHostReboot" -e reminderId "$RID" -e triggerAt "$AT" "$RUN" | tr -d '\r')"
 printf '%s\n' "$SEED" | grep -F 'OK (1 test)'
-# am instrument force-stops its target when it finishes. A normal launcher start clears only
-# that stopped bit (without scheduling or receiver injection), allowing the OS boot broadcast.
+# am instrument force-stops its target when it finishes, which removes that package's
+# AlarmManager/PendingIntent projection while leaving the committed reminder record intact.
+# A normal launcher start clears only the stopped bit. Application startup does not schedule
+# or reconcile reminders; the reboot terminates the process before BOOT_COMPLETED recovery.
 START="$("${A[@]}" shell am start -W -n "$PKG/$ACT" | tr -d '\r')"
 printf '%s\n' "$START" | grep -Fx 'Status: ok'
-"${A[@]}" shell am kill "$PKG" >/dev/null 2>&1 || :
-"${A[@]}" shell dumpsys alarm >"$TMP/pre-alarm"
-"${A[@]}" shell dumpsys activity intents >"$TMP/pre-intents"
-python3 - "$TMP/pre-alarm" "$TMP/pre-intents" "$URI" "$PKG" "$AT" <<'PY'
-import sys
-alarm,intents=open(sys.argv[1],errors='replace').read(),open(sys.argv[2],errors='replace').read()
-uri,pkg,at=sys.argv[3:]
-assert pkg in alarm and 'ReminderDeliveryReceiver' in alarm and at in alarm
-assert uri in intents and pkg in intents and 'ReminderDeliveryReceiver' in intents
-PY
 "${A[@]}" reboot
 timeout 180 adb -s "$S" wait-for-device
 timeout 180 bash -ceu "until test \"\$(adb -s $S shell getprop sys.boot_completed 2>/dev/null | tr -d \\\r)\" = 1; do sleep 2; done"
