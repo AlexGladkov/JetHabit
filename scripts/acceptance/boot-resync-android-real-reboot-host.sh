@@ -14,17 +14,23 @@ test "$("${A[@]}" get-state)" = device
 ./gradlew --no-daemon :composeApp:assembleDebug :composeApp:assembleDebugAndroidTest
 "${A[@]}" install --no-streaming -r -t composeApp/build/outputs/apk/debug/composeApp-debug.apk | grep -Fx Success
 "${A[@]}" install --no-streaming -r -t composeApp/build/outputs/apk/androidTest/debug/composeApp-debug-androidTest.apk | grep -Fx Success
-# Clear the package's post-install stopped state so Android is allowed to deliver BOOT_COMPLETED.
-"${A[@]}" shell monkey -p "$PKG" -c android.intent.category.LAUNCHER 1 >/dev/null
-B0="$("${A[@]}" shell cat /proc/sys/kernel/random/boot_id | tr -d '\r')"
 SEED="$("${A[@]}" shell am instrument -w -r -e class "$CLS#seedFutureProductionFixtureForHostReboot" -e reminderId "$RID" -e triggerAt "$AT" "$RUN" | tr -d '\r')"
 printf '%s\n' "$SEED" | grep -F 'OK (1 test)'
 # am instrument force-stops its target when it finishes, which removes that package's
 # AlarmManager/PendingIntent projection while leaving the committed reminder record intact.
-# A normal launcher start clears only the stopped bit. Application startup does not schedule
-# or reconcile reminders; the reboot terminates the process before BOOT_COMPLETED recovery.
+# Application startup only clears the stopped state; it does not reconcile reminders.
 START="$("${A[@]}" shell am start -W -n "$PKG/$ACT" | tr -d '\r')"
 printf '%s\n' "$START" | grep -Fx 'Status: ok'
+sleep 15
+# BOOT_COMPLETED excludes stopped packages using package-manager state persisted before
+# reboot. Wait for both package-manager queues instead of racing that persistence.
+"${A[@]}" shell cmd package wait-for-handler --timeout 10000
+"${A[@]}" shell cmd package wait-for-background-handler --timeout 10000
+"${A[@]}" shell sync
+"${A[@]}" shell am kill "$PKG" >/dev/null 2>&1 || :
+sleep 5
+"${A[@]}" shell dumpsys package "$PKG" | grep -F 'stopped=false notLaunched=false'
+B0="$("${A[@]}" shell cat /proc/sys/kernel/random/boot_id | tr -d '\r')"
 "${A[@]}" reboot
 timeout 180 adb -s "$S" wait-for-device
 timeout 180 bash -ceu "until test \"\$(adb -s $S shell getprop sys.boot_completed 2>/dev/null | tr -d \\\r)\" = 1; do sleep 2; done"
