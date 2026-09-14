@@ -10,6 +10,7 @@ build
 .kotlin/
 .DS_Store
 .idea/
+.monet/
 # Local signing keys and secret material (never commit)
 release.keystore
 *.keystore
