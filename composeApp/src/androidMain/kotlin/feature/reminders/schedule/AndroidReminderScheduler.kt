@@ -169,8 +169,6 @@ internal object ReminderDeliveryCoordinator {
             intent.data?.lastPathSegment != AndroidReminderScheduler.digest(id)
         ) return
 
-        // Durable consumption is the authorization boundary; a stale/replayed alarm is inert.
-        if (!AndroidReminderScheduler.removeRecord(context, id)) return
         if (!AndroidReminderScheduler.notificationsAllowed(context)) return
         AndroidReminderScheduler.createChannel(context)
         val notification = NotificationCompat.Builder(context, AndroidReminderScheduler.CHANNEL_ID)
@@ -180,6 +178,7 @@ internal object ReminderDeliveryCoordinator {
             .setAutoCancel(true)
             .build()
         NotificationManagerCompat.from(context).notify(AndroidReminderScheduler.digest(id).hashCode(), notification)
+        AndroidReminderScheduler.removeRecord(context, id)
     }
 }
 
