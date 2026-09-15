@@ -138,7 +138,42 @@ class ScheduleEngineTest {
         )
     }
 
+    @Test
+    fun schedule_interval_floor_between_series_dates_stays_on_anchor_series() {
+        val config = ReminderConfig(
+            anchor = LocalDateTime(2_026, 2, 1, 8, 0),
+            frequency = Frequency.Interval(days = 3),
+            tzId = "Europe/Berlin"
+        )
+        val floor = LocalDateTime(2_026, 2, 11, 7, 0).toInstant(berlin)
+
+        val result = ScheduleEngine.nextOccurrence(config, completedAt = null, now = floor)
+
+        // Series dates are Feb 1, 4, 7, 10, 13; the floor date must not become a new origin.
+        assertEquals(
+            LocalDateTime(2_026, 2, 13, 8, 0).toInstant(berlin),
+            assertNotNull(result)
+        )
+    }
+
     // -- schedule_weekly_dayset_selection -------------------------------------
+
+    @Test
+    fun schedule_weekly_single_day_floor_on_unselected_weekday_stays_on_dayset() {
+        val config = ReminderConfig(
+            anchor = LocalDateTime(2_026, 2, 2, 9, 0), // Monday
+            frequency = Frequency.Weekly(setOf(DayOfWeek.MONDAY)),
+            tzId = "Europe/Berlin"
+        )
+        val floor = LocalDateTime(2_026, 2, 10, 8, 0).toInstant(berlin) // Tuesday before anchor time
+
+        val result = ScheduleEngine.nextOccurrence(config, completedAt = null, now = floor)
+
+        assertEquals(
+            LocalDateTime(2_026, 2, 16, 9, 0).toInstant(berlin),
+            assertNotNull(result)
+        )
+    }
 
     @Test
     fun schedule_weekly_dayset_selection() {
