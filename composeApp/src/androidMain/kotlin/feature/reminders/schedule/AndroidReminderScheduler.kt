@@ -48,13 +48,25 @@ class AndroidReminderScheduler internal constructor(
     context: Context,
     private val alarmInstaller: AlarmInstaller,
     private val permissionCheck: (Context) -> Boolean,
-    private val now: () -> Long
+    private val now: () -> Long,
+    private val permissionRequest: suspend () -> Unit = {}
 ) : ReminderScheduler {
     constructor(context: Context) : this(
         context.applicationContext,
         AndroidAlarmInstaller(context.applicationContext),
         AndroidReminderScheduler::notificationsAllowed,
         System::currentTimeMillis
+    )
+
+    constructor(
+        context: Context,
+        permissionRequest: suspend () -> Unit
+    ) : this(
+        context.applicationContext,
+        AndroidAlarmInstaller(context.applicationContext),
+        AndroidReminderScheduler::notificationsAllowed,
+        System::currentTimeMillis,
+        permissionRequest
     )
 
     private val appContext = context.applicationContext
@@ -66,6 +78,7 @@ class AndroidReminderScheduler internal constructor(
             cancelInternal(reminderId)
             return@withContext ReminderScheduleResult.Invalid("triggerAt must be in the future")
         }
+        runCatching { permissionRequest() }
         if (!permissionCheck(appContext)) {
             // Transient denial: retain the durable record; reconcile() reinstalls the alarm later.
             return@withContext ReminderScheduleResult.PermissionDenied

@@ -9,6 +9,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import core.platform.AndroidImagePicker
 import di.PlatformConfiguration
+import feature.reminders.schedule.ReminderPermissionRequester
 import di.PlatformSDK
 
 class MainActivity : ComponentActivity() {
@@ -42,6 +43,9 @@ class MainActivity : ComponentActivity() {
             )
         }
 
+        // Register the runtime POST_NOTIFICATIONS request entry point (API 33+)
+        val notificationPermissionRequester = ReminderPermissionRequester(this)
+
         // Create ImagePicker with registered launchers
         imagePicker = AndroidImagePicker(
             pickImageLauncher = pickImageLauncher,
@@ -61,7 +65,8 @@ class MainActivity : ComponentActivity() {
             configuration = PlatformConfiguration(
                 application = application,
                 activity = this,
-                imagePicker = imagePicker
+                imagePicker = imagePicker,
+                notificationPermissionRequester = notificationPermissionRequester
             )
         )
         
