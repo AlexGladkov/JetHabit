@@ -160,9 +160,17 @@ class AdaptReminderScheduleUseCase(
 class AdaptiveReminderCheckedHook(
     private val adaptReminderSchedule: AdaptReminderScheduleUseCase
 ) : HabitCheckedHook {
-    override suspend fun onHabitChecked(habitId: String, completedAt: Instant) {
-        adaptReminderSchedule.onHabitChecked(habitId, completedAt)
-    }
+    override suspend fun onHabitChecked(habitId: String, completedAt: Instant): Result<Unit> =
+        try {
+            when (val outcome = adaptReminderSchedule.onHabitChecked(habitId, completedAt)) {
+                is AdaptReminderScheduleOutcome.Failed,
+                is AdaptReminderScheduleOutcome.Invalid ->
+                    Result.failure(IllegalStateException(outcome.toString()))
+                else -> Result.success(Unit)
+            }
+        } catch (failure: Throwable) {
+            Result.failure(failure)
+        }
 }
 
 class AdaptiveReminderDeletedHook(
@@ -170,10 +178,20 @@ class AdaptiveReminderDeletedHook(
     private val scheduler: ReminderScheduler,
     private val mutationLock: ReminderMutationLock
 ) : HabitDeletedHook {
-    override suspend fun onHabitDeleted(habitId: String) {
-        mutationLock.withLock {
-            runCatching { reminderDao.delete(habitId) }
-            runCatching { scheduler.cancel(habitId) }
+    override suspend fun onHabitDeleted(habitId: String): Result<Unit> = mutationLock.withLock {
+        val snapshot = reminderDao.getSnapshot(habitId)
+        try {
+            reminderDao.delete(habitId)
+        } catch (failure: Throwable) {
+            return@withLock Result.failure<Unit>(failure)
         }
+        try {
+            scheduler.cancel(habitId)
+        } catch (failure: Throwable) {
+            // Compensation: restore the reminder row so the DB stays consistent with the still-active alarm.
+            snapshot?.let { runCatching { reminderDao.insert(it) } }
+            return@withLock Result.failure<Unit>(failure)
+        }
+        Result.success(Unit)
     }
 }

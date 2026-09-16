@@ -42,6 +42,7 @@ class SwitchHabitUseCase(
         )
 
         // Completion is authoritative: post-commit feedback must never fail the checked mutation.
-        runCatching { checkedHook.onHabitChecked(habitId, completedAt) }
+        checkedHook.onHabitChecked(habitId, completedAt)
+            .onFailure { /* surfaced for logging; checked mutation stays committed */ }
     }
 }

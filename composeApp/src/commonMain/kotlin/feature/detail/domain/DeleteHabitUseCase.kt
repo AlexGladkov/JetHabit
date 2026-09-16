@@ -9,9 +9,14 @@ class DeleteHabitUseCase(
     private val deletedHook: HabitDeletedHook = NoOpHabitDeletedHook
 ) {
 
-    suspend fun execute(habitId: String) {
+    /**
+     * Habit deletion remains authoritative; the post-delete hook outcome is retried once
+     * (hook operations are idempotent) and then surfaced to the caller for logging/handling.
+     */
+    suspend fun execute(habitId: String): Result<Unit> {
         habitDao.deleteWith(habitId)
-        // Habit deletion remains authoritative if reminder cleanup or platform cancellation fails.
-        runCatching { deletedHook.onHabitDeleted(habitId) }
+        val first = deletedHook.onHabitDeleted(habitId)
+        if (first.isSuccess) return first
+        return first.recoverCatching { deletedHook.onHabitDeleted(habitId).getOrThrow() }
     }
 }
