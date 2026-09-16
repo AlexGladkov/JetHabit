@@ -53,12 +53,16 @@ class MainActivity : AppCompatActivity() {
             imagePicker.handleTakePhotoResult(resultCode, uri)
         }
 
+        val notificationPermissionRequester =
+            feature.reminders.schedule.ReminderPermissionRequester(this@MainActivity)
+
         val appDatabase = getDatabaseBuilder(applicationContext).build()
         PlatformSDK.init(
             configuration = PlatformConfiguration(
                 application = application,
                 activity = this@MainActivity,
-                imagePicker = imagePicker
+                imagePicker = imagePicker,
+                notificationPermissionRequester = notificationPermissionRequester
             ),
             appDatabase = appDatabase
         )

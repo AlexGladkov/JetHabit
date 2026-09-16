@@ -3,6 +3,7 @@ package di
 import core.platform.ImagePicker
 import feature.reminders.domain.schedule.ReminderScheduler
 import feature.reminders.schedule.AndroidReminderScheduler
+import feature.reminders.schedule.ReminderPermissionRequester
 import org.kodein.di.DI
 import org.kodein.di.bind
 import org.kodein.di.instance
@@ -16,6 +17,11 @@ actual fun DI.Builder.provideImagePicker() {
 
 actual fun DI.Builder.provideReminderScheduler() {
     bind<ReminderScheduler>() with singleton {
-        AndroidReminderScheduler(instance<PlatformConfiguration>().application)
+        val config = instance<PlatformConfiguration>()
+        val requester = config.notificationPermissionRequester
+        AndroidReminderScheduler(
+            context = config.application,
+            permissionRequest = { requester.request() }
+        )
     }
 }
