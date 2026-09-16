@@ -63,7 +63,9 @@ class ReminderSchedulerAndroidTest {
 
         val denied = AndroidReminderScheduler(context, AlarmInstaller { fail("must not arm") }, { false }, { now })
         assertEquals(ReminderScheduleResult.PermissionDenied, denied.schedule("denied", Instant.fromEpochMilliseconds(aAt)))
-        assertFalse(prefs.contains(AndroidReminderScheduler.storageKey("denied")))
+        // Transient denial retains the durable record (delivery-path symmetry; reconcile() reinstalls later).
+        assertEquals(aAt, prefs.getLong(AndroidReminderScheduler.storageKey("denied"), -1))
+        assertEquals("denied", prefs.getString(AndroidReminderScheduler.idKey("denied"), null))
 
         val failing = AndroidReminderScheduler(context, AlarmInstaller { throw SecurityException("synthetic") }, { true }, { now })
         assertTrue(failing.schedule("acceptance.scheduler.failure", Instant.fromEpochMilliseconds(aAt)) is ReminderScheduleResult.Failed)

@@ -67,7 +67,7 @@ class AndroidReminderScheduler internal constructor(
             return@withContext ReminderScheduleResult.Invalid("triggerAt must be in the future")
         }
         if (!permissionCheck(appContext)) {
-            cancelInternal(reminderId)
+            // Transient denial: retain the durable record; reconcile() reinstalls the alarm later.
             return@withContext ReminderScheduleResult.PermissionDenied
         }
 

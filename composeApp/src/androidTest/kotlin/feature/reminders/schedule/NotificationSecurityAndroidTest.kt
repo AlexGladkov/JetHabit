@@ -82,7 +82,8 @@ class NotificationSecurityAndroidTest {
         )
         val denied = deniedScheduler.schedule("acceptance.security.denied", Instant.fromEpochMilliseconds(at))
         assertEquals(ReminderScheduleResult.PermissionDenied, denied)
-        assertFalse(prefs.contains(AndroidReminderScheduler.idKey("acceptance.security.denied")))
+        assertTrue(prefs.contains(AndroidReminderScheduler.idKey("acceptance.security.denied")))
+        assertEquals(at, prefs.getLong(AndroidReminderScheduler.storageKey("acceptance.security.denied"), -1))
         clear()
     }
 
