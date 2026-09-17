@@ -21,3 +21,6 @@ release.keystore
 *.mobileprovision
 *.env
 .env.*
+
+# Monet process artifacts (never commit)
+.monet/
