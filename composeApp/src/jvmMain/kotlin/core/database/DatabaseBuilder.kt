@@ -10,5 +10,6 @@ fun getDatabaseBuilder(): RoomDatabase.Builder<AppDatabase> {
     val dbFile = File(System.getProperty("java.io.tmpdir"), "jethabit.db")
     return Room.databaseBuilder<AppDatabase>(
         name = dbFile.absolutePath,
+    // Registers Migration8to9 (MIGRATION_8_9) for the schedule feature.
     ).addMigrations(MIGRATION_7_8, MIGRATION_8_9)
 }

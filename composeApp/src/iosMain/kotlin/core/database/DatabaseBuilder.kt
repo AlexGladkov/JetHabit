@@ -15,6 +15,7 @@ fun getDatabaseBuilder(): RoomDatabase.Builder<AppDatabase> {
         name = dbFilePath,
         factory =  { AppDatabase::class.instantiateImpl() }
     )
+        // Registers Migration8to9 (MIGRATION_8_9) for the schedule feature.
         .addMigrations(MIGRATION_7_8, MIGRATION_8_9)
         .setDriver(BundledSQLiteDriver())
         .setQueryCoroutineContext(Dispatchers.IO)

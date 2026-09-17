@@ -13,6 +13,7 @@ fun getDatabaseBuilder(context: Context): RoomDatabase.Builder<AppDatabase> {
         context = applicationContext,
         name = databaseFile.absolutePath
     )
+        // Registers Migration8to9 (MIGRATION_8_9) for the schedule feature.
         .addMigrations(MIGRATION_7_8, MIGRATION_8_9)
         // Deliberate pre-v7 policy: versions 1..6 have no maintained schema
         // history and are wiped; v7+ upgrades use explicit hand-written migrations.

@@ -49,7 +49,8 @@ internal class Migration7to8Test {
         val databaseSource = readProjectFile(APP_DATABASE_SOURCE_PATHS)
         val schema = readProjectFile(VERSION_EIGHT_SCHEMA_PATHS)
 
-        assertTrue(actual = databaseSource.contains("version = $VERSION_EIGHT"))
+        // AppDatabase source now declares version = 9 (E1 schedule merge);
+        // source-level version checks live in Migration8to9RegistrationTest.
         assertTrue(actual = schema.contains("\"version\": $VERSION_EIGHT"))
         assertTrue(actual = schema.contains("\"tableName\": \"$PROJECT_TABLE\""))
         assertTrue(actual = schema.contains("`projectId` TEXT"))
