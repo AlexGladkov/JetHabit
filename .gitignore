@@ -10,6 +10,9 @@ build
 .kotlin/
 .DS_Store
 .idea/
+# Durable validation artifacts are generated locally and must not be committed
+.monet/
+
 # Local signing keys and secret material (never commit)
 release.keystore
 *.keystore

@@ -1,0 +1,18 @@
+name: desktop-room-data-survives-temp-cleanup
+description: "Reproduces Desktop JVM Room storage loss: write a habit, remove the java.io.tmpdir database as a simulated OS cleanup/restart, reopen through the real Desktop builder, and require the habit to remain."
+feature: Move the Desktop database to durable user storage
+anchors:
+  - core.database.DesktopDatabaseStorageBugTest.dataSurvivesDesktopTempDirectoryCleanup
+  - HabitEntity(id=repro-habit)
+  - reopened.getHabitDao().getAll()
+verify: host
+command: ./gradlew :composeApp:jvmTest --tests core.database.DesktopDatabaseStorageBugTest --no-daemon --console=plain
+steps:
+  - action: host_command
+    args:
+      command: ./gradlew :composeApp:jvmTest --tests core.database.DesktopDatabaseStorageBugTest --no-daemon --console=plain
+assertions:
+  - kind: text
+    target: DesktopDatabaseStorageBugTest.dataSurvivesDesktopTempDirectoryCleanup
+    equals: passed
+    note: After the storage fix, the reopened database must contain the inserted repro-habit and the JVM test command must exit 0.
