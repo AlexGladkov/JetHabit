@@ -1,6 +1,10 @@
 package data.features.daily
 
+import di.Inject
+import feature.daily.data.DailyDao
+import feature.daily.data.DailyEntity
 import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -11,52 +15,38 @@ data class DailyItem(
     val habits: List<DailyHabitContainer>
 )
 
-class DailyRepository() {
+class DailyRepository(
+    private val dailyDao: DailyDao = Inject.instance()
+) {
 
-    suspend fun fetchDiary(): List<DailyItem> {
-//        val result = database.dailyQueries.selectAll()
-//            .executeAsList()
-//            .filter {
-//                !it.date.contains("T")
-//            }
-//            .map {
-//                DailyItem(
-//                    date = it.date,
-//                    habits = decompressHabitsWithValues(it.habitItemIdsWithStatuses)
-//                )
-//            }
-//
-//        return result
-        return emptyList()
-    }
+    suspend fun fetchDiary(): List<DailyItem> = dailyDao.getAll()
+        .groupBy { it.timestamp }
+        .map { (date, entries) ->
+            DailyItem(
+                date = date,
+                habits = entries.map { DailyHabitContainer(it.habitId.toLong(), it.isChecked) }
+            )
+        }
 
-    @OptIn(ExperimentalSerializationApi::class)
     suspend fun addOrUpdate(date: String, habitId: Long, value: Boolean) {
-//        val records = fetchDiary()
-//        val recordForDate = records.firstOrNull { it.date == date }
-//
-//        if (recordForDate == null) {
-//            database.dailyQueries
-//                .insert(date, compressHabitsWithValues(
-//                    listOf(DailyHabitContainer(habitId, value))
-//                ))
-//        } else {
-//            val dailyRecords = recordForDate.habits.toMutableList()
-//            val dailyRecord = dailyRecords.filter { it.habbitId == habitId }
-//
-//            if (dailyRecord.isNotEmpty()) {
-//                dailyRecords.remove(dailyRecord.first())
-//            }
-//
-//            dailyRecords.add(DailyHabitContainer(habitId, value))
-//            val compressed = compressHabitsWithValues(dailyRecords)
-//            database.dailyQueries.update(date, habitItemIdsWithStatuses = compressed)
-//        }
+        dailyDao.insert(
+            DailyEntity(
+                id = "$date:$habitId",
+                habitId = habitId.toString(),
+                timestamp = date,
+                isChecked = value
+            )
+        )
     }
 
     @ExperimentalSerializationApi
     fun decompressHabitsWithValues(input: String): List<DailyHabitContainer> {
-        return Json.decodeFromString(input)
+        require(input.isNotBlank()) { "Daily serialization must not be blank" }
+        return try {
+            Json.decodeFromString(input)
+        } catch (error: SerializationException) {
+            throw IllegalArgumentException("Malformed Daily serialization", error)
+        }
     }
 
     @ExperimentalSerializationApi

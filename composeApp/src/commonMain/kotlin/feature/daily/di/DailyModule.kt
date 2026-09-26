@@ -26,6 +26,6 @@ val dailyModule = DI.Module("DailyModule") {
     }
 
     bind<DailyRepository>() with provider {
-        DailyRepository()
+        DailyRepository(instance())
     }
 }
