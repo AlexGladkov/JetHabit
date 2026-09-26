@@ -1,0 +1,20 @@
+name: composition-android-runtime
+description: Android composition root owns app-scoped resources and survives Activity recreation.
+feature: JetHabit Android/Desktop composition roots
+target: android
+anchors:
+  - android-composition-root
+  - android-current-activity
+  - android-image-picker
+  - android-room-persistence
+verify: instrumented
+command: python3 scripts/verify_composition.py android
+steps:
+  - action: run_command
+    label: Run Android composition verifier
+    args:
+      command: python3 scripts/verify_composition.py android
+assertions:
+  - kind: text
+    target: android-verifier-result
+    equals: PASS
