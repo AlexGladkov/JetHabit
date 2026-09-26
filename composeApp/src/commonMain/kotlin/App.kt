@@ -13,8 +13,12 @@ import screens.splash.SplashScreen
 import themes.MainTheme
 
 @Composable
-fun App() {
-    val settingsEventBus = remember { SettingsEventBus() }
+fun App(
+    settingsEventBus: SettingsEventBus = SettingsEventBus(),
+    onSettingsEventBusReady: ((SettingsEventBus) -> Unit)? = null
+) {
+    val settingsEventBus = remember { settingsEventBus }
+    onSettingsEventBusReady?.invoke(settingsEventBus)
     val currentSettings by settingsEventBus.currentSettings.collectAsState()
 
     MainTheme(

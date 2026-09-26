@@ -44,6 +44,7 @@ class MainActivity : ComponentActivity() {
 
         // Create ImagePicker with registered launchers
         imagePicker = AndroidImagePicker(
+            ownerActivity = this,
             pickImageLauncher = pickImageLauncher,
             takePhotoLauncher = takePhotoLauncher
         )

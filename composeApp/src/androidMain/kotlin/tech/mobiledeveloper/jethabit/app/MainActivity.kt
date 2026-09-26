@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.CompositionLocalProvider
+import data.features.settings.SettingsEventBus
 import core.database.getDatabaseBuilder
 import core.platform.AndroidImagePicker
 import di.LocalPlatform
@@ -14,6 +15,12 @@ import di.PlatformConfiguration
 import di.PlatformSDK
 
 class MainActivity : AppCompatActivity() {
+    companion object {
+        internal var settingsEventBusObserverForTesting: ((SettingsEventBus) -> Unit)? = null
+        internal var lastCreatedActivity: MainActivity? = null
+        internal var lastImagePicker: AndroidImagePicker? = null
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
@@ -41,6 +48,7 @@ class MainActivity : AppCompatActivity() {
 
         // Create ImagePicker
         val imagePicker = AndroidImagePicker(
+            ownerActivity = this,
             pickImageLauncher = pickImageLauncher,
             takePhotoLauncher = takePhotoLauncher
         )
@@ -53,7 +61,9 @@ class MainActivity : AppCompatActivity() {
             imagePicker.handleTakePhotoResult(resultCode, uri)
         }
 
-        val appDatabase = getDatabaseBuilder(applicationContext).build()
+        lastCreatedActivity = this
+        lastImagePicker = imagePicker
+        val appDatabase = (application as JetHabitApp).database
         PlatformSDK.init(
             configuration = PlatformConfiguration(
                 application = application,
@@ -67,7 +77,10 @@ class MainActivity : AppCompatActivity() {
             CompositionLocalProvider(
                 LocalPlatform provides Platform.Android
             ) {
-                App()
+                App(
+                    settingsEventBus = (application as JetHabitApp).settingsEventBus,
+                    onSettingsEventBusReady = settingsEventBusObserverForTesting
+                )
             }
         }
     }

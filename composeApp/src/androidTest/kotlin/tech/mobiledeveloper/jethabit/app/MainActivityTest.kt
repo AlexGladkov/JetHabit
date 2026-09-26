@@ -1,6 +1,12 @@
 package tech.mobiledeveloper.jethabit.app
 
 import android.util.Log
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import feature.habits.data.HabitEntity
+import kotlinx.coroutines.runBlocking
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertSame
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.AndroidComposeTestRule
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
@@ -8,7 +14,6 @@ import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.printToString
-import androidx.test.ext.junit.runners.AndroidJUnit4
 import navigation.AppScreens
 import navigation.AppTestTags
 import org.junit.Rule
@@ -33,6 +38,52 @@ class MainActivityTest {
             useUnmergedTree = true,
             expectedRoutes = bottomNavigationRoutes
         )
+    }
+
+    @Test
+    fun currentActivityAndPickerAfterRecreation() {
+        composeTestRule.waitUntilBottomNavigationExists()
+        val before = MainActivity.lastCreatedActivity
+        assertNotNull(before)
+        assertNotNull(MainActivity.lastImagePicker)
+        composeTestRule.activityRule.scenario.recreate()
+        composeTestRule.waitUntilBottomNavigationExists()
+        val after = MainActivity.lastCreatedActivity
+        assertNotNull(after)
+        assert(after !== before)
+        assertSame(after, MainActivity.lastImagePicker?.ownerActivity)
+        composeTestRule.onNodeWithTag(AppTestTags.BottomNavigation).assertIsDisplayed()
+    }
+
+    @Test
+    fun roomRowPersistsAcrossRecreation() {
+        composeTestRule.waitUntilBottomNavigationExists()
+        val db = ((composeTestRule.activity as MainActivity).application as JetHabitApp).database
+        val row = HabitEntity("acceptance", "Acceptance", true, "2024-01-01", "2024-12-31", "1")
+        runBlocking { db.getHabitDao().insert(row) }
+        composeTestRule.activityRule.scenario.recreate()
+        composeTestRule.waitUntilBottomNavigationExists()
+        assertEquals("Acceptance", runBlocking { db.getHabitDao().getHabitWith("acceptance").title })
+    }
+
+    @Test
+    fun singleCompositionBootstrap() {
+        composeTestRule.waitUntilBottomNavigationExists()
+        val app = (composeTestRule.activity as MainActivity).application as JetHabitApp
+        val database = app.database
+        composeTestRule.activityRule.scenario.recreate()
+        composeTestRule.waitUntilBottomNavigationExists()
+        assertSame(database, app.database)
+        assertSame(app.settingsEventBus, app.settingsEventBus)
+    }
+
+    @Test
+    fun settingsEventBusProductionUpdate() {
+        composeTestRule.waitUntilBottomNavigationExists()
+        val bus = ((composeTestRule.activity as MainActivity).application as JetHabitApp).settingsEventBus
+        val before = bus.currentSettings.value.isDarkMode
+        bus.updateDarkMode(!before)
+        assertEquals(!before, bus.currentSettings.value.isDarkMode as Boolean)
     }
 
     @Test

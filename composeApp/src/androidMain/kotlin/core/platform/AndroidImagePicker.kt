@@ -8,6 +8,7 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 
 class AndroidImagePicker(
+    val ownerActivity: Activity,
     private val pickImageLauncher: ActivityResultLauncher<Intent>,
     private val takePhotoLauncher: ActivityResultLauncher<Intent>
 ) : ImagePicker {
