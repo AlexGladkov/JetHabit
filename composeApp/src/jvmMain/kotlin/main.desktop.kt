@@ -1,5 +1,6 @@
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.window.Window
@@ -20,22 +21,27 @@ fun main() {
     initializeCoil(PlatformContext.INSTANCE)
 
     application {
+        val runtime = remember {
+            DesktopRuntime(appDatabase = getRoomDatabase(getDatabaseBuilder())).also { it.bootstrap() }
+        }
+        DisposableEffect(runtime) {
+            onDispose { runtime.close() }
+        }
         Window(
-            onCloseRequest = ::exitApplication,
+            onCloseRequest = {
+                runtime.close()
+                exitApplication()
+            },
             title = "JetHabit"
         ) {
-            MainView()
+            MainView(runtime)
         }
     }
 }
 
 @Composable
-fun MainView() {
-    val appDatabase = remember { getRoomDatabase(getDatabaseBuilder()) }
-    PlatformSDK.init(PlatformConfiguration(), appDatabase = appDatabase)
-
-    val settingsEventBus = remember { SettingsEventBus() }
-    val currentSettings = settingsEventBus.currentSettings.collectAsState().value
+fun MainView(runtime: DesktopRuntime) {
+    val currentSettings = runtime.settingsEventBus.currentSettings.collectAsState().value
 
     MainTheme(
         style = currentSettings.style,
@@ -45,8 +51,8 @@ fun MainView() {
         paddingSize = currentSettings.paddingSize
     ) {
         CompositionLocalProvider(
-            LocalPlatform provides Platform.Desktop,
-            LocalSettingsEventBus provides settingsEventBus
+            LocalPlatform provides runtime.platform,
+            LocalSettingsEventBus provides runtime.settingsEventBus
         ) {
             App()
         }

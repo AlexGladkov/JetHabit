@@ -22,8 +22,6 @@ object PlatformSDK {
         configuration: PlatformConfiguration,
         appDatabase: Any? = null
     ) {
-        // Android activities are recreated while application-scoped services must stay alive.
-        // Refresh the platform handles without rebuilding the application graph.
         if (_di != null) {
             this.configuration = configuration
             return
