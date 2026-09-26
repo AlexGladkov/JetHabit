@@ -34,7 +34,7 @@ def parse_fixture(path):
 
 def yaml_mode():
     try:
-        parse_fixture(ROOT / ".monet/test-cases/composition-android-runtime.yaml")
+        parse_fixture(ROOT / "composeApp/src/jvmTest/resources/android-startup-composition-root-duplicate-red.yaml")
         # Exercise rejection paths, so a parser that accepts nested junk cannot pass.
         with tempfile.NamedTemporaryFile("w", suffix=".yaml", delete=True) as f:
             f.write("name: composition-android-runtime\nsteps: [!!python/object/apply:os.system [echo pwned]]\n")
