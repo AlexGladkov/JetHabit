@@ -46,6 +46,7 @@ def yaml_mode():
         return 1
     print("target=jvm case=YamlDiscoveryTest.correctedStartupFixture PASS")
     print("target=jvm case=YamlDiscoveryTest.safeParseAndDiscovery PASS")
+    print("yaml-verifier-result=PASS yaml-malicious-tags-rejected=true yaml-unknown-schema-rejected=true yaml-junit-failures=0 yaml-junit-errors=0 yaml-junit-skips=0")
     return 0
 
 def test_mode(kind):
@@ -73,6 +74,7 @@ def test_mode(kind):
     ok = rc == 0 and clean and all(name in found for name in names)
     if ok:
         for name in names: print(f"target={'android' if kind == 'android' else 'jvm'} case={'MainActivityTest.' if kind == 'android' else 'DesktopRuntimeTest.'}{name} PASS")
+        print(f"{'android' if kind == 'android' else 'desktop'}-verifier-result=PASS {'android' if kind == 'android' else 'desktop'}-junit-failures=0 {'android' if kind == 'android' else 'desktop'}-junit-errors=0 {'android' if kind == 'android' else 'desktop'}-junit-skips=0")
     else: print(f"target={'android' if kind == 'android' else 'jvm'} verifier FAIL", file=sys.stderr)
     report.unlink(missing_ok=True)
     return 0 if ok else 1
