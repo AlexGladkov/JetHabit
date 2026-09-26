@@ -6,9 +6,15 @@ import org.kodein.di.bind
 import org.kodein.di.direct
 import org.kodein.di.instance
 import org.kodein.di.singleton
+import org.kodein.di.provider
 
 object PlatformSDK {
     private var _di: DirectDI? = null
+    private var configuration: PlatformConfiguration? = null
+    var initializationCount: Int = 0
+        private set
+    var initializedDatabase: Any? = null
+        private set
     val di: DirectDI
         get() = requireNotNull(_di)
 
@@ -16,8 +22,19 @@ object PlatformSDK {
         configuration: PlatformConfiguration,
         appDatabase: Any? = null
     ) {
+        // Android activities are recreated while application-scoped services must stay alive.
+        // Refresh the platform handles without rebuilding the application graph.
+        if (_di != null) {
+            this.configuration = configuration
+            return
+        }
+        initializationCount++
+        initializedDatabase = appDatabase
+        this.configuration = configuration
         val configModule = DI.Module("config") {
-            bind<PlatformConfiguration>() with singleton { configuration }
+            bind<PlatformConfiguration>() with provider {
+                requireNotNull(PlatformSDK.configuration)
+            }
             if (appDatabase != null) {
                 bind<Any>("appDatabase") with singleton { appDatabase }
             }
