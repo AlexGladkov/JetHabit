@@ -7,6 +7,7 @@ import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertSame
+import org.junit.Assert.assertNotSame
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.AndroidComposeTestRule
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
@@ -14,6 +15,11 @@ import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.printToString
+import core.platform.AndroidImagePicker
+import data.features.settings.SettingsEventBus
+import java.util.concurrent.atomic.AtomicReference
+import di.PlatformConfiguration
+import di.PlatformSDK
 import navigation.AppScreens
 import navigation.AppTestTags
 import org.junit.Rule
@@ -45,45 +51,81 @@ class MainActivityTest {
         composeTestRule.waitUntilBottomNavigationExists()
         val before = MainActivity.lastCreatedActivity
         assertNotNull(before)
-        assertNotNull(MainActivity.lastImagePicker)
+        val beforePicker = MainActivity.lastImagePicker
+        assertNotNull(beforePicker)
         composeTestRule.activityRule.scenario.recreate()
         composeTestRule.waitUntilBottomNavigationExists()
         val after = MainActivity.lastCreatedActivity
         assertNotNull(after)
-        assert(after !== before)
+        assertNotSame(before, after)
         assertSame(after, MainActivity.lastImagePicker?.ownerActivity)
+        assertNotSame(before, MainActivity.lastImagePicker?.ownerActivity)
+        assertNotSame(beforePicker, MainActivity.lastImagePicker)
+        val currentConfiguration = PlatformSDK.instance<PlatformConfiguration>()
+        assertSame(after, currentConfiguration.activity)
+        assertSame(after, (currentConfiguration.imagePicker as AndroidImagePicker).ownerActivity)
+        assertSame(MainActivity.lastImagePicker, currentConfiguration.imagePicker)
         composeTestRule.onNodeWithTag(AppTestTags.BottomNavigation).assertIsDisplayed()
     }
 
     @Test
     fun roomRowPersistsAcrossRecreation() {
         composeTestRule.waitUntilBottomNavigationExists()
-        val db = ((composeTestRule.activity as MainActivity).application as JetHabitApp).database
+        val application = (composeTestRule.activity as MainActivity).application as JetHabitApp
+        val dbBefore = application.database
         val row = HabitEntity("acceptance", "Acceptance", true, "2024-01-01", "2024-12-31", "1")
-        runBlocking { db.getHabitDao().insert(row) }
+        runBlocking { dbBefore.getHabitDao().insert(row) }
         composeTestRule.activityRule.scenario.recreate()
         composeTestRule.waitUntilBottomNavigationExists()
-        assertEquals("Acceptance", runBlocking { db.getHabitDao().getHabitWith("acceptance").title })
+        val applicationAfter = (composeTestRule.activity as MainActivity).application as JetHabitApp
+        assertSame(application, applicationAfter)
+        assertSame(dbBefore, applicationAfter.database)
+        assertEquals("Acceptance", runBlocking { applicationAfter.database.getHabitDao().getHabitWith("acceptance").title })
     }
 
     @Test
     fun singleCompositionBootstrap() {
         composeTestRule.waitUntilBottomNavigationExists()
         val app = (composeTestRule.activity as MainActivity).application as JetHabitApp
-        val database = app.database
+        val settingsEventBusBeforeRecreation = app.settingsEventBus
         composeTestRule.activityRule.scenario.recreate()
         composeTestRule.waitUntilBottomNavigationExists()
-        assertSame(database, app.database)
-        assertSame(app.settingsEventBus, app.settingsEventBus)
+        val appAfterRecreation = (composeTestRule.activity as MainActivity).application as JetHabitApp
+        assertEquals(1, PlatformSDK.initializationCount)
+        assertSame(app, appAfterRecreation)
+        assertSame(settingsEventBusBeforeRecreation, appAfterRecreation.settingsEventBus)
     }
 
     @Test
     fun settingsEventBusProductionUpdate() {
         composeTestRule.waitUntilBottomNavigationExists()
-        val bus = ((composeTestRule.activity as MainActivity).application as JetHabitApp).settingsEventBus
-        val before = bus.currentSettings.value.isDarkMode
-        bus.updateDarkMode(!before)
-        assertEquals(!before, bus.currentSettings.value.isDarkMode as Boolean)
+        val app = (composeTestRule.activity as MainActivity).application as JetHabitApp
+        val productionBus = app.settingsEventBus
+        val before = productionBus.currentSettings.value.isDarkMode
+        val observedBus = AtomicReference<SettingsEventBus?>()
+        val observedDarkMode = AtomicReference<Boolean?>()
+
+        MainActivity.settingsEventBusObserverForTesting = { bus ->
+            observedBus.set(bus)
+            observedDarkMode.set(bus.currentSettings.value.isDarkMode)
+        }
+        try {
+            composeTestRule.activityRule.scenario.recreate()
+            composeTestRule.waitUntilBottomNavigationExists()
+            composeTestRule.waitUntil {
+                observedBus.get() === productionBus && observedDarkMode.get() == before
+            }
+            assertSame(productionBus, observedBus.get())
+
+            productionBus.updateDarkMode(!before)
+            composeTestRule.waitUntil {
+                observedBus.get() === productionBus && observedDarkMode.get() == !before
+            }
+            assertEquals(!before, observedDarkMode.get())
+        } finally {
+            productionBus.updateDarkMode(before)
+            MainActivity.settingsEventBusObserverForTesting = null
+        }
     }
 
     @Test
